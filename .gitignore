@@ -2,9 +2,9 @@ HELP.md
 target/
 !**/src/main/**
 !**/src/test/**
-
-### 屏蔽.mvn下的所有文件 ###
 .mvn/
+mvnw
+mvnw.cmd
 
 ### STS ###
 .apt_generated
