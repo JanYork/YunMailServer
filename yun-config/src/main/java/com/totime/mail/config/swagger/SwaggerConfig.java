@@ -49,9 +49,9 @@ public class SwaggerConfig {
     private String email;
 
 
-
     /**
      * Swagger3文档信息
+     *
      * @return ApiInfo API信息对象
      */
     @Bean
@@ -68,6 +68,7 @@ public class SwaggerConfig {
 
     /**
      * 分组-全部接口
+     *
      * @return Docket Docket对象
      */
     @Bean
