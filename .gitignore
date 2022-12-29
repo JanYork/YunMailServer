@@ -2,9 +2,6 @@ HELP.md
 target/
 !**/src/main/**
 !**/src/test/**
-.mvn/
-mvnw
-mvnw.cmd
 
 ### STS ###
 .apt_generated
@@ -31,3 +28,5 @@ build/
 
 ### VS Code ###
 .vscode/
+
+/.mvn/**
