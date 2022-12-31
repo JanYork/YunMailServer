@@ -2,57 +2,29 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <!--  父级依赖  -->
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.6</version>
-        <relativePath/>
-    </parent>
     <!--  主要配置信息  -->
     <groupId>com.totime</groupId>
-    <artifactId>YunMail</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <artifactId>YunMailServer</artifactId>
+    <version>2.0.0</version>
     <name>YunMail</name>
     <description>云寄时光驿站服务端</description>
     <!--  全局依赖版本管理  -->
     <properties>
-        <!--    JDK版本     -->
         <java.version>11</java.version>
-        <!--    打包编码指定     -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!--    MySQL版本    -->
-        <mysql.version>8.0.30</mysql.version>
-        <!--    MyBatisPlus版本    -->
         <mybatis-plus.version>3.5.2</mybatis-plus.version>
-        <!--    Swagger版本    -->
         <swagger.version>3.0.0</swagger.version>
-        <!--    Knife4j版本    -->
         <knife4j.version>3.0.3</knife4j.version>
-        <!--    Hutool版本    -->
         <hutool.version>5.8.10</hutool.version>
-        <!--    FastJSON2版本    -->
         <fastjson.version>2.0.21</fastjson.version>
-        <!--    Druid版本    -->
-        <druid.version>1.2.15</druid.version>
-        <!--    Redis连接池(commons-pool2)   -->
-        <commons-pool2.version>2.5.0</commons-pool2.version>
-        <!--    ip2region(离线IP定位库)    -->
         <ip2region.version>2.6.6</ip2region.version>
-        <!--    MapStruct(对象转换)    -->
         <org.mapstruct>1.5.3.Final</org.mapstruct>
-        <!--    EasyCaptcha(图像验证码)    -->
         <easy-captcha.version>1.6.2</easy-captcha.version>
-        <!--    UserAgentUtils(浏览器信息解析)      -->
         <user-agent-utils.version>1.21</user-agent-utils.version>
-        <!--    JJWT版本    -->
-        <jjwt.version>0.11.5</jjwt.version>
-        <!--    Shiro版本    -->
+        <jjwt.version>0.9.1</jjwt.version>
         <shiro.version>1.10.1</shiro.version>
-        <!--    系统信息获取库版本    -->
         <oshi.version>6.3.0</oshi.version>
-        <!--    SpringBoot版本    -->
-        <spring-boot.version>2.7.6</spring-boot.version>
+        <druid.version>1.2.14</druid.version>
     </properties>
     <!--  全局公共依赖管理  -->
     <dependencies>
@@ -60,51 +32,16 @@
     <!--  全局可选依赖管理  -->
     <dependencyManagement>
         <dependencies>
-            <!--    Validation数据校验    -->
+            <!-- SpringBoot的依赖配置 -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-validation</artifactId>
-                <version>${spring-boot.version}</version>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>2.7.6</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
 
-            <!--    Spring boot Websocket    -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-websocket</artifactId>
-                <version>${spring-boot.version}</version>
-            </dependency>
-
-            <!--    SpringBoot元数据映射        -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-configuration-processor</artifactId>
-                <optional>true</optional>
-                <version>${spring-boot.version}</version>
-            </dependency>
-
-            <!--    Redis    -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-data-redis</artifactId>
-                <version>${spring-boot.version}</version>
-            </dependency>
-
-            <!--    Redis连接池    -->
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-pool2</artifactId>
-                <version>${commons-pool2.version}</version>
-            </dependency>
-
-            <!--    Lombok    -->
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <optional>true</optional>
-                <version>${lombok.version}</version>
-            </dependency>
-
-            <!--    Hutool    -->
+            <!-- Hutool -->
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
@@ -118,62 +55,42 @@
                 <version>${fastjson.version}</version>
             </dependency>
 
-            <!--   Druid连接池     -->
+            <!-- Druid连接池 -->
             <dependency>
                 <groupId>com.alibaba</groupId>
-                <artifactId>druid</artifactId>
+                <artifactId>druid-spring-boot-starter</artifactId>
                 <version>${druid.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-test</artifactId>
-                <scope>test</scope>
-            </dependency>
-
-            <!--    MySQL驱动        -->
-            <dependency>
-                <groupId>mysql</groupId>
-                <artifactId>mysql-connector-java</artifactId>
-                <version>${mysql.version}</version>
-            </dependency>
-
-            <!--    MyBatisPlus    -->
+            <!-- MyBatisPlus -->
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
             </dependency>
 
-            <!--    Swagger3    -->
+            <!-- Swagger3 -->
             <dependency>
                 <groupId>io.springfox</groupId>
                 <artifactId>springfox-boot-starter</artifactId>
                 <version>${swagger.version}</version>
             </dependency>
 
-            <!--    Knife4j       -->
+            <!-- Knife4j -->
             <dependency>
                 <groupId>com.github.xiaoymin</groupId>
                 <artifactId>knife4j-spring-boot-starter</artifactId>
                 <version>${knife4j.version}</version>
             </dependency>
 
-            <!--    Knife4j-OpenAPI3(Swagger增强)    -->
-<!--            <dependency>-->
-<!--                <groupId>com.github.xiaoymin</groupId>-->
-<!--                <artifactId>knife4j-openapi3-spring-boot-starter</artifactId>-->
-<!--                <version>${knife4j.version}</version>-->
-<!--            </dependency>-->
-
-            <!--    离线IP定位库       -->
+            <!-- 离线IP定位库 -->
             <dependency>
                 <groupId>org.lionsoul</groupId>
                 <artifactId>ip2region</artifactId>
                 <version>${ip2region.version}</version>
             </dependency>
 
-            <!--     MapStruct(对象转换)      -->
+            <!-- MapStruct(对象转换) -->
             <dependency>
                 <groupId>org.mapstruct</groupId>
                 <artifactId>mapstruct</artifactId>
@@ -185,66 +102,67 @@
                 <version>${org.mapstruct}</version>
             </dependency>
 
-            <!--     图形验证码      -->
+            <!-- 图形验证码 -->
             <dependency>
                 <groupId>com.github.whvcse</groupId>
                 <artifactId>easy-captcha</artifactId>
                 <version>${easy-captcha.version}</version>
             </dependency>
-            <!--     UserAgentUtils(浏览器信息解析)      -->
+
+            <!-- UserAgentUtils(浏览器信息解析) -->
             <dependency>
                 <groupId>eu.bitwalker</groupId>
                 <artifactId>UserAgentUtils</artifactId>
                 <version>${user-agent-utils.version}</version>
             </dependency>
-            <!--     JJWT      -->
+
+            <!-- JJWT -->
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt</artifactId>
                 <version>${jjwt.version}</version>
             </dependency>
-            <!--     Quartz      -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-quartz</artifactId>
-            </dependency>
-            <!--     Shiro    -->
+
+            <!-- Shiro -->
             <dependency>
                 <groupId>org.apache.shiro</groupId>
                 <artifactId>shiro-spring</artifactId>
                 <version>${shiro.version}</version>
             </dependency>
-            <!--     获取系统信息       -->
+
+            <!-- 获取系统信息 -->
             <dependency>
                 <groupId>com.github.oshi</groupId>
                 <artifactId>oshi-core</artifactId>
                 <version>${oshi.version}</version>
             </dependency>
-            <!--      云寄接口模块      -->
+
+            <!-- 云寄接口模块 -->
             <dependency>
                 <artifactId>yun-api</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
                 <groupId>com.totime</groupId>
             </dependency>
-            <!--      云寄通用工具模块      -->
+
+            <!-- 云寄通用工具模块 -->
             <dependency>
                 <artifactId>yun-common</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
                 <groupId>com.totime</groupId>
             </dependency>
-            <!--      云寄通用配置模块      -->
+            <!-- 云寄通用配置模块 -->
             <dependency>
                 <artifactId>yun-config</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
                 <groupId>com.totime</groupId>
             </dependency>
-            <!--      云寄定时任务模块      -->
+            <!-- 云寄定时任务模块 -->
             <dependency>
                 <artifactId>yun-quartz</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
                 <groupId>com.totime</groupId>
             </dependency>
-            <!--      云寄系统核心模块      -->
+            <!-- 云寄系统核心模块 -->
             <dependency>
                 <artifactId>yun-core</artifactId>
                 <version>0.0.1-SNAPSHOT</version>

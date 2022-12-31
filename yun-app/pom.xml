@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
-        <artifactId>YunMail</artifactId>
+        <artifactId>YunMailServer</artifactId>
+        <version>2.0.0</version>
         <groupId>com.totime</groupId>
-        <version>0.0.1-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -15,15 +15,23 @@
     <description>云寄服务启动模块</description>
 
     <dependencies>
-        <!--      云寄系统核心模块      -->
+        <!-- MySQL驱动 -->
         <dependency>
-            <artifactId>yun-core</artifactId>
-            <groupId>com.totime</groupId>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
         </dependency>
-        <!--      云寄通用配置模块      -->
+
+        <!-- spring-boot-devtools -->
         <dependency>
-            <artifactId>yun-config</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <!-- 表示依赖不会传递 -->
+            <optional>true</optional>
+        </dependency>
+        <!-- 云寄核心模块 -->
+        <dependency>
             <groupId>com.totime</groupId>
+            <artifactId>yun-core</artifactId>
         </dependency>
     </dependencies>
 
@@ -32,6 +40,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>2.7.6</version>
                 <configuration>
                     <!-- 如果没有该配置，devtools不会生效 -->
                     <fork>true</fork>
@@ -43,6 +52,15 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <warName>${project.artifactId}</warName>
+                </configuration>
             </plugin>
         </plugins>
         <finalName>${project.artifactId}</finalName>
