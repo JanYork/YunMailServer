@@ -1,0 +1,37 @@
+spring:
+  quartz:
+    # 使用数据库存储
+    job-store-type: jdbc
+    # 相同 Scheduler 名字的节点，形成一个 Quartz 集群
+    scheduler-name: hyhScheduler
+    # 应用关闭时，是否等待定时任务执行完成。默认为 false ，建议设置为 true
+    wait-for-jobs-to-complete-on-shutdown: true
+    jdbc:
+      # 是否自动使用 SQL 初始化 Quartz 表结构。这里设置成 never ，我们手动创建表结构。
+      initialize-schema: never
+    properties:
+      org:
+        quartz:
+          # JobStore 相关配置
+          jobStore:
+            dataSource: quartzDataSource
+            # JobStore 实现类
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            # Quartz 表前缀
+            tablePrefix: QRTZ_
+            # 是集群模式
+            isClustered: true
+            clusterCheckinInterval: 1000
+            useProperties: false
+          scheduler:
+            instanceName: clusteredScheduler
+            instanceId: AUTO
+          # 线程池相关配置
+          threadPool:
+            # 线程池大小。默认为 10 。
+            threadCount: 25
+            # 线程优先级
+            threadPriority: 5
+            # 线程池类型
+            class: org.quartz.simpl.SimpleThreadPool
