@@ -29,4 +29,6 @@ build/
 ### VS Code ###
 .vscode/
 
+### 自定义 ###
 /.mvn/**
+/logs/
