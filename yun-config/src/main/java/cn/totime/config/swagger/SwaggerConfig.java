@@ -1,4 +1,4 @@
-package com.totime.mail.config.swagger;
+package cn.totime.config.swagger;
 
 
 import org.springframework.beans.factory.annotation.Value;

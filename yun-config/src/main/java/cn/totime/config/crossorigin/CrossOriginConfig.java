@@ -1,4 +1,4 @@
-package com.totime.mail.config.crossorigin;
+package cn.totime.config.crossorigin;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
