@@ -18,6 +18,7 @@ import java.util.Date;
 public class YunMailApplication {
     public static void main(String[] args) {
         SpringApplication.run(YunMailApplication.class, args);
+        String port = "8088";
         System.out.println("云寄时光机启动成功啦!\n" +
                 " __      __\n" +
                 "( _\\    /_ )\n" +
@@ -29,11 +30,11 @@ public class YunMailApplication {
                 "   \\/  ;   /\n" +
                 "    | === | 好耶！");
         //输出启动信息
-        System.out.println("启动时间：" + new Date());
+        System.out.println("启动时间：" + String.format("%tF-%tT", new Date(), new Date()));
         System.out.println("开发者：JanYork");
-        System.out.println("版本号：V2.0");
-        System.out.println("请访问：http://localhost:8088");
-        System.out.println("看文档：http://localhost:8088/swagger-ui/index.html");
-
+        System.out.println("版本号：V2.0.0");
+        System.out.println("请访问：http://localhost:" + port);
+        System.out.println("文档一：http://localhost:" + port + "/swagger-ui/index.html");
+        System.out.println("文档二：http://localhost:" + port + "/doc.html");
     }
 }
