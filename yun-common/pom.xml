@@ -12,13 +12,6 @@
     <description>云寄通用工具模块</description>
 
     <dependencies>
-        <!-- Lombok -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-
         <!-- 离线IP定位库 -->
         <dependency>
             <groupId>org.lionsoul</groupId>

@@ -19,6 +19,7 @@
         <module>yun-quartz</module>
         <module>yun-common</module>
         <module>yun-config</module>
+        <module>yun-data</module>
     </modules>
 
     <properties>
@@ -43,6 +44,15 @@
         <tencent.cos.version>5.6.97</tencent.cos.version>
         <tencentcloud.api.version>3.1.668</tencentcloud.api.version>
     </properties>
+
+    <dependencies>
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
 
     <dependencyManagement>
         <dependencies>
@@ -204,6 +214,13 @@
             <dependency>
                 <groupId>cn.totime</groupId>
                 <artifactId>yun-config</artifactId>
+                <version>${totime.version}</version>
+            </dependency>
+
+            <!-- 云寄数据操作模块 -->
+            <dependency>
+                <groupId>cn.totime</groupId>
+                <artifactId>yun-data</artifactId>
                 <version>${totime.version}</version>
             </dependency>
         </dependencies>

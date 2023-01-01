@@ -30,12 +30,6 @@
             <artifactId>druid-spring-boot-starter</artifactId>
         </dependency>
 
-        <!-- MyBatisPlus -->
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
-        </dependency>
-
         <!-- redis 缓存操作 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
