@@ -2,7 +2,7 @@
 > 开发：© By JanYork
 ### 整体功能设计
 
-![设计图](https://a.ideaopen.cn/JanYork/UmeibOV4.png)
+![设计图](https://i.328888.xyz/2023/01/01/nuHkX.png)
 
 ### 模块分析
 
