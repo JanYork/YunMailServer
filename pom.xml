@@ -1,17 +1,32 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <!--  主要配置信息  -->
-    <groupId>com.totime</groupId>
-    <artifactId>YunMailServer</artifactId>
+
+    <groupId>cn.totime</groupId>
+    <artifactId>YunMail</artifactId>
     <version>2.0.0</version>
+
+    <packaging>pom</packaging>
+
     <name>YunMail</name>
-    <description>云寄时光驿站服务端</description>
-    <!--  全局依赖版本管理  -->
+    <description>云寄后台管理</description>
+    <url>https://yunji.totime.cn</url>
+
+    <modules>
+        <module>yun-app</module>
+        <module>yun-core</module>
+        <module>yun-api</module>
+        <module>yun-quartz</module>
+        <module>yun-common</module>
+        <module>yun-config</module>
+    </modules>
+
     <properties>
-        <java.version>11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>11</java.version>
+        <spring-boot.version>2.6.11</spring-boot.version>
+        <druid.version>1.2.14</druid.version>
+        <totime.version>2.0.0</totime.version>
         <mybatis-plus.version>3.5.2</mybatis-plus.version>
         <swagger.version>3.0.0</swagger.version>
         <knife4j.version>3.0.3</knife4j.version>
@@ -24,38 +39,23 @@
         <jjwt.version>0.9.1</jjwt.version>
         <shiro.version>1.10.1</shiro.version>
         <oshi.version>6.3.0</oshi.version>
-        <druid.version>1.2.14</druid.version>
+        <poi.version>4.1.2</poi.version>
+        <tencent.cos.version>5.6.97</tencent.cos.version>
+        <tencentcloud.api.version>3.1.668</tencentcloud.api.version>
     </properties>
-    <!--  全局公共依赖管理  -->
-    <dependencies>
-    </dependencies>
-    <!--  全局可选依赖管理  -->
+
     <dependencyManagement>
         <dependencies>
             <!-- SpringBoot的依赖配置 -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>2.7.6</version>
+                <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
 
-            <!-- Hutool -->
-            <dependency>
-                <groupId>cn.hutool</groupId>
-                <artifactId>hutool-all</artifactId>
-                <version>${hutool.version}</version>
-            </dependency>
-
-            <!-- FastJSON2 -->
-            <dependency>
-                <groupId>com.alibaba.fastjson2</groupId>
-                <artifactId>fastjson2</artifactId>
-                <version>${fastjson.version}</version>
-            </dependency>
-
-            <!-- Druid连接池 -->
+            <!-- 阿里数据库连接池 -->
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>druid-spring-boot-starter</artifactId>
@@ -137,63 +137,84 @@
                 <version>${oshi.version}</version>
             </dependency>
 
+            <!-- excel工具 -->
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
+
+            <!-- Hutool -->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+
+            <!-- FastJSON2 -->
+            <dependency>
+                <groupId>com.alibaba.fastjson2</groupId>
+                <artifactId>fastjson2</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+
+            <!-- 腾讯云对象存储SDK -->
+            <dependency>
+                <groupId>com.qcloud</groupId>
+                <artifactId>cos_api</artifactId>
+                <version>${tencent.cos.version}</version>
+            </dependency>
+
+            <!-- 腾讯云API集成SDK -->
+            <dependency>
+                <groupId>com.tencentcloudapi</groupId>
+                <artifactId>tencentcloud-sdk-java</artifactId>
+                <version>${tencentcloud.api.version}</version>
+            </dependency>
+
+            <!-- 云寄核心模块 -->
+            <dependency>
+                <groupId>cn.totime</groupId>
+                <artifactId>yun-core</artifactId>
+                <version>${totime.version}</version>
+            </dependency>
+
+            <!-- 云寄定时任务模块 -->
+            <dependency>
+                <groupId>cn.totime</groupId>
+                <artifactId>yun-quartz</artifactId>
+                <version>${totime.version}</version>
+            </dependency>
+
             <!-- 云寄接口模块 -->
             <dependency>
+                <groupId>cn.totime</groupId>
                 <artifactId>yun-api</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
-                <groupId>com.totime</groupId>
+                <version>${totime.version}</version>
             </dependency>
 
             <!-- 云寄通用工具模块 -->
             <dependency>
+                <groupId>cn.totime</groupId>
                 <artifactId>yun-common</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
-                <groupId>com.totime</groupId>
+                <version>${totime.version}</version>
             </dependency>
+
             <!-- 云寄通用配置模块 -->
             <dependency>
+                <groupId>cn.totime</groupId>
                 <artifactId>yun-config</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
-                <groupId>com.totime</groupId>
-            </dependency>
-            <!-- 云寄定时任务模块 -->
-            <dependency>
-                <artifactId>yun-quartz</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
-                <groupId>com.totime</groupId>
-            </dependency>
-            <!-- 云寄系统核心模块 -->
-            <dependency>
-                <artifactId>yun-core</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
-                <groupId>com.totime</groupId>
+                <version>${totime.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
-    <!--  子级模块  -->
-    <modules>
-        <!--    系统启动模块    -->
-        <module>yun-app</module>
-        <!--    通用工具模块    -->
-        <module>yun-common</module>
-        <!--    定时任务模块    -->
-        <module>yun-quartz</module>
-        <!--    系统核心模块    -->
-        <module>yun-core</module>
-        <!--    系统接口模块    -->
-        <module>yun-api</module>
-        <!--    全局配置模块    -->
-        <module>yun-config</module>
-    </modules>
-    <!--  设置打包格式  -->
-    <packaging>pom</packaging>
-    <!--  全局插件管理  -->
+
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.1</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -202,29 +223,29 @@
             </plugin>
         </plugins>
     </build>
-    <!--  设置仓库地址  -->
-    <repositories>
-        <repository>
-            <id>public</id>
-            <name>aliyun nexus</name>
-            <url>https://maven.aliyun.com/repository/public</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </repository>
-    </repositories>
-    <!--  设置插件仓库  -->
-    <pluginRepositories>
-        <pluginRepository>
-            <id>public</id>
-            <name>aliyun nexus</name>
-            <url>https://maven.aliyun.com/repository/public</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
+
+    <!--  <repositories>-->
+    <!--    <repository>-->
+    <!--      <id>public</id>-->
+    <!--      <name>aliyun nexus</name>-->
+    <!--      <url>https://maven.aliyun.com/repository/public</url>-->
+    <!--      <releases>-->
+    <!--        <enabled>true</enabled>-->
+    <!--      </releases>-->
+    <!--    </repository>-->
+    <!--  </repositories>-->
+
+    <!--  <pluginRepositories>-->
+    <!--    <pluginRepository>-->
+    <!--      <id>public</id>-->
+    <!--      <name>aliyun nexus</name>-->
+    <!--      <url>https://maven.aliyun.com/repository/public</url>-->
+    <!--      <releases>-->
+    <!--        <enabled>true</enabled>-->
+    <!--      </releases>-->
+    <!--      <snapshots>-->
+    <!--        <enabled>false</enabled>-->
+    <!--      </snapshots>-->
+    <!--    </pluginRepository>-->
+    <!--  </pluginRepositories>-->
 </project>
