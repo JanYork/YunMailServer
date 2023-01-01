@@ -30,5 +30,4 @@ build/
 .vscode/
 
 ### 自定义 ###
-/.mvn/**
 /logs/
