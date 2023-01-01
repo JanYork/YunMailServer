@@ -1,4 +1,4 @@
-package com.totime.mail;
+package cn.totime;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,7 +18,6 @@ import java.util.Date;
 public class YunMailApplication {
     public static void main(String[] args) {
         SpringApplication.run(YunMailApplication.class, args);
-        //成功后输出Banner
         System.out.println("云寄时光机启动成功啦!\n" +
                 " __      __\n" +
                 "( _\\    /_ )\n" +
