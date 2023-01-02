@@ -20,6 +20,7 @@
         <module>yun-common</module>
         <module>yun-config</module>
         <module>yun-data</module>
+        <module>yun-mq</module>
     </modules>
 
     <properties>
@@ -221,6 +222,13 @@
             <dependency>
                 <groupId>cn.totime</groupId>
                 <artifactId>yun-data</artifactId>
+                <version>${totime.version}</version>
+            </dependency>
+
+            <!-- 云寄异步队列模块 -->
+            <dependency>
+                <groupId>cn.totime</groupId>
+                <artifactId>yun-mq</artifactId>
                 <version>${totime.version}</version>
             </dependency>
         </dependencies>

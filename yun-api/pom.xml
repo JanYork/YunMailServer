@@ -29,5 +29,11 @@
             <groupId>cn.totime</groupId>
             <artifactId>yun-data</artifactId>
         </dependency>
+
+        <!-- 云寄通用工具模块 -->
+        <dependency>
+            <groupId>cn.totime</groupId>
+            <artifactId>yun-common</artifactId>
+        </dependency>
     </dependencies>
 </project>
