@@ -78,6 +78,8 @@ public class SwaggerConfig {
                 .apiInfo(createApiInfo())
                 .groupName("全部接口")
                 .select()
+                .paths(Predicate.not(Predicate.isEqual("/error")))
+                .apis(input -> true)
                 .build();
     }
 
