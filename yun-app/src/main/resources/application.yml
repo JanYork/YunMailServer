@@ -39,6 +39,7 @@ spring:
       - swagger
       - quartz
       - druid
+      - mq
 knife4j:
   enable: true
   setting:
