@@ -45,10 +45,10 @@
             <artifactId>yun-config</artifactId>
         </dependency>
 
-        <!-- 云寄数据操作模块 -->
+        <!-- 云寄接口模块 -->
         <dependency>
             <groupId>cn.totime</groupId>
-            <artifactId>yun-data</artifactId>
+            <artifactId>yun-api</artifactId>
         </dependency>
     </dependencies>
 

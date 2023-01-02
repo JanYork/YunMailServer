@@ -23,5 +23,11 @@
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-spring-boot-starter</artifactId>
         </dependency>
+
+        <!-- 云寄数据操作模块 -->
+        <dependency>
+            <groupId>cn.totime</groupId>
+            <artifactId>yun-data</artifactId>
+        </dependency>
     </dependencies>
 </project>
