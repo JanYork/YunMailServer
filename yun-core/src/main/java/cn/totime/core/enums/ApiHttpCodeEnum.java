@@ -38,4 +38,12 @@ public enum ApiHttpCodeEnum {
     public String getMsg() {
         return msg;
     }
+
+    @Override
+    public String toString() {
+        return "ApiHttpCodeEnum{" +
+                "code=" + code +
+                ", msg='" + msg + '\'' +
+                '}';
+    }
 }
