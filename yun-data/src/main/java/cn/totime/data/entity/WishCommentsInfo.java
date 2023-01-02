@@ -1,5 +1,7 @@
 package cn.totime.data.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,6 +20,7 @@ public class WishCommentsInfo extends Model<WishCommentsInfo> {
     /**
      * 愿望评论表自增ID
      */
+    @TableId(type = IdType.AUTO)
     private Integer wishCommentsId;
     /**
      * 评论用户ID

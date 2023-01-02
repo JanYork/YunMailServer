@@ -1,5 +1,7 @@
 package cn.totime.data.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,6 +20,7 @@ public class LogisticsInfo extends Model<LogisticsInfo> {
     /**
      * 物流订单ID
      */
+    @TableId
     private Long logisticsId;
     /**
      * 物流类型

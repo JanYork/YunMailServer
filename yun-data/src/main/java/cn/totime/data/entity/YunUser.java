@@ -2,6 +2,8 @@ package cn.totime.data.entity;
 
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,6 +22,7 @@ public class YunUser extends Model<YunUser> {
     /**
      * 用户逐渐ID(雪花ID)
      */
+    @TableId
     private Long uId;
     /**
      * 用户账号
