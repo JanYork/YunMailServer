@@ -6,7 +6,7 @@ package cn.totime.core.enums;
  * @description 全局接口返回信息状态码
  */
 public enum ApiHttpCodeEnum {
-/**
+    /**
      * 成功
      */
     SUCCESS(200, "成功"),
