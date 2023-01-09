@@ -35,5 +35,11 @@
             <groupId>cn.totime</groupId>
             <artifactId>yun-common</artifactId>
         </dependency>
+
+        <!-- 云寄异步队列模块 -->
+        <dependency>
+            <groupId>cn.totime</groupId>
+            <artifactId>yun-mq</artifactId>
+        </dependency>
     </dependencies>
 </project>

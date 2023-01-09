@@ -12,6 +12,7 @@
     <description>云寄MQ异步队列模块</description>
 
     <dependencies>
+        <!-- RocketMQ -->
         <dependency>
             <groupId>org.apache.rocketmq</groupId>
             <artifactId>rocketmq-spring-boot-starter</artifactId>

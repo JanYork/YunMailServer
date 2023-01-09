@@ -18,6 +18,18 @@
             <artifactId>ip2region</artifactId>
         </dependency>
 
+        <!-- 邮件服务依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
+        <!-- 模板引擎 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-freemarker</artifactId>
+        </dependency>
+
         <!-- MapStruct(对象转换) -->
         <dependency>
             <groupId>org.mapstruct</groupId>
