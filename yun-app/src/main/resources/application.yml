@@ -40,6 +40,35 @@ spring:
       - quartz
       - druid
       - mq
+  mail:
+    host: smtp.feishu.cn
+    username: timestore@totime.cn
+    password: lG5jjKUFKTjiBpIy
+    default-encoding: UTF-8
+    port: 465
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            enable: true
+  freemarker:
+    cache: false
+    # 模板路径
+    template-loader-path: classpath:/templates
+    charset: UTF-8
+    allow-request-override: false
+    check-template-location: true
+    content-type: text/html
+    expose-request-attributes: true
+    expose-session-attributes: true
+    suffix: .ftl
+    # 通用模板文件路径
+    general-base-package-path: /templates/general
+    # 邮件模板文件路径
+    mail-base-package-path: /templates/mail/
 knife4j:
   enable: true
   setting:
