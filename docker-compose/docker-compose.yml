@@ -1,0 +1,47 @@
+version: '2.4.1'
+services:
+  # RocketMQ-NameServer
+  namesrv:
+    image: rocketmq:latest
+    container_name: rocketmq-namesrv
+    ports:
+      - 9876:9876
+    environment:
+      - JAVA_OPT_EXT=-server -Xms256m -Xmx256m -Xmn256m
+    volumes:
+      - /rocketmq/data/namesrv/logs:/root/logs
+    command: sh mqnamesrv
+
+  # RocketMQ-Broker
+  broker:
+    image: rocketmq:latest
+    container_name: rocketmq-broker
+    links:
+      - namesrv
+    depends_on:
+      - namesrv
+    ports:
+      - 10909:10909
+      - 10911:10911
+      - 10912:10912
+    environment:
+      - NAMESRV_ADDR=namesrv:9876
+      - JAVA_OPT_EXT=-server -Xms512m -Xmx512m -Xmn256m
+    volumes:
+      - /rocketmq/data/broker/logs:/home/rocketmq/logs
+      - /rocketmq/data/broker/store:/home/rocketmq/store
+      - /rocketmq/etc/broker/broker.conf:/home/rocketmq/conf/broker.conf
+    command: sh mqbroker -c /home/rocketmq/conf/broker.conf
+
+  # RocketMQ-Dashboard(可视化管理)
+  dashboard:
+    image: rocketmq-dashboard:latest
+    container_name: rocketmq-dashboard
+    ports:
+      - 8099:8099
+    links:
+      - namesrv
+    depends_on:
+      - namesrv
+    environment:
+      - NAMESRV_ADDR=namesrv:9876
