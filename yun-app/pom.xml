@@ -86,6 +86,7 @@
                     <warName>${project.artifactId}</warName>
                 </configuration>
             </plugin>
+
         </plugins>
         <finalName>${project.artifactId}</finalName>
     </build>

@@ -30,6 +30,12 @@
             <artifactId>spring-boot-starter-freemarker</artifactId>
         </dependency>
 
+        <!-- 腾讯云API集成SDK -->
+        <dependency>
+            <groupId>com.tencentcloudapi</groupId>
+            <artifactId>tencentcloud-sdk-java</artifactId>
+        </dependency>
+
         <!-- MapStruct(对象转换) -->
         <dependency>
             <groupId>org.mapstruct</groupId>
