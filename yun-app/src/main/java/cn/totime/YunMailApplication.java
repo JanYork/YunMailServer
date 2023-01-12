@@ -36,5 +36,6 @@ public class YunMailApplication {
         System.out.println("请访问：http://localhost:" + port);
         System.out.println("文档一：http://localhost:" + port + "/swagger-ui/index.html");
         System.out.println("文档二：http://localhost:" + port + "/doc.html");
+        System.out.println("数据池：http://localhost:" + port + "/druid/index.html");
     }
 }
