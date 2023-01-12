@@ -40,6 +40,7 @@ spring:
       - quartz
       - druid
       - mq
+      - sms
   mail:
     host: smtp.feishu.cn
     username: timestore@totime.cn
@@ -68,8 +69,11 @@ spring:
     # 通用模板文件路径
     general-base-package-path: /templates/general
     # 邮件模板文件路径
-    mail-base-package-path: /templates/mail/
+    mail-base-package-path: /templates/email/
 knife4j:
   enable: true
   setting:
     language: zh-CN
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
