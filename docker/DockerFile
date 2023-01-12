@@ -9,6 +9,8 @@ RUN mkdir -p /app
 WORKDIR /app
 # 拷贝当前目录下的app.jar到镜像中
 COPY app-*.jar app/app.jar
+# 日志目录挂载
+VOLUME /log
 # 暴露端口
 EXPOSE 8099
 
