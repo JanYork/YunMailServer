@@ -19,11 +19,11 @@ import java.util.Map;
 @Component
 public class FreemarkerUtil {
 
-//    @Value("${ftl.general-base-package-path}")
-    private String generalBasePackagePath = "/templates/general";
+    @Value("${spring.freemarker.general-base-package-path}")
+    private String generalBasePackagePath;
 
-//    @Value("${spring.freemarker.mail-base-package-name}")
-    private String mailBasePackageName = "cn/totime/templates/email";
+    @Value("${spring.freemarker.mail-base-package-path}")
+    private String mailBasePackageName;
 
     /**
      * 根据模板和数据生成邮件内容(General)
