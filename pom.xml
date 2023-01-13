@@ -44,6 +44,9 @@
         <poi.version>4.1.2</poi.version>
         <tencent.cos.version>5.6.97</tencent.cos.version>
         <tencentcloud.api.version>3.1.668</tencentcloud.api.version>
+        <retrofit.version>2.3.11</retrofit.version>
+        <justauth.version>1.16.5</justauth.version>
+        <justauth.starter.version>1.4.0</justauth.starter.version>
     </properties>
 
     <dependencies>
@@ -182,6 +185,28 @@
                 <artifactId>tencentcloud-sdk-java</artifactId>
                 <version>${tencentcloud.api.version}</version>
             </dependency>
+
+            <!-- HTTP请求 -->
+            <dependency>
+                <groupId>com.github.lianjiatech</groupId>
+                <artifactId>retrofit-spring-boot-starter</artifactId>
+                <version>${retrofit.version}</version>
+            </dependency>
+
+            <!-- 第三方登录集成 -->
+<!--            <dependency>-->
+<!--                <groupId>me.zhyd.oauth</groupId>-->
+<!--                <artifactId>JustAuth</artifactId>-->
+<!--                <version>${justauth.version}</version>-->
+<!--            </dependency>-->
+
+            <!-- 第三方登录集成(starter) -->
+            <dependency>
+                <groupId>com.xkcoding.justauth</groupId>
+                <artifactId>justauth-spring-boot-starter</artifactId>
+                <version>${justauth.starter.version}</version>
+            </dependency>
+
 
             <!-- 云寄核心模块 -->
             <dependency>
