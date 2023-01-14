@@ -1,5 +1,6 @@
 package cn.totime;
 
+import com.github.lianjiatech.retrofit.spring.boot.core.RetrofitScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -7,6 +8,8 @@ import java.util.Date;
 
 /**
  * <p>Copyright © JanYork</p>
+ * <p>Company: 初柒网络科技</p>
+ * <p><i>@RetrofitScan</i>注解用于标识Retrofit请求方法的文件包路径</p>
  *
  * @author JanYork
  * @version 2.0
@@ -15,6 +18,7 @@ import java.util.Date;
  * @since 1.0
  */
 @SpringBootApplication
+@RetrofitScan(basePackages = "cn.totime.common.retrofit")
 public class YunMailApplication {
     public static void main(String[] args) {
         SpringApplication.run(YunMailApplication.class, args);
