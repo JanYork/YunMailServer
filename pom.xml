@@ -47,6 +47,7 @@
         <retrofit.version>2.3.11</retrofit.version>
         <justauth.version>1.16.5</justauth.version>
         <justauth.starter.version>1.4.0</justauth.starter.version>
+        <guava.version>31.1-jre</guava.version>
     </properties>
 
     <dependencies>
@@ -205,6 +206,13 @@
                 <groupId>com.xkcoding.justauth</groupId>
                 <artifactId>justauth-spring-boot-starter</artifactId>
                 <version>${justauth.starter.version}</version>
+            </dependency>
+
+            <!-- GoogleGuava -->
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
             </dependency>
 
 
