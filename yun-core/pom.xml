@@ -48,6 +48,12 @@
             <artifactId>commons-pool2</artifactId>
         </dependency>
 
+        <!-- SpringCache -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+
         <!-- GoogleGuava -->
         <dependency>
             <groupId>com.google.guava</groupId>
