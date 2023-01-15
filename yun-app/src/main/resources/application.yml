@@ -1,35 +1,6 @@
 spring:
   application:
     name: YunMail
-  datasource:
-    type: com.alibaba.druid.pool.DruidDataSource
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    #主要数据源
-    primary:
-      url: jdbc:mysql://127.0.0.1:3306/yun?useUnicode=true&characterEncoding=utf-8&useSSL=false
-      username: root
-      password: 123456
-    #备用数据源
-    standby:
-      url: jdbc:mysql://127.0.0.1:3306/yun?useUnicode=true&characterEncoding=utf-8&useSSL=false
-      username: root
-      password: 123456
-    #Task数据源
-    task:
-      url: jdbc:mysql://127.0.0.1:3306/quartz?useUnicode=true&characterEncoding=utf-8&useSSL=false
-      username: root
-      password: 123456
-  redis:
-    host: 127.0.0.1
-    port: 6379
-    password:
-    timeout: 5000
-    lettuce:
-      pool:
-        max-active: 8
-        max-wait: -1
-        max-idle: 8
-        min-idle: 0
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
@@ -41,6 +12,16 @@ spring:
       - druid
       - mq
       - sms
+      - oauth
+      - datasource
+  cache:
+    type: redis
+    redis:
+      time-to-live: 3600000
+      key-prefix: yun
+      use-key-prefix: true
+      # 防止缓存穿透
+      cache-null-values: true
   mail:
     host: smtp.feishu.cn
     username: timestore@totime.cn
