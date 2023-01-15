@@ -21,17 +21,17 @@ public class DataSourceConfig {
     /**
      * 主数据源yml配置路径
      */
-    private static final String BUSINESS_DATASOURCE_PREFIX = "spring.datasource.druid.primary";
+    private static final String BUSINESS_DATASOURCE_PREFIX = "spring.datasource.primary";
 
     /**
      * 备用数据源yml配置路径
      */
-    private static final String STANDBY_DATASOURCE_PREFIX = "spring.datasource.druid.standby";
+    private static final String STANDBY_DATASOURCE_PREFIX = "spring.datasource.standby";
 
     /**
      * 定时任务数据源yml配置路径
      */
-    private static final String TASK_DATASOURCE_PREFIX = "spring.datasource.druid.task";
+    private static final String TASK_DATASOURCE_PREFIX = "spring.datasource.task";
 
     /**
      * <p>主数据源配置</p>
