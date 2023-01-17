@@ -3,6 +3,7 @@ package cn.totime;
 import com.github.lianjiatech.retrofit.spring.boot.core.RetrofitScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 
 import java.util.Date;
 
@@ -19,6 +20,7 @@ import java.util.Date;
  */
 @SpringBootApplication
 @RetrofitScan(basePackages = "cn.totime.common.retrofit")
+@EnableCaching
 public class YunMailApplication {
     public static void main(String[] args) {
         SpringApplication.run(YunMailApplication.class, args);
