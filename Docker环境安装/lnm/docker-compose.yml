@@ -1,0 +1,29 @@
+# Nginx、MySQL → 一键安装
+version: '3.7'
+services:
+    nginx:
+        image: nginx:1.17.8
+        container_name: nginx
+        restart: always
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - ./nginx/conf.d:/etc/nginx/conf.d
+            - ./nginx/logs:/var/log/nginx
+            - ./nginx/ssl:/etc/nginx/ssl
+            - ./www:/var/www
+        command: tail -f /dev/null
+    mysql:
+        image: mysql:5.7.26
+        container_name: mysql
+        restart: always
+        ports:
+            - "3306:3306"
+        volumes:
+            - ./mysql/data:/var/lib/mysql
+            - ./mysql/conf.d:/etc/mysql/conf.d
+            - ./mysql/logs:/var/log/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: 911111
+        command: tail -f /dev/null
