@@ -1,9 +1,0 @@
-rocketmq:
-  name-server: 101.43.170.203:9876
-  producer:
-    # 发送同一类消息的设置为同一个group，保证唯一
-    group: yun_group
-    # 消息最大长度 默认1024*4(4M)
-    maxMessageSize: 4096
-    # 发送消息失败重试次数，默认2
-    retryTimesWhenSendFailed: 3
