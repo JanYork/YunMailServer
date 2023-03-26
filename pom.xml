@@ -1,67 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cn.totime</groupId>
-    <artifactId>YunMail</artifactId>
+    <groupId>com.totime</groupId>
+    <artifactId>mail</artifactId>
     <version>2.0.0</version>
-
-    <packaging>pom</packaging>
-
     <name>YunMail</name>
-    <description>云寄后台管理</description>
-    <url>https://yunji.totime.cn</url>
-
-    <modules>
-        <module>yun-app</module>
-        <module>yun-core</module>
-        <module>yun-api</module>
-        <module>yun-quartz</module>
-        <module>yun-common</module>
-        <module>yun-config</module>
-        <module>yun-data</module>
-        <module>yun-mq</module>
-    </modules>
+    <description>云寄服务端2.0.0版本</description>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>11</java.version>
-        <spring-boot.version>2.6.11</spring-boot.version>
-        <druid.version>1.2.14</druid.version>
-        <totime.version>2.0.0</totime.version>
-        <mybatis-plus.version>3.5.2</mybatis-plus.version>
-        <swagger.version>3.0.0</swagger.version>
-        <knife4j.version>3.0.3</knife4j.version>
-        <hutool.version>5.8.10</hutool.version>
-        <fastjson.version>2.0.21</fastjson.version>
-        <ip2region.version>2.6.6</ip2region.version>
-        <org.mapstruct>1.5.3.Final</org.mapstruct>
-        <easy-captcha.version>1.6.2</easy-captcha.version>
-        <user-agent-utils.version>1.21</user-agent-utils.version>
-        <jjwt.version>0.9.1</jjwt.version>
-        <shiro.version>1.10.1</shiro.version>
-        <oshi.version>6.3.0</oshi.version>
-        <poi.version>4.1.2</poi.version>
-        <tencent.cos.version>5.6.97</tencent.cos.version>
-        <tencentcloud.api.version>3.1.668</tencentcloud.api.version>
-        <retrofit.version>2.3.11</retrofit.version>
-        <justauth.version>1.16.5</justauth.version>
-        <justauth.starter.version>1.4.0</justauth.starter.version>
-        <guava.version>31.1-jre</guava.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <aliyun-spring-boot.version>1.0.0</aliyun-spring-boot.version>
+        <spring-boot.version>2.6.13</spring-boot.version>
+        <spring-cloud-alibaba.version>2021.0.5.0</spring-cloud-alibaba.version>
     </properties>
 
     <dependencies>
-        <!-- Lombok -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>aliyun-sms-spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>com.taobao.arthas</groupId>
+            <artifactId>arthas-spring-boot-starter</artifactId>
+            <version>3.6.7</version>
+            <scope>runtime</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-spring-boot-starter</artifactId>
+            <version>1.34.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-dao-redis</artifactId>
+            <version>1.34.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>1.2.16</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.5.3.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.8.16</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>8.0.32</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
         <dependencies>
-            <!-- SpringBoot的依赖配置 -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -69,200 +121,19 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
-            <!-- 阿里数据库连接池 -->
             <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>druid-spring-boot-starter</artifactId>
-                <version>${druid.version}</version>
-            </dependency>
-
-            <!-- MyBatisPlus -->
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-boot-starter</artifactId>
-                <version>${mybatis-plus.version}</version>
-            </dependency>
-
-            <!-- Swagger3 -->
-            <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-boot-starter</artifactId>
-                <version>${swagger.version}</version>
-            </dependency>
-
-            <!-- Knife4j -->
-            <dependency>
-                <groupId>com.github.xiaoymin</groupId>
-                <artifactId>knife4j-spring-boot-starter</artifactId>
-                <version>${knife4j.version}</version>
-            </dependency>
-
-            <!-- 离线IP定位库 -->
-            <dependency>
-                <groupId>org.lionsoul</groupId>
-                <artifactId>ip2region</artifactId>
-                <version>${ip2region.version}</version>
-            </dependency>
-
-            <!-- MapStruct(对象转换) -->
-            <dependency>
-                <groupId>org.mapstruct</groupId>
-                <artifactId>mapstruct</artifactId>
-                <version>${org.mapstruct}</version>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>aliyun-spring-boot-dependencies</artifactId>
+                <version>${aliyun-spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>org.mapstruct</groupId>
-                <artifactId>mapstruct-processor</artifactId>
-                <version>${org.mapstruct}</version>
-            </dependency>
-
-            <!-- 图形验证码 -->
-            <dependency>
-                <groupId>com.github.whvcse</groupId>
-                <artifactId>easy-captcha</artifactId>
-                <version>${easy-captcha.version}</version>
-            </dependency>
-
-            <!-- UserAgentUtils(浏览器信息解析) -->
-            <dependency>
-                <groupId>eu.bitwalker</groupId>
-                <artifactId>UserAgentUtils</artifactId>
-                <version>${user-agent-utils.version}</version>
-            </dependency>
-
-            <!-- JJWT -->
-            <dependency>
-                <groupId>io.jsonwebtoken</groupId>
-                <artifactId>jjwt</artifactId>
-                <version>${jjwt.version}</version>
-            </dependency>
-
-            <!-- Shiro -->
-            <dependency>
-                <groupId>org.apache.shiro</groupId>
-                <artifactId>shiro-spring</artifactId>
-                <version>${shiro.version}</version>
-            </dependency>
-
-            <!-- 获取系统信息 -->
-            <dependency>
-                <groupId>com.github.oshi</groupId>
-                <artifactId>oshi-core</artifactId>
-                <version>${oshi.version}</version>
-            </dependency>
-
-            <!-- excel工具 -->
-            <dependency>
-                <groupId>org.apache.poi</groupId>
-                <artifactId>poi-ooxml</artifactId>
-                <version>${poi.version}</version>
-            </dependency>
-
-            <!-- Hutool -->
-            <dependency>
-                <groupId>cn.hutool</groupId>
-                <artifactId>hutool-all</artifactId>
-                <version>${hutool.version}</version>
-            </dependency>
-
-            <!-- FastJSON2 -->
-            <dependency>
-                <groupId>com.alibaba.fastjson2</groupId>
-                <artifactId>fastjson2</artifactId>
-                <version>${fastjson.version}</version>
-            </dependency>
-
-            <!-- 腾讯云对象存储SDK -->
-            <dependency>
-                <groupId>com.qcloud</groupId>
-                <artifactId>cos_api</artifactId>
-                <version>${tencent.cos.version}</version>
-            </dependency>
-
-            <!-- 腾讯云API集成SDK -->
-            <dependency>
-                <groupId>com.tencentcloudapi</groupId>
-                <artifactId>tencentcloud-sdk-java</artifactId>
-                <version>${tencentcloud.api.version}</version>
-            </dependency>
-
-            <!-- HTTP请求 -->
-            <dependency>
-                <groupId>com.github.lianjiatech</groupId>
-                <artifactId>retrofit-spring-boot-starter</artifactId>
-                <version>${retrofit.version}</version>
-            </dependency>
-
-            <!-- 第三方登录集成 -->
-<!--            <dependency>-->
-<!--                <groupId>me.zhyd.oauth</groupId>-->
-<!--                <artifactId>JustAuth</artifactId>-->
-<!--                <version>${justauth.version}</version>-->
-<!--            </dependency>-->
-
-            <!-- 第三方登录集成(starter) -->
-            <dependency>
-                <groupId>com.xkcoding.justauth</groupId>
-                <artifactId>justauth-spring-boot-starter</artifactId>
-                <version>${justauth.starter.version}</version>
-            </dependency>
-
-            <!-- GoogleGuava -->
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${guava.version}</version>
-            </dependency>
-
-
-            <!-- 云寄核心模块 -->
-            <dependency>
-                <groupId>cn.totime</groupId>
-                <artifactId>yun-core</artifactId>
-                <version>${totime.version}</version>
-            </dependency>
-
-            <!-- 云寄定时任务模块 -->
-            <dependency>
-                <groupId>cn.totime</groupId>
-                <artifactId>yun-quartz</artifactId>
-                <version>${totime.version}</version>
-            </dependency>
-
-            <!-- 云寄接口模块 -->
-            <dependency>
-                <groupId>cn.totime</groupId>
-                <artifactId>yun-api</artifactId>
-                <version>${totime.version}</version>
-            </dependency>
-
-            <!-- 云寄通用工具模块 -->
-            <dependency>
-                <groupId>cn.totime</groupId>
-                <artifactId>yun-common</artifactId>
-                <version>${totime.version}</version>
-            </dependency>
-
-            <!-- 云寄通用配置模块 -->
-            <dependency>
-                <groupId>cn.totime</groupId>
-                <artifactId>yun-config</artifactId>
-                <version>${totime.version}</version>
-            </dependency>
-
-            <!-- 云寄数据操作模块 -->
-            <dependency>
-                <groupId>cn.totime</groupId>
-                <artifactId>yun-data</artifactId>
-                <version>${totime.version}</version>
-            </dependency>
-
-            <!-- 云寄异步队列模块 -->
-            <dependency>
-                <groupId>cn.totime</groupId>
-                <artifactId>yun-mq</artifactId>
-                <version>${totime.version}</version>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -272,38 +143,30 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <version>3.8.1</version>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <source>11</source>
+                    <target>11</target>
+                    <encoding>UTF-8</encoding>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
+                <configuration>
+                    <mainClass>com.totime.mail.MailApplication</mainClass>
+                    <skip>true</skip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>repackage</id>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
-
-    <!--  <repositories>-->
-    <!--    <repository>-->
-    <!--      <id>public</id>-->
-    <!--      <name>aliyun nexus</name>-->
-    <!--      <url>https://maven.aliyun.com/repository/public</url>-->
-    <!--      <releases>-->
-    <!--        <enabled>true</enabled>-->
-    <!--      </releases>-->
-    <!--    </repository>-->
-    <!--  </repositories>-->
-
-    <!--  <pluginRepositories>-->
-    <!--    <pluginRepository>-->
-    <!--      <id>public</id>-->
-    <!--      <name>aliyun nexus</name>-->
-    <!--      <url>https://maven.aliyun.com/repository/public</url>-->
-    <!--      <releases>-->
-    <!--        <enabled>true</enabled>-->
-    <!--      </releases>-->
-    <!--      <snapshots>-->
-    <!--        <enabled>false</enabled>-->
-    <!--      </snapshots>-->
-    <!--    </pluginRepository>-->
-    <!--  </pluginRepositories>-->
 </project>
