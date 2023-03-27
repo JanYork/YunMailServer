@@ -5,16 +5,16 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * (RoleToPrem)表实体类
+ * 角色与权限中间表(RoleToPrem)表实体类
  *
  * @author JanYork
- * @since 2023-03-26 22:06:50
+ * @since 2023-03-27 22:13:35
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class RoleToPrem extends Model<RoleToPrem> {
     /**
-     * 角色与权限中间表
+     * 角色与权限中间表ID
      */
     private Integer id;
     /**

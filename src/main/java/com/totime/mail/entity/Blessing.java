@@ -5,20 +5,24 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 状态类型表(StateType)表实体类
+ * 愿望祝福表(Blessing)表实体类
  *
  * @author JanYork
- * @since 2023-03-27 22:13:35
+ * @since 2023-03-27 22:13:32
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class StateType extends Model<StateType> {
+public class Blessing extends Model<Blessing> {
     /**
-     * 状态类型ID
+     * 祝福ID
      */
     private Integer id;
     /**
-     * 状态名称
+     * 祝福分类ID
      */
-    private String state;
+    private Integer categoryId;
+    /**
+     * 祝福内容
+     */
+    private String content;
 }

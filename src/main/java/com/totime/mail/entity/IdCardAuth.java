@@ -5,20 +5,28 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 角色表(Role)表实体类
+ * 实名认证表(IdCardAuth)表实体类
  *
  * @author JanYork
- * @since 2023-03-27 22:13:35
+ * @since 2023-03-27 22:13:33
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class Role extends Model<Role> {
+public class IdCardAuth extends Model<IdCardAuth> {
     /**
-     * 角色ID
+     * 实名认证ID
      */
     private Integer id;
     /**
-     * 角色名称
+     * 身份证号
+     */
+    private String idCard;
+    /**
+     * 姓名
      */
     private String name;
+    /**
+     * 其他证明身份图片[JSON]
+     */
+    private String other;
 }

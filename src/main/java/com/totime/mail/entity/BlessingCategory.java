@@ -5,16 +5,20 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * (Remarks)表实体类
+ * 祝福分类表(BlessingCategory)表实体类
  *
  * @author JanYork
- * @since 2023-03-26 17:54:02
+ * @since 2023-03-27 22:13:32
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class Remarks extends Model<Remarks> {
+public class BlessingCategory extends Model<BlessingCategory> {
     /**
-     * 评论ID
+     * 祝福分类ID
      */
     private Integer id;
+    /**
+     * 祝福分类名称
+     */
+    private String name;
 }

@@ -1,14 +1,16 @@
 package com.totime.mail.entity;
 
+import java.util.Date;
+
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * (User)表实体类
+ * 云寄用户表(User)表实体类
  *
  * @author JanYork
- * @since 2023-03-26 17:53:57
+ * @since 2023-03-27 22:13:35
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -37,6 +39,14 @@ public class User extends Model<User> {
      * 用户密码
      */
     private String pwd;
+    /**
+     * 是否实名认证
+     */
+    private Integer authRealName;
+    /**
+     * 用户创建时间
+     */
+    private Date createTime;
     /**
      * 用户状态
      */

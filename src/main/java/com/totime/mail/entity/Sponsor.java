@@ -5,10 +5,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * (Sponsor)表实体类
+ * 赞助信息表(Sponsor)表实体类
  *
  * @author JanYork
- * @since 2023-03-26 17:54:00
+ * @since 2023-03-27 22:13:35
  */
 @EqualsAndHashCode(callSuper = true)
 @Data

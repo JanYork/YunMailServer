@@ -7,10 +7,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * (Mail)表实体类
+ * 邮件任务表(Mail)表实体类
  *
  * @author JanYork
- * @since 2023-03-26 17:54:03
+ * @since 2023-03-27 22:13:34
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -31,6 +31,10 @@ public class Mail extends Model<Mail> {
      * 邮件内容
      */
     private String mailContent;
+    /**
+     * 邮件创建时间
+     */
+    private Date mailCreateTime;
     /**
      * 发往地址
      */

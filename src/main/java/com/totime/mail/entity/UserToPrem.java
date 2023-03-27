@@ -4,19 +4,17 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.io.Serializable;
-
 /**
- * (UserToPrem)表实体类
+ * 用户与权限中间表(UserToPrem)表实体类
  *
  * @author JanYork
- * @since 2023-03-26 22:24:56
+ * @since 2023-03-27 22:13:35
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class UserToPrem extends Model<UserToPrem> {
     /**
-     * 用户与权限中间表
+     * 用户与权限中间表ID
      */
     private Integer id;
     /**

@@ -7,10 +7,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * (Letter)表实体类
+ * 时光信件表(Letter)表实体类
  *
  * @author JanYork
- * @since 2023-03-26 17:54:04
+ * @since 2023-03-27 22:13:34
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -31,6 +31,10 @@ public class Letter extends Model<Letter> {
      * 信件内容
      */
     private String letterContent;
+    /**
+     * 信件创建时间
+     */
+    private Date letterCreateTime;
     /**
      * 信件是否公开
      */

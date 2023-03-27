@@ -5,20 +5,24 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 状态类型表(StateType)表实体类
+ * 全局商品表(Goods)表实体类
  *
  * @author JanYork
- * @since 2023-03-27 22:13:35
+ * @since 2023-03-27 22:13:33
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class StateType extends Model<StateType> {
+public class Goods extends Model<Goods> {
     /**
-     * 状态类型ID
+     * 商品ID
      */
     private Integer id;
     /**
-     * 状态名称
+     * 商品名称
      */
-    private String state;
+    private String goodsName;
+    /**
+     * 商品价格
+     */
+    private Double goodsPrice;
 }
