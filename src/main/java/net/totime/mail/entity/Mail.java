@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import net.totime.mail.enums.MailState;
+import net.totime.mail.enums.MailUseServer;
 
 /**
  * 邮件任务表(Mail)表实体类
@@ -45,7 +47,7 @@ public class Mail extends Model<Mail> {
     /**
      * 邮件是否公开
      */
-    private Integer isPublic;
+    private Boolean isPublic;
     /**
      * 邮件发送时间
      */
@@ -57,9 +59,9 @@ public class Mail extends Model<Mail> {
     /**
      * 邮件发送使用的服务
      */
-    private Integer useServe;
+    private MailUseServer useServe;
     /**
      * 邮件发送状态
      */
-    private Integer state;
+    private MailState state;
 }

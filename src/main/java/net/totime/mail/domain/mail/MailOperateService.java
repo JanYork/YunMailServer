@@ -3,8 +3,9 @@ package net.totime.mail.domain.mail;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import net.totime.mail.dto.MailDTO;
 import net.totime.mail.entity.Mail;
-import net.totime.mail.response.ApiResponse;
+import net.totime.mail.enums.MailState;
 import net.totime.mail.service.MailService;
 import net.totime.mail.service.UserService;
 import net.totime.mail.util.IdUtils;
@@ -33,6 +34,7 @@ public class MailOperateService {
     private UserService userService;
     private static final String GO_TO_TIME = "go_to_datetime";
     private static final String USER_ID_COLUMN = "user_id";
+    private static final String USER_SERVER_ENUM = "TENCENT";
 
     /**
      * 分页查询邮件
@@ -85,6 +87,25 @@ public class MailOperateService {
     }
 
     /**
+     * 分页查询允许公开展示的邮件
+     *
+     * @param page 当前页面
+     * @param size 分页大小
+     * @return {@link List}<{@link Mail}> 邮件列表
+     */
+    public List<MailVO> queryMailByPublic(Integer page, Integer size) {
+        return mailService.page(
+                        new Page<>(page, size),
+                        new QueryWrapper<Mail>().eq("is_public", 0))
+                .getRecords().stream().map(mail -> {
+                    MailVO mailVO = new MailVO();
+                    BeanUtils.copyProperties(mail, mailVO);
+                    mailVO.setUserName(userService.getById(mail.getUserId()).getName());
+                    return mailVO;
+                }).collect(Collectors.toList());
+    }
+
+    /**
      * 根据邮件ID查询邮件
      *
      * @param id 邮件id
@@ -120,16 +141,16 @@ public class MailOperateService {
      * @param mailDTO 邮件信息
      * @return {@link Boolean} 是否添加成功
      */
-    public Boolean addMail(Mail mailDTO) {
+    public Boolean addMail(MailDTO mailDTO) {
         Mail mail = new Mail();
         BeanUtils.copyProperties(mailDTO, mail);
         mail.setUserId(Long.parseLong(StpUtil.getLoginId().toString()));
         mail.setMailId(IdUtils.getMailId());
         mail.setMailCreateTime(new Date());
         //如果使用腾讯云代发，则设置状态为待支付
-        if (mail.getUseServe() == 1) {
-            mail.setState(3);
-            //TODO: 调用支付订单创建
+        if(USER_SERVER_ENUM.equals(mail.getUseServe().name())){
+            mail.setState(MailState.REJECT);
+            //TODO:调用支付创建订单
         }
         return mailService.save(mail);
     }

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.Date;
 import java.util.Optional;
 
@@ -68,7 +69,7 @@ public class LoginApi {
      */
     @RequestMapping("/register")
     @ApiOperation(value = "注册云寄账户", notes = "注册强依赖于手机号")
-    public ApiResponse<String> register(@RequestBody UserDTO userDTO) {
+    public ApiResponse<String> register(@Valid @RequestBody UserDTO userDTO) {
         if (!userDTO.getCode().equals(verify.getCode(userDTO.getPhone()))) {
             return ApiResponse.fail("验证码错误");
         }

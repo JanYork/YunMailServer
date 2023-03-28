@@ -41,7 +41,7 @@ public class MailVO implements Serializable {
     /**
      * 邮件是否公开
      */
-    private Integer isPublic;
+    private Boolean isPublic;
     /**
      * 邮件发送时间
      */
