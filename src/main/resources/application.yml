@@ -5,11 +5,24 @@ server:
 ## Spring Cloud Alibaba RocketMQ 文档：https://github.com/alibaba/spring-cloud-alibaba/blob/master/spring-cloud-alibaba-docs/src/main/asciidoc-zh/rocketmq.adoc
 ## RocketMQ 帮助文档：https://help.aliyun.com/product/29530.html
 spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   datasource:
     username: root
     password: 123456
     url: jdbc:mysql://localhost:3306/yun?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
     driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    timeout: 5000
+    lettuce:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
 sa-token:
   token-name: yun
   timeout: 2592000

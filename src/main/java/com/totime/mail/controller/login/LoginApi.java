@@ -7,12 +7,25 @@ import cn.dev33.satoken.stp.StpLogic;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.github.xiaoymin.knife4j.annotations.ApiSupport;
+import com.totime.mail.domain.VerifyService;
+import com.totime.mail.dto.UserDTO;
 import com.totime.mail.entity.User;
+import com.totime.mail.response.ApiResponse;
 import com.totime.mail.service.impl.UserServiceImpl;
+import com.totime.mail.util.BcryptUtil;
+import com.totime.mail.util.RedisUtil;
+import com.totime.mail.util.SnowflakeUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.BeanUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.Date;
+import java.util.Optional;
 
 /**
  * @author JanYork
@@ -22,60 +35,59 @@ import javax.annotation.Resource;
  * @since 1.0.0
  */
 @RestController
+@Api(tags = "云寄注册与登录接口")
+@ApiSupport(author = "JanYork")
 public class LoginApi {
     @Resource
     private UserServiceImpl userService;
 
+    @Resource
+    private VerifyService verify;
+
     /**
-     * 登录
+     * 云寄登录接口
      *
      * @param username 用户名
      * @param password 密码
-     * @return 登录结果
+     * @return {@link ApiResponse}<{@link String}> 登录结果
      */
     @RequestMapping("/login")
-    public String login(String username, String password) {
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("name", username);
-        User user = userService.getOne(queryWrapper);
-        if (user == null) {
-            return "用户不存在";
+    @ApiOperation(value = "登录云寄账户", notes = "默认密码和用户名登录")
+    public ApiResponse<String> login(String username, String password) {
+        User user = userService.getOne(
+                new QueryWrapper<User>().eq("name", username)
+        );
+        Optional.ofNullable(user).orElseThrow(() -> new RuntimeException("用户不存在"));
+        if (!BcryptUtil.verify(password, user.getPwd())) {
+            throw new RuntimeException("密码错误");
         }
-        if (!user.getPwd().equals(password)) {
-            return "密码错误";
-        }
-        //登录
         StpUtil.login(user.getId());
-        return "登录成功";
+        return ApiResponse.ok("登录成功");
     }
+
 
     /**
-     * 注册
+     * 注册云寄账户
      *
-     * @param username 用户名
-     * @param password 密码
-     * @return 注册结果
+     * @param userDTO 用户信息
+     * @return {@link ApiResponse}<{@link String}> 注册结果
      */
     @RequestMapping("/register")
-    public String register(String username, String password) {
-        return "注册成功";
-    }
-
-    @RequestMapping("/ltest")
-    @SaCheckLogin
-    public String test() {
-        return "测试成功";
-    }
-
-    @RequestMapping("/open/test")
-    @SaCheckPermission("open.tes")
-    public String test1() {
-        return "测试成功";
-    }
-
-    @RequestMapping("/test")
-    @SaCheckRole("admi")
-    public String test2() {
-        return "测试成功";
+    @ApiOperation(value = "注册云寄账户", notes = "注册强依赖于手机号")
+    public ApiResponse<String> register(@RequestBody UserDTO userDTO) {
+        if (!userDTO.getCode().equals(verify.getCode(userDTO.getPhone()))) {
+            return ApiResponse.fail("验证码错误");
+        }
+        String gensalt = BcryptUtil.gensalt();
+        User user = new User();
+        BeanUtils.copyProperties(userDTO, user);
+        user.setId(SnowflakeUtil.getSnowflakeId());
+        user.setCreateTime(new Date());
+        user.setPwd(BcryptUtil.encrypt(userDTO.getPwd(), gensalt));
+        user.setSalt(gensalt);
+        if (!userService.save(user)) {
+            return ApiResponse.fail("注册失败").message("系统错误");
+        }
+        return ApiResponse.ok("注册成功");
     }
 }

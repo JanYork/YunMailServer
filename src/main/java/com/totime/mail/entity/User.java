@@ -2,6 +2,7 @@ package com.totime.mail.entity;
 
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,6 +23,7 @@ public class User extends Model<User> {
     /**
      * 用户昵称
      */
+    @TableField("`name`")
     private String name;
     /**
      * 用户头像
@@ -51,4 +53,8 @@ public class User extends Model<User> {
      * 用户状态
      */
     private Integer state;
+    /**
+     * 用户盐值
+     */
+    private String salt;
 }
