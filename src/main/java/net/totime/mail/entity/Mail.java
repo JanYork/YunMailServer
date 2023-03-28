@@ -53,7 +53,7 @@ public class Mail extends Model<Mail> {
     /**
      * 邮件是否发给自己
      */
-    private Integer isYourself;
+    private Boolean isYourself;
     /**
      * 邮件发送使用的服务
      */

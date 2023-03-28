@@ -23,8 +23,6 @@ import java.util.List;
 public class MailApi {
     @Resource
     private MailOperateService mos;
-    @Resource
-    private MailService mailService;
     private static final Integer SIZE = 8;
 
     /**
@@ -69,5 +67,15 @@ public class MailApi {
     @PostMapping("/queryById")
     public ApiResponse<MailVO> queryMailDetail(@PathParam("id") Long id) {
         return ApiResponse.ok(mos.queryMailById(id));
+    }
+
+    /**
+     * 新增邮件
+     * @param mailDTO 邮件信息
+     * @return {@link ApiResponse}<{@link Mail}> 邮件信息
+     */
+    @PostMapping("/add")
+    public ApiResponse<Boolean> addMail(@RequestBody Mail mailDTO) {
+        return ApiResponse.ok(mos.addMail(mailDTO));
     }
 }
