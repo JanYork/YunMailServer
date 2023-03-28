@@ -30,4 +30,11 @@ sa-token:
   is-concurrent: true
   is-share: true
   token-style: random-64
-  is-log: true
+  is-log: false
+  is-print: off
+mybatis-plus:
+  global-config.banner: false
+logging:
+  level:
+    org.springframework: error
+    net.totime.mail: error
