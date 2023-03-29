@@ -38,4 +38,7 @@ build/
 **/application.yml
 src/main/resources/application.yml
 application.yml!/src/main/resources/application.yml
-/src/main/resources/cert/
+/src/main/resources/cert/**
+/src/main/resources/cert/*.pem
+/src/main/resources/cert/*.cer
+/src/main/resources/cert/*.p12
