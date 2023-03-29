@@ -1,5 +1,6 @@
 package net.totime.mail;
 
+import com.alicp.jetcache.anno.config.EnableMethodCache;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -12,6 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @since 1.0.0
  */
 @SpringBootApplication
+@EnableMethodCache(basePackages = "net.totime.mail")
 public class MailApplication {
     public static void main(String[] args) {
         SpringApplication.run(MailApplication.class, args);

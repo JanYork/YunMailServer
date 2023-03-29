@@ -2,6 +2,12 @@ package net.totime.mail.controller;
 
 import cn.dev33.satoken.exception.*;
 import com.aliyuncs.exceptions.ClientException;
+import com.baomidou.kaptcha.exception.KaptchaException;
+import com.baomidou.kaptcha.exception.KaptchaIncorrectException;
+import com.baomidou.kaptcha.exception.KaptchaNotFoundException;
+import com.baomidou.kaptcha.exception.KaptchaTimeoutException;
+import net.totime.mail.exception.GloballyUniversalException;
+import net.totime.mail.exception.RateLimiterException;
 import net.totime.mail.response.ApiResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -40,10 +46,27 @@ public class GlobalExceptionHandler {
         return new ApiResponse<String>().code(500).message("ali sms is error").data("阿里云短信异常");
     }
 
+    /**
+     * 参数校验异常处理程序
+     *
+     * @param e 异常
+     * @return {@link ApiResponse}<{@link String}> 返回错误结果
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ApiResponse<String> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException e) {
         String msg = Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage();
         return new ApiResponse<String>().code(500).message(msg).data("参数校验异常");
+    }
+
+    /**
+     * 限流器异常处理程序
+     *
+     * @param e 异常
+     * @return {@link ApiResponse}<{@link String}>
+     */
+    @ExceptionHandler(RateLimiterException.class)
+    public ApiResponse<String> rateLimiterExceptionHandler(RateLimiterException e) {
+        return new ApiResponse<String>().code(500).message(e.getMsg()).data("限流器异常");
     }
 
     /**
@@ -69,7 +92,6 @@ public class GlobalExceptionHandler {
         e.printStackTrace();
         return ApiResponse.fail("缺少权限：" + e.getPermission());
     }
-
 
     /**
      * 缺少角色异常处理程序
@@ -117,6 +139,36 @@ public class GlobalExceptionHandler {
     public ApiResponse<String> handlerException(NotBasicAuthException e) {
         e.printStackTrace();
         return ApiResponse.fail(e.getMessage());
+    }
+
+    /**
+     * 全局通用异常处理程序
+     *
+     * @param e 异常
+     * @return {@link ApiResponse}<{@link String}> 返回通用错误结果
+     */
+    @ExceptionHandler(GloballyUniversalException.class)
+    public ApiResponse<String> globallyUniversalExceptionHandler(GloballyUniversalException e) {
+        return new ApiResponse<String>().code(e.getCode()).message(e.getMsg()).data(e.getMsg());
+    }
+
+    /**
+     * Kaptcha异常处理程序
+     *
+     * @param kaptchaException kaptcha异常
+     * @return {@link ApiResponse}<{@link String}> 返回错误结果
+     */
+    @ExceptionHandler(value = KaptchaException.class)
+    public ApiResponse<String> kaptchaExceptionHandler(KaptchaException kaptchaException) {
+        if (kaptchaException instanceof KaptchaIncorrectException) {
+            return ApiResponse.fail("验证码不正确");
+        } else if (kaptchaException instanceof KaptchaNotFoundException) {
+            return ApiResponse.fail("验证码未找到");
+        } else if (kaptchaException instanceof KaptchaTimeoutException) {
+            return ApiResponse.fail("验证码已过期");
+        } else {
+            return ApiResponse.fail("验证码渲染错误");
+        }
     }
 
     /**

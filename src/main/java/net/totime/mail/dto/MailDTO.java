@@ -6,6 +6,7 @@ import net.totime.mail.annotation.TimeDistance;
 import net.totime.mail.enums.MailUseServer;
 
 import javax.validation.constraints.*;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 /**
@@ -45,7 +46,7 @@ public class MailDTO {
      */
     @NotNull
     @Future(message = "发送时间必须大于当前时间")
-    @TimeDistance(distance = 1)
+    @TimeDistance(distance = 5, unit = ChronoUnit.DAYS)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date goToTime;
     /**

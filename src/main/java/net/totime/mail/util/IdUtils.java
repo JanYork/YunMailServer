@@ -16,4 +16,13 @@ public class IdUtils {
     public static String getMailId() {
         return "mail" + System.currentTimeMillis();
     }
+
+    /**
+     * 生成信件id
+     *
+     * @return {@link String}
+     */
+    public static String getLetterId() {
+        return "letter" + System.currentTimeMillis();
+    }
 }

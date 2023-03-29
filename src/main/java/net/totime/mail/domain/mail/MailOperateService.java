@@ -1,6 +1,8 @@
 package net.totime.mail.domain.mail;
 
 import cn.dev33.satoken.stp.StpUtil;
+import com.alicp.jetcache.anno.CacheInvalidate;
+import com.alicp.jetcache.anno.Cached;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import net.totime.mail.dto.MailDTO;
@@ -44,8 +46,15 @@ public class MailOperateService {
      * @param size 分页大小
      * @return {@link List}<{@link Mail}> 邮件列表
      */
-    public List<Mail> queryMail(Integer page, Integer size) {
-        return mailService.page(new Page<>(page, size)).getRecords();
+    @Cached(name = "mail:", key = "'page_'+#page+#size", expire = 3600)
+    public List<MailVO> queryMail(Integer page, Integer size) {
+        return mailService.page(new Page<>(page, size))
+                .getRecords().stream().map(mail -> {
+                    MailVO mailVO = new MailVO();
+                    BeanUtils.copyProperties(mail, mailVO);
+                    mailVO.setUserName(userService.getById(mail.getUserId()).getName());
+                    return mailVO;
+                }).collect(Collectors.toList());
     }
 
 
@@ -56,6 +65,7 @@ public class MailOperateService {
      * @param size 分页大小
      * @return {@link List}<{@link Mail}> 邮件列表
      */
+    @Cached(name = "mail:", key = "'after_now_'+#page+#size", expire = 3600)
     public List<MailVO> queryMailAfterNow(Integer page, Integer size) {
         return mailService.page(
                         new Page<>(page, size),
@@ -75,6 +85,7 @@ public class MailOperateService {
      * @param size 分页大小
      * @return {@link List}<{@link Mail}> 邮件列表
      */
+    @Cached(name = "mail:", key = "'before_now_'+#page+#size", expire = 3600)
     public List<MailVO> queryMailBeforeNow(Integer page, Integer size) {
         return mailService.page(
                         new Page<>(page, size),
@@ -94,10 +105,11 @@ public class MailOperateService {
      * @param size 分页大小
      * @return {@link List}<{@link Mail}> 邮件列表
      */
+    @Cached(name = "mail:", key = "'public_'+#page+#size", expire = 3600)
     public List<MailVO> queryMailByPublic(Integer page, Integer size) {
         return mailService.page(
                         new Page<>(page, size),
-                        new QueryWrapper<Mail>().eq("is_public", 0))
+                        new QueryWrapper<Mail>().eq("is_public", true))
                 .getRecords().stream().map(mail -> {
                     MailVO mailVO = new MailVO();
                     BeanUtils.copyProperties(mail, mailVO);
@@ -112,6 +124,7 @@ public class MailOperateService {
      * @param id 邮件id
      * @return {@link Mail} 邮件详情
      */
+    @Cached(name = "mail:", key = "'id_'+#id", expire = 3600)
     public MailVO queryMailById(String id) {
         Mail mail = mailService.getById(id);
         Optional.ofNullable(mail).orElseThrow(() -> new RuntimeException("邮件不存在"));
@@ -124,9 +137,12 @@ public class MailOperateService {
     /**
      * 根据用户ID查询邮件
      *
-     * @param id 用户id
-     * @return {@link Mail} 邮件详情
+     * @param id   用户id
+     * @param page 当前页面
+     * @param size 分页大小
+     * @return {@link List}<{@link MailVO}> 邮件列表
      */
+    @Cached(name = "mail:", key = "'user_id_'+#id+#page+#size", expire = 3600)
     public List<MailVO> queryMailByUserId(Long id, Integer page, Integer size) {
         return mailService.page(
                 new Page<>(page, size),
@@ -145,6 +161,7 @@ public class MailOperateService {
      * @param mail 发往邮箱
      * @return {@link Mail} 邮件详情
      */
+    @Cached(name = "mail:", key = "'go_to_'+#mail+#page+#size", expire = 3600)
     public List<MailVO> queryMailByGoToMail(String mail, Integer page, Integer size) {
         return mailService.page(
                 new Page<>(page, size),
@@ -163,9 +180,11 @@ public class MailOperateService {
      * @param mailDTO 邮件信息
      * @return {@link Boolean} 是否添加成功
      */
+    @CacheInvalidate(name = "mail:")
     public Boolean addMail(MailDTO mailDTO) {
         Mail mail = new Mail();
         BeanUtils.copyProperties(mailDTO, mail);
+
         mail.setUserId(Long.parseLong(StpUtil.getLoginId().toString()));
         mail.setMailId(IdUtils.getMailId());
         mail.setMailCreateTime(new Date());
