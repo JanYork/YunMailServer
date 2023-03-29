@@ -2,6 +2,8 @@ package net.totime.mail.vo;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
+import net.totime.mail.enums.MailState;
+import net.totime.mail.enums.MailUseServer;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -49,15 +51,15 @@ public class MailVO implements Serializable {
     /**
      * 邮件是否发给自己
      */
-    private Integer isYourself;
+    private Boolean isYourself;
     /**
      * 邮件发送使用的服务
      */
-    private Integer useServe;
+    private MailUseServer useServe;
     /**
      * 邮件发送状态
      */
-    private Integer state;
+    private MailState state;
     /**
      * 用户名称
      */

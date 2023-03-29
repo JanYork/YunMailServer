@@ -1,6 +1,9 @@
 package net.totime.mail.controller.mail;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
+import com.github.xiaoymin.knife4j.annotations.ApiSupport;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import net.totime.mail.domain.mail.MailOperateService;
 import net.totime.mail.dto.MailDTO;
 import net.totime.mail.entity.Mail;
@@ -10,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
-import javax.websocket.server.PathParam;
 import java.util.List;
 
 /**
@@ -22,6 +24,8 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/mail")
+@Api(tags = "云寄注册与登录接口")
+@ApiSupport(author = "JanYork")
 public class MailApi {
     @Resource
     private MailOperateService mos;
@@ -34,6 +38,7 @@ public class MailApi {
      * @return {@link List}<{@link Mail}> 邮件列表
      */
     @GetMapping("/query/{page}")
+    @ApiOperation(value = "分页查询邮件", notes = "分页以8条/页为单位")
     public List<Mail> queryMail(@PathVariable Integer page) {
         return mos.queryMail(page, SIZE);
     }
@@ -45,6 +50,7 @@ public class MailApi {
      * @return {@link List}<{@link Mail}> 邮件列表
      */
     @GetMapping("/queryAfterNow/{page}")
+    @ApiOperation(value = "查询当前时间之后的邮件", notes = "分页以8条/页为单位")
     public List<MailVO> queryMailAfterNow(@PathVariable Integer page) {
         return mos.queryMailAfterNow(page, SIZE);
     }
@@ -56,6 +62,7 @@ public class MailApi {
      * @return {@link List}<{@link Mail}> 邮件列表
      */
     @GetMapping("/queryBeforeNow/{page}")
+    @ApiOperation(value = "查询当前时间之前的邮件", notes = "分页以8条/页为单位")
     public List<MailVO> queryMailBeforeNow(@PathVariable Integer page) {
         return mos.queryMailBeforeNow(page, SIZE);
     }
@@ -66,8 +73,9 @@ public class MailApi {
      * @param id 邮件id
      * @return {@link Mail} 邮件详情
      */
-    @PostMapping("/queryById")
-    public ApiResponse<MailVO> queryMailDetail(@PathParam("id") Long id) {
+    @RequestMapping ("/queryById")
+    @ApiOperation(value = "根据邮件ID查询邮件", notes = "邮件ID与信件ID均唯一")
+    public ApiResponse<MailVO> queryMailDetail(@RequestParam("id") String id) {
         return ApiResponse.ok(mos.queryMailById(id));
     }
 
@@ -77,9 +85,22 @@ public class MailApi {
      * @param id 用户id
      * @return {@link Mail} 邮件详情
      */
-    @PostMapping("/queryByUserId")
-    public ApiResponse<List<MailVO>> queryMailByUserId(@PathParam("id") Long id) {
-        return ApiResponse.ok(mos.queryMailByUserId(id));
+    @RequestMapping  ("/queryByUserId/{page}")
+    @ApiOperation(value = "根据用户ID查询邮件", notes = "分页以8条/页为单位")
+    public ApiResponse<List<MailVO>> queryMailByUserId(@RequestParam("id") Long id, @PathVariable Integer page) {
+        return ApiResponse.ok(mos.queryMailByUserId(id, page, SIZE));
+    }
+
+    /**
+     * 根据发往邮箱查询邮件
+     *
+     * @param mail 发往邮箱
+     * @return {@link Mail} 邮件详情
+     */
+    @RequestMapping  ("/queryByGoToMail/{page}")
+    @ApiOperation(value = "根据发往邮箱查询邮件", notes = "分页以8条/页为单位")
+    public ApiResponse<List<MailVO>> queryMailByGoToMail(@RequestParam("mail") String mail, @PathVariable Integer page) {
+        return ApiResponse.ok(mos.queryMailByGoToMail(mail, page, SIZE));
     }
 
     /**
@@ -89,6 +110,7 @@ public class MailApi {
      * @return {@link List}<{@link Mail}> 邮件列表
      */
     @GetMapping("/queryPublic/{page}")
+    @ApiOperation(value = "分页查询允许公开展示的邮件", notes = "分页以8条/页为单位")
     public List<MailVO> queryPublicMail(@PathVariable Integer page) {
         return mos.queryMailByPublic(page, SIZE);
     }
@@ -101,6 +123,7 @@ public class MailApi {
      */
     @PostMapping("/add")
     @SaCheckLogin
+    @ApiOperation(value = "新增邮件", notes = "此接口会自动绑定用户，强制要求登录")
     public ApiResponse<Boolean> addMail(@Valid @RequestBody MailDTO mailDTO) {
         return ApiResponse.ok(mos.addMail(mailDTO));
     }

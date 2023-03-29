@@ -12,27 +12,23 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * @see Enum
  * @since 1.0.0
  */
-public enum MailState {
+public enum LetterState {
     /**
      * 未发送
      */
-    NOT_SEND(0, "未发出"),
+    NOT_SEND(0, "未发送"),
     /**
      * 已发送
      */
-    SEND(1, "已发出"),
+    SEND(1, "已发送"),
     /**
-     * 已拒收
+     * 已删除
      */
     DELETE(2, "已拒收"),
     /**
-     * 未支付
+     * 已拒收
      */
-    REJECT(3, "未支付"),
-    /**
-     * 已收取
-     */
-    RECEIVE(4, "已收取");
+    REJECT(3, "未支付");
     @EnumValue
     private Integer id;
     @JsonValue
@@ -54,7 +50,7 @@ public enum MailState {
         this.name = name;
     }
 
-    MailState(Integer id, String name) {
+    LetterState(Integer id, String name) {
         this.id = id;
         this.name = name;
     }

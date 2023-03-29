@@ -32,9 +32,10 @@ public class MailOperateService {
     private MailService mailService;
     @Resource
     private UserService userService;
-    private static final String GO_TO_TIME = "go_to_datetime";
+    private static final String GO_TO_TIME = "go_to_time";
     private static final String USER_ID_COLUMN = "user_id";
     private static final String USER_SERVER_ENUM = "TENCENT";
+    private static final String MAIL_CONTENT = "go_to";
 
     /**
      * 分页查询邮件
@@ -111,7 +112,7 @@ public class MailOperateService {
      * @param id 邮件id
      * @return {@link Mail} 邮件详情
      */
-    public MailVO queryMailById(Long id) {
+    public MailVO queryMailById(String id) {
         Mail mail = mailService.getById(id);
         Optional.ofNullable(mail).orElseThrow(() -> new RuntimeException("邮件不存在"));
         MailVO mailVO = new MailVO();
@@ -126,11 +127,32 @@ public class MailOperateService {
      * @param id 用户id
      * @return {@link Mail} 邮件详情
      */
-    public List<MailVO> queryMailByUserId(Long id) {
-        return mailService.list(new QueryWrapper<Mail>().eq(USER_ID_COLUMN, id)).stream().map(mail -> {
+    public List<MailVO> queryMailByUserId(Long id, Integer page, Integer size) {
+        return mailService.page(
+                new Page<>(page, size),
+                new QueryWrapper<Mail>().eq(USER_ID_COLUMN, id)
+        ).getRecords().stream().map(mail -> {
             MailVO mailVO = new MailVO();
             BeanUtils.copyProperties(mail, mailVO);
             mailVO.setUserName(userService.getById(mail.getUserId()).getName());
+            return mailVO;
+        }).collect(Collectors.toList());
+    }
+
+    /**
+     * 根据发往邮箱查询邮件
+     *
+     * @param mail 发往邮箱
+     * @return {@link Mail} 邮件详情
+     */
+    public List<MailVO> queryMailByGoToMail(String mail, Integer page, Integer size) {
+        return mailService.page(
+                new Page<>(page, size),
+                new QueryWrapper<Mail>().eq(MAIL_CONTENT, mail)
+        ).getRecords().stream().map(mail1 -> {
+            MailVO mailVO = new MailVO();
+            BeanUtils.copyProperties(mail1, mailVO);
+            mailVO.setUserName(userService.getById(mail1.getUserId()).getName());
             return mailVO;
         }).collect(Collectors.toList());
     }
@@ -148,7 +170,7 @@ public class MailOperateService {
         mail.setMailId(IdUtils.getMailId());
         mail.setMailCreateTime(new Date());
         //如果使用腾讯云代发，则设置状态为待支付
-        if(USER_SERVER_ENUM.equals(mail.getUseServe().name())){
+        if (USER_SERVER_ENUM.equals(mail.getUseServe().name())) {
             mail.setState(MailState.REJECT);
             //TODO:调用支付创建订单
         }

@@ -7,10 +7,10 @@ import net.totime.mail.service.LetterTypeService;
 import org.springframework.stereotype.Service;
 
 /**
- * (LetterType)表服务实现类
+ * 信件类型表(LetterType)表服务实现类
  *
  * @author JanYork
- * @since 2023-03-26 17:54:03
+ * @since 2023-03-29 10:46:48
  */
 @Service
 public class LetterTypeServiceImpl extends ServiceImpl<LetterTypeMapper, LetterType> implements LetterTypeService {

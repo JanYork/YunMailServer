@@ -70,7 +70,7 @@ public class LoginApi {
     @RequestMapping("/register")
     @ApiOperation(value = "注册云寄账户", notes = "注册强依赖于手机号")
     public ApiResponse<String> register(@Valid @RequestBody UserDTO userDTO) {
-        if (!userDTO.getCode().equals(verify.getCode(userDTO.getPhone()))) {
+        if (!verify.verifyCode(userDTO.getPhone(), userDTO.getCode())) {
             return ApiResponse.fail("验证码错误");
         }
         String gensalt = BcryptUtil.gensalt();

@@ -1,12 +1,10 @@
-package net.totime.mail.entity;
-
-import java.util.Date;
+package net.totime.mail.vo;
 
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import net.totime.mail.enums.LetterState;
+
+import java.util.Date;
 
 /**
  * 时光信件表(Letter)表实体类
@@ -14,10 +12,8 @@ import net.totime.mail.enums.LetterState;
  * @author JanYork
  * @since 2023-03-27 22:13:34
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class Letter extends Model<Letter> {
-    private static final long serialVersionUID = 8349360044676853889L;
+public class LetterVO {
     /**
      * 信件唯一ID
      */

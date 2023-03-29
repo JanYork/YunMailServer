@@ -1,5 +1,7 @@
-package net.totime.mail.controller;
+package net.totime.mail.controller.letter;
 
+import com.github.xiaoymin.knife4j.annotations.ApiSupport;
+import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/")
+@Api(tags = "云寄信件服务接口")
+@ApiSupport(author = "JanYork")
 public class LetterApi {
 
 }

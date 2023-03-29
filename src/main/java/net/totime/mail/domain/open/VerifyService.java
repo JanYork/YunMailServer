@@ -4,6 +4,7 @@ import net.totime.mail.util.RedisUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -27,7 +28,7 @@ public class VerifyService {
      * @param phone 手机号
      */
     public void cacheCode(String phone) {
-        rut.set(CODE+phone, this.createCode(CODE_LENGTH), CODE_TIME, TimeUnit.SECONDS);
+        rut.set(CODE + phone, this.createCode(CODE_LENGTH), CODE_TIME, TimeUnit.SECONDS);
         //TODO: 发送验证码
     }
 
@@ -38,7 +39,7 @@ public class VerifyService {
      * @return 验证码
      */
     public String getCode(String phone) {
-        return rut.get(CODE+phone).toString();
+        return rut.get(CODE + phone).toString();
     }
 
     /**
@@ -53,5 +54,24 @@ public class VerifyService {
             code.append((int) (Math.random() * 10));
         }
         return code.toString();
+    }
+
+    /**
+     * 验证验证码
+     *
+     * @param phone 手机号
+     * @param code  验证码
+     * @return {@link Boolean} 是否正确
+     */
+    public Boolean verifyCode(String phone, String code) {
+        Optional<Object> optional = Optional.ofNullable(rut.get(CODE + phone));
+        if (optional.isEmpty()) {
+            return false;
+        }
+        boolean e = code.equals(optional.get().toString());
+        if (e) {
+            rut.del(CODE + phone);
+        }
+        return e;
     }
 }
