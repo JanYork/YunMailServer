@@ -11,8 +11,9 @@ import java.util.Date;
 /**
  * @author JanYork
  * @version 1.0.0
- * @date 2023/03/28
+ * @date 2023/04/01
  * @description 邮件视图数据实体
+ * @see Serializable
  * @since 1.0.0
  */
 @Data

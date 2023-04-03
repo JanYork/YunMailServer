@@ -25,7 +25,6 @@ import javax.annotation.Resource;
 public class KaptchaApi {
     @Resource
     private Kaptcha kaptcha;
-
     /**
      * 有效时长
      */
@@ -56,7 +55,6 @@ public class KaptchaApi {
         //default timeout 900 seconds
         return ApiResponse.ok(kaptcha.validate(code));
     }
-
 
     /**
      * 有效时长验证

@@ -4,16 +4,20 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import net.totime.mail.enums.LetterState;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 时光信件表(Letter)表实体类
- *
  * @author JanYork
- * @since 2023-03-27 22:13:34
+ * @version 1.0.0
+ * @date 2023/04/01
+ * @description 信件视图数据实体
+ * @see Serializable
+ * @since 1.0.0
  */
 @Data
-public class LetterVO {
+public class LetterVO implements Serializable {
+    private static final long serialVersionUID = 3903138177494743789L;
     /**
      * 信件唯一ID
      */

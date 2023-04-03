@@ -17,11 +17,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class SpringBeanContext implements ApplicationContextAware {
 
-    private ApplicationContext context;
+    private static ApplicationContext context;
 
     @Override
     public void setApplicationContext(@NonNull ApplicationContext context) throws BeansException {
-        this.context = context;
+        SpringBeanContext.context = context;
     }
 
     /**
@@ -29,7 +29,7 @@ public class SpringBeanContext implements ApplicationContextAware {
      *
      * @return 上下文对象
      */
-    public ApplicationContext getContext() {
+    public static ApplicationContext getContext() {
         return context;
     }
 
@@ -39,7 +39,7 @@ public class SpringBeanContext implements ApplicationContextAware {
      * @param beanName bean名称
      * @return bean对象
      */
-    public Object getBean(String beanName) {
+    public static Object getBean(String beanName) {
         return context.getBean(beanName);
     }
 
@@ -51,7 +51,7 @@ public class SpringBeanContext implements ApplicationContextAware {
      * @param <T>      bean类型
      * @return bean对象
      */
-    public <T> T getBean(String beanName, Class<T> clazz) {
+    public static  <T> T getBean(String beanName, Class<T> clazz) {
         return context.getBean(beanName, clazz);
     }
 
@@ -62,7 +62,7 @@ public class SpringBeanContext implements ApplicationContextAware {
      * @param <T>   bean类型
      * @return bean对象
      */
-    public <T> T getBean(Class<T> clazz) {
+    public static  <T> T getBean(Class<T> clazz) {
         return context.getBean(clazz);
     }
 }

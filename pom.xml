@@ -39,11 +39,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-pool2</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
@@ -61,6 +56,12 @@
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>aliyun-sms-spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
@@ -183,15 +184,55 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.javen205</groupId>
-            <artifactId>IJPay-WxPay</artifactId>
-            <version>2.9.6</version>
+            <groupId>com.egzosn</groupId>
+            <artifactId>pay-java-wx</artifactId>
+            <version>2.14.5</version>
         </dependency>
 
         <dependency>
-            <groupId>com.github.javen205</groupId>
-            <artifactId>IJPay-AliPay</artifactId>
-            <version>2.9.6</version>
+            <groupId>com.egzosn</groupId>
+            <artifactId>pay-java-ali</artifactId>
+            <version>2.14.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.egzosn</groupId>
+            <artifactId>pay-java-web-support</artifactId>
+            <version>2.14.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.xkcoding.justauth</groupId>
+            <artifactId>justauth-spring-boot-starter</artifactId>
+            <version>1.4.0</version>
+        </dependency>
+
+        <!--        <dependency>-->
+        <!--            <groupId>com.github.binarywang</groupId>-->
+        <!--            <artifactId>wx-java-mp-spring-boot-starter</artifactId>-->
+        <!--            <version>4.4.0</version>-->
+        <!--        </dependency>-->
+
+        <dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>wx-java-miniapp-spring-boot-starter</artifactId>
+            <version>4.4.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-freemarker</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.qcloud</groupId>
+            <artifactId>cos_api</artifactId>
+            <version>5.6.97</version>
         </dependency>
     </dependencies>
 
@@ -233,19 +274,15 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring-boot.version}</version>
-                <configuration>
-                    <mainClass>net.totime.mail.MailApplication</mainClass>
-                    <skip>true</skip>
-                </configuration>
                 <executions>
                     <execution>
-                        <id>repackage</id>
                         <goals>
-                            <goal>repackage</goal>
+                            <goal>repackage</goal><!--可以把依赖的包都打包到生成的Jar包中-->
                         </goals>
                     </execution>
                 </executions>
