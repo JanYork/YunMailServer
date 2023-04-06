@@ -14,7 +14,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,7 +43,7 @@ public class TencentUpload implements UploadInterface {
     /**
      * 支持的文件类型
      */
-    private static final List<String> FILE_TYPE = Arrays.asList("image/png", "image/jpeg", "image/gif");
+    private static final List<String> FILE_TYPE = Arrays.asList("image/png", "image/jpeg", "image/gif", "image/jpg");
     private static final Long CACHE_TIME = 3600L;
 
     /**
@@ -54,6 +56,40 @@ public class TencentUpload implements UploadInterface {
     @Override
     public String upload(MultipartFile file) throws IOException {
         return getFileUrl(file);
+    }
+
+    /**
+     * 上传
+     *
+     * @param fileUrl 文件链接
+     * @return {@link String}
+     */
+    @Override
+    public String upload(String fileUrl) throws IOException {
+        String fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
+        String fileType = "image/" + fileName.substring(fileName.lastIndexOf(".") + 1);
+        if (!FILE_TYPE.contains(fileType)) {
+            throw new GloballyUniversalException(500, "不支持的文件类型");
+        }
+        String md5 = Md5Utils.md5Hex(fileUrl);
+        String url = (String)rut.get(md5);
+        if (!StringUtils.isEmpty(url)) {
+            return url;
+        }
+        String randomName = ImageUtils.getRandomName(fileName);
+        //将图片转换为Byte数组
+        byte[] bytes = ImageUtils.getImageFromUrl(fileUrl);
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentLength(bytes.length);
+        InputStream inputStream = new ByteArrayInputStream(bytes);
+        try {
+            cos.putObject(bucketName, randomName, inputStream, objectMetadata);
+        } catch (Exception e) {
+            throw new GloballyUniversalException(500, "上传失败");
+        }
+        url = this.url + "/" + randomName;
+        rut.set(md5, url, CACHE_TIME);
+        return url;
     }
 
     /**

@@ -45,4 +45,16 @@ public class ImageUpload {
     public ApiResponse<List<String>> uploadImage(MultipartFile[] files) {
         return ApiResponse.ok(tud.batchUpload(files));
     }
+
+    /**
+     * 上传图片
+     *
+     * @param url 文件链接
+     * @return {@link ApiResponse}<{@link String}> 返回上传成功的URL
+     */
+    @SneakyThrows
+    @RequestMapping("/upload/url")
+    public ApiResponse<String> uploadImage(String url) {
+        return ApiResponse.ok(tud.upload(url));
+    }
 }

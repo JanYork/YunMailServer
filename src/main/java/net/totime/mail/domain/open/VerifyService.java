@@ -19,7 +19,7 @@ public class VerifyService {
     @Resource
     private RedisUtil rut;
     private static final String CODE = "code:";
-    private static final Integer CODE_TIME = 120;
+    private static final Long CODE_TIME = 120L;
     private static final Integer CODE_LENGTH = 6;
 
     /**
@@ -28,7 +28,7 @@ public class VerifyService {
      * @param phone 手机号
      */
     public void cacheCode(String phone) {
-        rut.set(CODE + phone, this.createCode(CODE_LENGTH), CODE_TIME, TimeUnit.SECONDS);
+        rut.set(CODE + phone, this.createCode(CODE_LENGTH), CODE_TIME);
         //TODO: 发送验证码
     }
 
@@ -70,7 +70,7 @@ public class VerifyService {
         }
         boolean e = code.equals(optional.get().toString());
         if (e) {
-            rut.del(CODE + phone);
+            rut.delete(CODE + phone);
         }
         return e;
     }

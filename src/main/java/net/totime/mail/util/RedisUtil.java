@@ -18,68 +18,19 @@ public class RedisUtil {
     @Resource
     private RedisTemplate<String, Object> rt;
 
-    /**
-     * 设置缓存
-     *
-     * @param key   键
-     * @param value 值
-     */
     public void set(String key, Object value) {
         rt.opsForValue().set(key, value);
     }
 
-    /**
-     * 设置缓存
-     *
-     * @param key   键
-     * @param value 值
-     * @param time  过期时间
-     */
-    public void set(String key, Object value, long time) {
-        rt.opsForValue().set(key, value, time);
+    public void set(String key, Object value, Long time) {
+        rt.opsForValue().set(key, value, time, TimeUnit.SECONDS);
     }
 
-    /**
-     * 设置缓存
-     *
-     * @param key   键
-     * @param value 值
-     * @param time  过期时间
-     * @param unit  时间单位
-     */
-    public void set(String key, Object value, long time, TimeUnit unit) {
-        rt.opsForValue().set(key, value, time, unit);
-    }
-
-    /**
-     * 设置缓存
-     *
-     * @param key   键
-     * @param value 值
-     * @param time  过期时间
-     * @param unit  时间单位
-     */
-    public void set(String key, String value, long time, TimeUnit unit) {
-        rt.opsForValue().set(key, value, time, unit);
-    }
-
-
-    /**
-     * 获取缓存
-     *
-     * @param key 键
-     * @return 缓存值
-     */
     public Object get(String key) {
         return rt.opsForValue().get(key);
     }
 
-    /**
-     * 删除缓存
-     *
-     * @param key 键
-     */
-    public void del(String key) {
+    public void delete(String key) {
         rt.delete(key);
     }
 }

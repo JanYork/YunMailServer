@@ -1,7 +1,21 @@
 package net.totime.mail.storage.tencent.util;
 
+import org.apache.http.entity.ContentType;
+
+import org.apache.tomcat.util.http.fileupload.FileItem;
+import org.apache.tomcat.util.http.fileupload.FileItemFactory;
+import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 
 /**
  * @author JanYork
@@ -11,6 +25,8 @@ import java.util.regex.Pattern;
  * @since 1.0.0
  */
 public class ImageUtils {
+    private static final Integer MAX_NAME_LENGTH = 8;
+
     /**
      * 判断名称是否包含中文字符
      *
@@ -51,6 +67,34 @@ public class ImageUtils {
             return System.currentTimeMillis() + fileName.substring(fileName.lastIndexOf("."));
         }
         String name = replaceBlank(fileName.substring(0, fileName.lastIndexOf(".")));
+        if (name.length() > MAX_NAME_LENGTH) {
+            name = name.substring(0, MAX_NAME_LENGTH);
+        }
         return name + System.currentTimeMillis() + fileName.substring(fileName.lastIndexOf("."));
+    }
+
+    /**
+     * 从URL获得图像
+     *
+     * @param imgUrl 图片链接
+     * @return {@link byte[]} 图片字节数组
+     */
+    public static byte[] getImageFromUrl(String imgUrl) throws IOException {
+        InputStream input;
+        URL url = new URL(imgUrl);
+        HttpURLConnection httpUrl = (HttpURLConnection) url.openConnection();
+        httpUrl.connect();
+        httpUrl.getInputStream();
+        input = httpUrl.getInputStream();
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        byte[] buf = new byte[1024];
+        int numBytesRead;
+        while ((numBytesRead = input.read(buf)) != -1) {
+            output.write(buf, 0, numBytesRead);
+        }
+        byte[] data = output.toByteArray();
+        output.close();
+        input.close();
+        return data;
     }
 }

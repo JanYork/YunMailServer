@@ -33,20 +33,21 @@
     });
     window.onload = function () {
         animation.play();
-        setTimeout( () => {
-            let msg = {
-                code: ${auth.code},
-                token: '${auth.token}' ? '${auth.token}' : null,
-                msg: '${auth.msg}'
+        let msg = {
+            code: ${auth.code},
+            msg: '${auth.msg}',
+            token: {
+                tokenName: '${auth.token.tokenName}',
+                tokenValue: '${auth.token.tokenValue}',
             }
-            try {
-                window.opener.postMessage(msg, 'http://localhost:3000');
-                window.close();
-            } catch (e) {
-                alert(e);
-                window.close();
-            }
-        }, 1500);
+        }
+        try {
+            window.opener.postMessage(msg, 'http://localhost:3000');
+            window.close();
+        } catch (e) {
+            alert("登录失败，请重试");
+            window.close();
+        }
     }
 </script>
 </body>

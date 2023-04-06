@@ -30,4 +30,12 @@ public interface UploadInterface {
      * @throws IOException 异常
      */
     List<String> batchUpload(MultipartFile[] files) throws IOException;
+
+    /**
+     * 上传
+     *
+     * @param url 文件链接
+     * @return {@link String}
+     */
+    String upload(String url) throws IOException;
 }

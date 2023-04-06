@@ -1,5 +1,6 @@
 package net.totime.mail.controller.login;
 
+import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
@@ -13,6 +14,7 @@ import net.totime.mail.util.SnowflakeUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -57,7 +59,9 @@ public class LoginApi {
             throw new RuntimeException("密码错误");
         }
         StpUtil.login(user.getId());
-        return ApiResponse.ok("登录成功");
+        String tokenValue = StpUtil.getTokenValue();
+        assert tokenValue != null;
+        return ApiResponse.ok(tokenValue);
     }
 
 
@@ -83,6 +87,48 @@ public class LoginApi {
         if (!userService.save(user)) {
             return ApiResponse.fail("注册失败").message("系统错误");
         }
-        return ApiResponse.ok("注册成功");
+        StpUtil.login(user.getId());
+        String tokenValue = StpUtil.getTokenValue();
+        assert tokenValue != null;
+        return ApiResponse.ok(tokenValue).message("注册成功");
+    }
+
+    /**
+     * 重置密码
+     * TODO: 2021/3/26 重置密码 未完成
+     *
+     * @param userDTO 用户信息
+     * @return {@link ApiResponse}<{@link String}> 重置结果
+     */
+    @RequestMapping("/reset")
+    @ApiOperation(value = "重置云寄账户密码", notes = "重置强依赖于手机号")
+    public ApiResponse<String> reset(@Valid @RequestBody UserDTO userDTO) {
+        if (!verify.verifyCode(userDTO.getPhone(), userDTO.getCode())) {
+            return ApiResponse.fail("验证码错误");
+        }
+        User user = userService.getOne(
+                new QueryWrapper<User>().eq("phone", userDTO.getPhone())
+        );
+        Optional.ofNullable(user).orElseThrow(() -> new RuntimeException("用户不存在"));
+        String gensalt = BcryptUtil.gensalt();
+        user.setPwd(BcryptUtil.encrypt(userDTO.getPwd(), gensalt));
+        user.setSalt(gensalt);
+        if (!userService.updateById(user)) {
+            return ApiResponse.fail("重置失败").message("系统错误");
+        }
+        return ApiResponse.ok("重置成功");
+    }
+
+    /**
+     * 退出登录
+     *
+     * @return {@link ApiResponse}<{@link String}> 退出结果
+     */
+    @RequestMapping("/logout")
+    @SaCheckLogin
+    @ApiOperation(value = "退出云寄账户", notes = "退出登录")
+    public ApiResponse<Boolean> logout() {
+        StpUtil.logout();
+        return ApiResponse.ok(true);
     }
 }

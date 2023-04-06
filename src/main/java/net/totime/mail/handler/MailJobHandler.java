@@ -22,29 +22,47 @@ public class MailJobHandler {
     @Resource
     private MailService ms;
 
-    @XxlJob("MailJobHandler")
+    private final static String STATUS = "status";
+    private final static String USE_SERVE = "use_serve";
+    private final static String GO_TO_TIME = "go_to_time";
+
+    /**
+     * 云寄定时邮件任务处理器
+     *
+     * @return {@link ApiResponse}<{@link String}> 处理结果
+     */
+    @XxlJob("MailSend")
     public ApiResponse<String> execute() {
-        List<Mail> list = ms.list(
-                new QueryWrapper<Mail>()
-                        .eq("status", 0)
-                        .eq("use_serve", 0)
-                        .orderByAsc("go_to_time")
-                        .gt("go_to_time", System.currentTimeMillis())
-        );
+        List<Mail> list = getMailList(0L);
         //TODO:发送邮件
         return ApiResponse.ok("邮件任务处理器");
     }
 
+    /**
+     * 云寄邮件
+     *
+     * @return {@link ApiResponse}<{@link String}>
+     */
     @XxlJob("MailRemind")
     public ApiResponse<String> remind() {
-        List<Mail> list = ms.list(
-                new QueryWrapper<Mail>()
-                        .eq("status", 0)
-                        .eq("use_serve", 0)
-                        .orderByAsc("go_to_time")
-                        .lt("go_to_time", System.currentTimeMillis() - 24 * 60 * 60 * 1000)
-        );
+        List<Mail> list = getMailList(24 * 60 * 60 * 1000L);
         //TODO:向管理员发送邮件提醒
         return ApiResponse.ok("邮件提醒处理器");
+    }
+
+    /**
+     * 获取邮件列表
+     *
+     * @param time 目标在当前时间之前N个TIME
+     * @return {@link List}<{@link Mail}> 邮件列表
+     */
+    private List<Mail> getMailList(Long time) {
+        return ms.list(
+                new QueryWrapper<Mail>()
+                        .eq(STATUS, 0)
+                        .eq(USE_SERVE, 0)
+                        .orderByAsc(GO_TO_TIME)
+                        .lt(GO_TO_TIME, System.currentTimeMillis() - time)
+        );
     }
 }

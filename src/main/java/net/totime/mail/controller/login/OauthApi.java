@@ -4,7 +4,9 @@ import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.xkcoding.justauth.AuthRequestFactory;
+import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,10 +22,7 @@ import net.totime.mail.vo.AuthVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -41,6 +40,9 @@ import java.util.List;
 @Controller
 @Slf4j
 @RequestMapping("/oauth")
+@Api(tags = "云寄第三方注册与登录接口")
+@CrossOrigin
+@ApiSupport(author = "JanYork")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class OauthApi {
     private final AuthRequestFactory factory;
@@ -55,6 +57,7 @@ public class OauthApi {
      * @return {@link ApiResponse}<{@link List}<{@link String}>> 第三方登录列表
      */
     @GetMapping
+    @ResponseBody
     public ApiResponse<List<String>> list() {
         return ApiResponse.ok(factory.oauthList());
     }
@@ -62,14 +65,12 @@ public class OauthApi {
     /**
      * 第三方登录
      *
-     * @param type     类型
-     * @param response 响应
+     * @param type 类型
      */
     @GetMapping("/login/{type}")
-    public void login(@PathVariable String type, HttpServletResponse response) throws IOException {
-        AuthRequest authRequest = factory.get(type);
-        response.sendRedirect(authRequest.authorize(AuthStateUtils.createState()));
-//        return ApiResponse.ok(factory.get(type).authorize(AuthStateUtils.createState()));
+    @ResponseBody
+    public ApiResponse<String> login(@PathVariable String type) {
+        return ApiResponse.ok(factory.get(type).authorize(AuthStateUtils.createState()));
     }
 
     /**
@@ -92,6 +93,7 @@ public class OauthApi {
     }
 
     @GetMapping("/wx/mini")
+    @ResponseBody
     public ApiResponse<HashMap<String, String>> wxMini(@RequestParam String code) {
         WxMaJscode2SessionResult sessionInfo;
         try {

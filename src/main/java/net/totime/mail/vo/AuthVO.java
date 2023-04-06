@@ -1,5 +1,6 @@
 package net.totime.mail.vo;
 
+import cn.dev33.satoken.stp.SaTokenInfo;
 import lombok.Builder;
 import lombok.Data;
 
@@ -29,5 +30,5 @@ public class AuthVO implements Serializable {
     /**
      * 登录Token
      */
-    private String token;
+    private SaTokenInfo token;
 }

@@ -3,6 +3,7 @@ package net.totime.mail.entity;
 import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,6 +21,7 @@ public class User extends Model<User> {
     /**
      * 用户自增ID
      */
+    @TableId
     private Long id;
     /**
      * 用户昵称

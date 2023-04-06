@@ -41,7 +41,6 @@ public class LetterOperateService {
      * @param size 分页大小
      * @return {@link List}<{@link Letter}> 信件列表
      */
-    @Cached(name = "letter:", key = "'page_'+#page+#size", expire = 3600)
     public List<LetterVO> queryLetter(Integer page, Integer size) {
         return letter.page(new Page<>(page, size))
                 .getRecords().stream().map(letter -> {
@@ -58,7 +57,6 @@ public class LetterOperateService {
      * @param size 分页大小
      * @return {@link List}<{@link Letter}> 信件列表
      */
-    @Cached(name = "letter:", key = "'after_now_'+#page+#size", expire = 3600)
     public List<LetterVO> queryLetterAfterNow(Integer page, Integer size) {
         return letter.page(
                         new Page<>(page, size),
@@ -77,7 +75,6 @@ public class LetterOperateService {
      * @param size 分页大小
      * @return {@link List}<{@link Letter}> 信件列表
      */
-    @Cached(name = "letter:", key = "'before_now_'+#page+#size", expire = 3600)
     public List<LetterVO> queryLetterBeforeNow(Integer page, Integer size) {
         return letter.page(
                         new Page<>(page, size),
@@ -96,7 +93,6 @@ public class LetterOperateService {
      * @param size 分页大小
      * @return {@link List}<{@link Letter}> 信件列表
      */
-    @Cached(name = "letter:", key = "'allow_public_'+#page+#size", expire = 3600)
     public List<LetterVO> queryAllowPublic(Integer page, Integer size) {
         return letter.page(
                         new Page<>(page, size),
@@ -114,7 +110,6 @@ public class LetterOperateService {
      * @param id 信件ID
      * @return {@link LetterVO} 信件
      */
-    @Cached(name = "letter:", key = "#id", expire = 3600)
     public LetterVO queryLetterById(Long id) {
         Letter letter = this.letter.getById(id);
         LetterVO letterVO = new LetterVO();
@@ -130,7 +125,6 @@ public class LetterOperateService {
      * @param size 分页大小
      * @return {@link List}<{@link LetterVO}> 信件列表
      */
-    @Cached(name = "letter:", key = "#id+#page+#size", expire = 3600)
     public List<LetterVO> queryLetterByUserId(Long id, Integer page, Integer size) {
         return letter.page(
                         new Page<>(page, size),
@@ -150,7 +144,6 @@ public class LetterOperateService {
      * @param size  分页大小
      * @return {@link List}<{@link LetterVO}> 信件列表
      */
-    @Cached(name = "letter:", key = "#phone+#page+#size", expire = 3600)
     public List<LetterVO> queryLetterByPhone(String phone, Integer page, Integer size) {
         return letter.page(
                         new Page<>(page, size),
@@ -168,7 +161,6 @@ public class LetterOperateService {
      * @param letterDTO 信件
      * @return {@link Boolean} 是否添加成功
      */
-    @CacheInvalidate(name = "letter:")
     public Boolean addLetter(LetterDTO letterDTO) {
         Letter letter = new Letter();
         BeanUtils.copyProperties(letterDTO, letter);

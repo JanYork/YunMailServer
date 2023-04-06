@@ -2,6 +2,7 @@ package net.totime.mail.domain.auth;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import lombok.SneakyThrows;
 import net.totime.mail.dto.AuthCallBackDTO;
 import net.totime.mail.entity.Oauth;
 import net.totime.mail.entity.User;
@@ -9,6 +10,7 @@ import net.totime.mail.enums.OauthType;
 import net.totime.mail.response.ApiResponse;
 import net.totime.mail.service.OauthService;
 import net.totime.mail.service.UserService;
+import net.totime.mail.storage.tencent.service.TencentUpload;
 import net.totime.mail.util.BcryptUtil;
 import net.totime.mail.util.SnowflakeUtil;
 import net.totime.mail.vo.AuthVO;
@@ -31,6 +33,8 @@ public class OauthOperateService {
     private OauthService oauthService;
     @Resource
     private UserService userService;
+    @Resource
+    private TencentUpload tu;
 
     /**
      * 第三方登录
@@ -41,6 +45,7 @@ public class OauthOperateService {
     public AuthVO login(AuthCallBackDTO auth) {
         String isLoginForId = (String) StpUtil.getLoginIdDefaultNull();
         if (isLoginForId != null) {
+            System.out.println("已经登录" + isLoginForId);
             return bind(auth);
         }
         User user = userBuilder(auth);
@@ -55,7 +60,7 @@ public class OauthOperateService {
             return AuthVO.builder().code(500).msg("登录失败").build();
         }
         StpUtil.login(snowflakeId);
-        return AuthVO.builder().code(200).msg("登录成功").token(StpUtil.getTokenValue()).build();
+        return AuthVO.builder().code(200).msg("登录成功").token(StpUtil.getTokenInfo()).build();
     }
 
     /**
@@ -110,7 +115,6 @@ public class OauthOperateService {
      */
     private Oauth oauthBuilder(AuthCallBackDTO auth) {
         Oauth oauth = new Oauth();
-        oauth.setOpenId(auth.getToken().getOpenId());
         oauth.setProvider(OauthType.valueOf(auth.getSource().toUpperCase()));
         oauth.setAccessToken(auth.getToken().getAccessToken());
         oauth.setRefreshToken(auth.getToken().getRefreshToken());
@@ -121,14 +125,16 @@ public class OauthOperateService {
         return oauth;
     }
 
+    @SneakyThrows
     private User userBuilder(AuthCallBackDTO auth) {
         User user = new User();
-        user.setAvatar(auth.getAvatar());
+        user.setAvatar(tu.upload(auth.getAvatar()));
         user.setName(auth.getNickname());
         user.setEmail(auth.getEmail());
         user.setCreateTime(new Date());
         //填充随机密码与手机号，防止用户未绑定手机号
         String pwd = UUID.randomUUID().toString().substring(0, 8);
+        //TODO：告知用户密码
         String gensalt = BcryptUtil.gensalt();
         user.setPwd(BcryptUtil.encrypt(pwd, gensalt));
         user.setSalt(gensalt);

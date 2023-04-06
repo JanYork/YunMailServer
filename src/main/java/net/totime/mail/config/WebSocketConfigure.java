@@ -1,14 +1,14 @@
 package net.totime.mail.config;
 
-import net.totime.mail.socket.SocketHandler;
 import net.totime.mail.socket.SocketInterceptor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
-import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
-import org.springframework.web.socket.server.standard.ServerEndpointExporter;
+import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.web.socket.config.annotation.*;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author JanYork
@@ -18,32 +18,36 @@ import javax.annotation.Resource;
  * @since 1.0.0
  */
 @Configuration
-public class WebSocketConfigure implements WebSocketConfigurer {
+@EnableWebSocketMessageBroker
+public class WebSocketConfigure implements WebSocketMessageBrokerConfigurer {
     @Resource
     private SocketInterceptor socketInterceptor;
-    @Resource
-    private SocketHandler socketHandler;
 
     /**
-     * 服务器端点配置
+     * Register STOMP endpoints mapping each to a specific URL and (optionally)
+     * enabling and configuring SockJS fallback options.
      *
-     * @return {@link ServerEndpointExporter} Socket服务端点配置
+     * @param registry 注册
      */
-    @Bean
-    public ServerEndpointExporter serverEndpointExporter() {
-        return new ServerEndpointExporter();
+    @Override
+    public void registerStompEndpoints(@Nonnull StompEndpointRegistry registry) {
+        // 配置客户端尝试连接地址
+        registry.
+                addEndpoint("/ws").
+                addInterceptors(socketInterceptor).
+        setAllowedOrigins("http://127.0.0.1:5173").
+                withSockJS();
     }
 
     /**
-     * 注册Socket处理器
+     * Configure message broker options.
      *
-     * @param registry 注册对象
+     * @param registry 消息代理注册
      */
     @Override
-    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry
-                .addHandler(socketHandler, "/api/ws/{id}")
-                .addInterceptors(socketInterceptor)
-                .setAllowedOrigins("*");
+    public void configureMessageBroker(@Nonnull MessageBrokerRegistry registry) {
+        registry.enableSimpleBroker("/topic", "/queue");
+        registry.setApplicationDestinationPrefixes("/app");
+        registry.setUserDestinationPrefix("/user");
     }
 }

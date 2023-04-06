@@ -1,5 +1,7 @@
 package net.totime.mail.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,6 +22,7 @@ public class Oauth extends Model<Oauth> {
     /**
      * 第三方授权表ID
      */
+    @TableId(value = "`id`", type = IdType.AUTO)
     private Integer id;
     /**
      * 第三方授权绑定的用户ID
