@@ -22,7 +22,7 @@ import java.util.List;
  * @since 1.0.0
  */
 @RestController
-@RequestMapping("/mail")
+@RequestMapping("/api/mail")
 @Api(tags = "云寄邮件服务接口")
 @ApiSupport(author = "JanYork")
 public class MailApi {

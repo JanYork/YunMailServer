@@ -1,7 +1,10 @@
 package net.totime.mail.config;
 
+import net.totime.mail.socket.AuthChannelInterceptor;
 import net.totime.mail.socket.SocketInterceptor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.*;
 
@@ -22,6 +25,13 @@ import java.util.List;
 public class WebSocketConfigure implements WebSocketMessageBrokerConfigurer {
     @Resource
     private SocketInterceptor socketInterceptor;
+    @Resource
+    private AuthChannelInterceptor authChannelInterceptor;
+
+    @Value("${ws.allowed-origins}")
+    private String allowedOrigins;
+    @Value("${ws.endpoint}")
+    private String endpoint;
 
     /**
      * Register STOMP endpoints mapping each to a specific URL and (optionally)
@@ -33,10 +43,20 @@ public class WebSocketConfigure implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(@Nonnull StompEndpointRegistry registry) {
         // 配置客户端尝试连接地址
         registry.
-                addEndpoint("/ws").
+                addEndpoint(endpoint).
                 addInterceptors(socketInterceptor).
-        setAllowedOrigins("http://127.0.0.1:5173").
+                setAllowedOrigins(allowedOrigins).
                 withSockJS();
+    }
+
+    /**
+     * 配置客户端入站通道
+     *
+     * @param registration 通道注册
+     */
+    @Override
+    public void configureClientInboundChannel(ChannelRegistration registration) {
+        registration.interceptors(authChannelInterceptor);
     }
 
     /**
@@ -46,7 +66,7 @@ public class WebSocketConfigure implements WebSocketMessageBrokerConfigurer {
      */
     @Override
     public void configureMessageBroker(@Nonnull MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/topic", "/queue");
+        registry.enableSimpleBroker("/topic", "/queue", "/third");
         registry.setApplicationDestinationPrefixes("/app");
         registry.setUserDestinationPrefix("/user");
     }

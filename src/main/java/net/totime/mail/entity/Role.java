@@ -1,5 +1,8 @@
 package net.totime.mail.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,9 +16,11 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class Role extends Model<Role> {
+    private static final long serialVersionUID = -4442326084905064881L;
     /**
      * 角色ID
      */
+    @TableId(type = IdType.AUTO)
     private Integer id;
     /**
      * 角色名称

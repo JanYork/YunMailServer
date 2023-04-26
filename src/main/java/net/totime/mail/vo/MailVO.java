@@ -13,17 +13,13 @@ import java.util.Date;
  * @version 1.0.0
  * @date 2023/04/01
  * @description 邮件视图数据实体
- * @see Serializable
  * @since 1.0.0
  */
 @Data
-public class MailVO implements Serializable {
-    private static final long serialVersionUID = -6356097508458182036L;
-
+public class MailVO {
     /**
      * 邮件唯一ID
      */
-    @TableId
     private String mailId;
     /**
      * 邮件标题

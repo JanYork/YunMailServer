@@ -19,15 +19,19 @@ import lombok.EqualsAndHashCode;
 public class User extends Model<User> {
     private static final long serialVersionUID = 4149134366386885495L;
     /**
-     * 用户自增ID
+     * 用户ID
      */
     @TableId
     private Long id;
     /**
-     * 用户昵称
+     * 用户账户
      */
     @TableField("`name`")
     private String name;
+    /**
+     * 用户昵称
+     */
+    private String nickName;
     /**
      * 用户头像
      */

@@ -6,13 +6,25 @@ import com.baomidou.kaptcha.exception.KaptchaException;
 import com.baomidou.kaptcha.exception.KaptchaIncorrectException;
 import com.baomidou.kaptcha.exception.KaptchaNotFoundException;
 import com.baomidou.kaptcha.exception.KaptchaTimeoutException;
+import com.tencentcloudapi.common.exception.TencentCloudSDKException;
 import net.totime.mail.exception.GloballyUniversalException;
+import net.totime.mail.exception.PayException;
 import net.totime.mail.exception.RateLimiterException;
 import net.totime.mail.response.ApiResponse;
+import org.springframework.validation.BindException;
+import org.springframework.web.HttpMediaTypeNotAcceptableException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingPathVariableException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
+import javax.validation.ConstraintViolationException;
+import javax.validation.ValidationException;
+import java.security.GeneralSecurityException;
 import java.util.Objects;
 
 /**
@@ -24,6 +36,18 @@ import java.util.Objects;
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    /**
+     * 支付异常处理程序
+     *
+     * @param e 异常
+     * @return {@link ApiResponse}<{@link String}>
+     */
+    @ExceptionHandler(PayException.class)
+    public String payExceptionHandler(PayException e) {
+        //TODO: 2021/3/8 支付异常调用短信接口
+        return "{\"code\":\"fail\",\"message\":\"失败\"}";
+    }
+
     /**
      * 空指针异常处理程序
      *
@@ -55,7 +79,42 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ApiResponse<String> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException e) {
         String msg = Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage();
-        return new ApiResponse<String>().code(500).message(msg).data("参数校验异常");
+        return ApiResponse.fail("参数校验异常").message(msg);
+    }
+
+    /**
+     * 参数校验异常处理程序
+     *
+     * @param e 异常
+     * @return {@link ApiResponse}<{@link Object}>
+     */
+    @ExceptionHandler(BindException.class)
+    public ApiResponse<String> bindExceptionHandler(BindException e) {
+        String msg = Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage();
+        return ApiResponse.fail("参数校验异常").message(msg);
+    }
+
+    /**
+     * 参数校验异常处理程序
+     *
+     * @param e 异常
+     * @return {@link ApiResponse}<{@link String}> 返回错误结果
+     */
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ApiResponse<String> constraintViolationExceptionHandler(javax.validation.ConstraintViolationException e) {
+        String msg = e.getConstraintViolations().iterator().next().getMessage();
+        return ApiResponse.fail("参数校验异常").message(msg);
+    }
+
+    /**
+     * 验证异常处理程序
+     *
+     * @param e e
+     * @return {@link ApiResponse}<{@link String}>
+     */
+    @ExceptionHandler(ValidationException.class)
+    public ApiResponse<String> validationExceptionHandler(ValidationException e) {
+        return new ApiResponse<String>().code(500).message(e.getMessage()).data("参数校验异常");
     }
 
     /**
@@ -172,6 +231,59 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * 腾讯云异常处理程序
+     *
+     * @param e 异常
+     * @return {@link ApiResponse}<{@link String}> 返回错误结果
+     */
+    @ExceptionHandler(TencentCloudSDKException.class)
+    public ApiResponse<String> tencentCloudExceptionHandler(TencentCloudSDKException e) {
+        e.printStackTrace();
+        return ApiResponse.fail("腾讯云异常通信");
+    }
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ApiResponse<String> handlerException(NoHandlerFoundException e) {
+        e.printStackTrace();
+        return ApiResponse.fail("请求地址不存在");
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ApiResponse<String> handlerException(HttpRequestMethodNotSupportedException e) {
+        e.printStackTrace();
+        return ApiResponse.fail("请求方式不支持");
+    }
+
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    public ApiResponse<String> handlerException(HttpMediaTypeNotSupportedException e) {
+        e.printStackTrace();
+        return ApiResponse.fail("请求媒体类型不支持");
+    }
+
+    @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
+    public ApiResponse<String> handlerException(HttpMediaTypeNotAcceptableException e) {
+        e.printStackTrace();
+        return ApiResponse.fail("请求媒体类型不可接受");
+    }
+
+    @ExceptionHandler(MissingPathVariableException.class)
+    public ApiResponse<String> handlerException(MissingPathVariableException e) {
+        e.printStackTrace();
+        return ApiResponse.fail("缺少路径变量");
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ApiResponse<String> handlerException(MissingServletRequestParameterException e) {
+        e.printStackTrace();
+        return ApiResponse.fail("缺少请求参数");
+    }
+
+    @ExceptionHandler(GeneralSecurityException.class)
+    public ApiResponse<String> handlerException(GeneralSecurityException e) {
+        return ApiResponse.fail(e.getMessage());
+    }
+
+    /**
      * 其它所有异常处理程序
      *
      * @param e 异常
@@ -180,6 +292,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ApiResponse<String> handlerException(Exception e) {
         e.printStackTrace();
+        System.out.println("异常：" + e.getMessage());
         return ApiResponse.fail(e.getMessage());
     }
 }

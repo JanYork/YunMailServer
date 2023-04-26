@@ -23,7 +23,7 @@ import java.util.List;
  * @since 2023-03-26 17:54:03
  */
 @RestController
-@RequestMapping("/letter")
+@RequestMapping("/api/letter")
 @Api(tags = "云寄信件服务接口")
 @ApiSupport(author = "JanYork")
 public class LetterApi {

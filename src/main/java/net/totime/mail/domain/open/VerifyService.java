@@ -1,5 +1,9 @@
 package net.totime.mail.domain.open;
 
+import com.tencentcloudapi.sms.v20210111.models.SendSmsRequest;
+import net.totime.mail.enums.SmsTemplate;
+import net.totime.mail.sms.tencent.SmsRequestBuild;
+import net.totime.mail.sms.tencent.TencentSmsUtil;
 import net.totime.mail.util.RedisUtil;
 import org.springframework.stereotype.Service;
 
@@ -18,9 +22,12 @@ import java.util.concurrent.TimeUnit;
 public class VerifyService {
     @Resource
     private RedisUtil rut;
+    @Resource
+    private TencentSmsUtil sut;
     private static final String CODE = "code:";
     private static final Long CODE_TIME = 120L;
     private static final Integer CODE_LENGTH = 6;
+    private static final String CODE_TIME_OUT = "2";
 
     /**
      * 获取并缓存验证码
@@ -28,8 +35,31 @@ public class VerifyService {
      * @param phone 手机号
      */
     public void cacheCode(String phone) {
-        rut.set(CODE + phone, this.createCode(CODE_LENGTH), CODE_TIME);
-        //TODO: 发送验证码
+        String code = createCode(CODE_LENGTH);
+        SendSmsRequest build = SmsRequestBuild.builder()
+                .phoneNumber(new String[]{phone})
+                .templateId(SmsTemplate.REGISTER)
+                .params(new String[]{code, CODE_TIME_OUT})
+                .build();
+        sut.sendSms(build);
+        rut.set(CODE + phone, code, CODE_TIME);
+    }
+
+    /**
+     * 获取并缓存验证码
+     *
+     * @param phone    手机号
+     * @param template 模板
+     */
+    public void cacheCode(String phone, SmsTemplate template) {
+        String code = createCode(CODE_LENGTH);
+        SendSmsRequest build = SmsRequestBuild.builder()
+                .phoneNumber(new String[]{phone})
+                .templateId(template)
+                .params(new String[]{code, CODE_TIME_OUT})
+                .build();
+        sut.sendSms(build);
+        rut.set(CODE + phone, code, CODE_TIME);
     }
 
     /**

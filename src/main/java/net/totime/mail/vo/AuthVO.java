@@ -15,8 +15,7 @@ import java.io.Serializable;
  */
 @Data
 @Builder
-public class AuthVO implements Serializable {
-    private static final long serialVersionUID = 5057287920338443519L;
+public class AuthVO {
     /**
      * 登录结果码
      */

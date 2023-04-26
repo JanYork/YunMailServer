@@ -12,16 +12,13 @@ import java.util.Date;
  * @version 1.0.0
  * @date 2023/04/01
  * @description 信件视图数据实体
- * @see Serializable
  * @since 1.0.0
  */
 @Data
-public class LetterVO implements Serializable {
-    private static final long serialVersionUID = 3903138177494743789L;
+public class LetterVO {
     /**
      * 信件唯一ID
      */
-    @TableId
     private String letterId;
     /**
      * 用户ID

@@ -6,8 +6,8 @@ import com.egzosn.pay.ali.bean.AliPayMessage;
 import com.egzosn.pay.common.api.PayMessageHandler;
 import com.egzosn.pay.common.api.PayMessageInterceptor;
 import com.egzosn.pay.common.exception.PayErrorException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
 import java.util.Map;
 
 /**
@@ -18,7 +18,7 @@ import java.util.Map;
  * @see PayMessageInterceptor 支付处理器
  * @since 1.0.0
  */
-@Component
+@Slf4j
 public class AliPayMessageInterceptor implements PayMessageInterceptor<AliPayMessage, AliPayService> {
 
     /**

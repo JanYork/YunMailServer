@@ -6,10 +6,7 @@ import net.totime.mail.entity.Perm;
 import net.totime.mail.entity.Role;
 import net.totime.mail.entity.UserToPrem;
 import net.totime.mail.entity.UserToRole;
-import net.totime.mail.service.PermService;
-import net.totime.mail.service.RoleService;
-import net.totime.mail.service.UserToPremService;
-import net.totime.mail.service.UserToRoleService;
+import net.totime.mail.service.*;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.Resource;
@@ -33,6 +30,9 @@ public class StpInterfaceImpl implements StpInterface {
     private UserToRoleService userToRole;
     @Resource
     private UserToPremService userToPrem;
+    @Resource
+    private AdminService adminService;
+    private static final String ADMIN = "admin";
 
     /**
      * 一个账号所拥有的权限码集合
@@ -43,7 +43,11 @@ public class StpInterfaceImpl implements StpInterface {
      */
     @Override
     public List<String> getPermissionList(Object loginId, String loginType) {
-        List<String> list = userToPrem.listObjs(new QueryWrapper<UserToPrem>().eq("user_id", loginId).lambda().select(UserToPrem::getPremId), Object::toString);
+        Long id = Long.valueOf(loginId.toString());
+        if (ADMIN.equals(loginType)) {
+            return null;
+        }
+        List<String> list = userToPrem.listObjs(new QueryWrapper<UserToPrem>().eq("user_id", id).lambda().select(UserToPrem::getPremId), Object::toString);
         return perm.listObjs(new QueryWrapper<Perm>().in("id", list).lambda().select(Perm::getPermissions), Object::toString);
     }
 
@@ -56,7 +60,12 @@ public class StpInterfaceImpl implements StpInterface {
      */
     @Override
     public List<String> getRoleList(Object loginId, String loginType) {
-        List<String> list = userToRole.listObjs(new QueryWrapper<UserToRole>().eq("user_id", loginId).lambda().select(UserToRole::getRoleId), Object::toString);
+        Long id = Long.valueOf(loginId.toString());
+        if (ADMIN.equals(loginType)) {
+            String userRole = adminService.getById(id).getUserRole();
+            return List.of(userRole);
+        }
+        List<String> list = userToRole.listObjs(new QueryWrapper<UserToRole>().eq("user_id", id).lambda().select(UserToRole::getRoleId), Object::toString);
         return role.listObjs(new QueryWrapper<Role>().in("id", list).lambda().select(Role::getName), Object::toString);
     }
 }

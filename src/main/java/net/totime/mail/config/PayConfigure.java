@@ -8,7 +8,7 @@ import com.egzosn.pay.common.util.sign.SignUtils;
 import com.egzosn.pay.wx.v3.api.WxPayConfigStorage;
 import com.egzosn.pay.wx.v3.api.WxPayService;
 import net.totime.mail.handler.AliPayMessageHandler;
-import net.totime.mail.handler.WxPayMessageHandler;
+import net.totime.mail.handler.WxV3PayMessageHandler;
 import net.totime.mail.interceptor.AliPayMessageInterceptor;
 import net.totime.mail.properties.AliPayProperties;
 import net.totime.mail.properties.WeiXinPayProperties;
@@ -53,7 +53,7 @@ public class PayConfigure {
         payConfigStorage.setApiClientKeyP12(wxp.getApiClientKeyP12());
         payConfigStorage.setCertStoreType(CertStoreType.PATH);
         WxPayService wxPayService = new WxPayService(payConfigStorage);
-        wxPayService.setPayMessageHandler(new WxPayMessageHandler());
+        wxPayService.setPayMessageHandler(new WxV3PayMessageHandler());
         return wxPayService;
     }
 
@@ -74,7 +74,6 @@ public class PayConfigure {
         aliPayConfigStorage.setSignType(SignUtils.RSA2.name());
         aliPayConfigStorage.setSeller(alp.getSeller());
         aliPayConfigStorage.setInputCharset(alp.getInputCharset());
-        aliPayConfigStorage.setTest(true);
         HttpConfigStorage httpConfigStorage = new HttpConfigStorage();
         httpConfigStorage.setMaxTotal(20);
         httpConfigStorage.setDefaultMaxPerRoute(10);

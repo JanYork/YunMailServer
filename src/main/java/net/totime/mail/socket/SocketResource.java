@@ -1,5 +1,6 @@
 package net.totime.mail.socket;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -18,41 +19,14 @@ import java.security.Principal;
  * @since 1.0.0
  */
 @RestController
+@Slf4j
 public class SocketResource {
     @Resource
-    private SimpMessagingTemplate messagingTemplate;
+    private SimpMessagingTemplate smt;
 
-    /**
-     * 订阅消息
-     *
-     * @param principal 用户信息
-     * @return 消息
-     */
-    @SubscribeMapping("/topic/{topic}")
-    public String subscribe(@DestinationVariable String topic, Principal principal) {
-        return "欢迎" + principal.getName() + "订阅" + topic;
-    }
-
-    /**
-     * 发送消息
-     *
-     * @param principal 用户信息
-     * @return 消息
-     */
-    @MessageMapping("/topic/{topic}")
-    @SendTo("/topic/{topic}")
-    public String send(@DestinationVariable String topic, Principal principal) {
-        return "欢迎" + principal.getName() + "发送" + topic;
-    }
-
-    /**
-     * 接收消息
-     *
-     * @param topic     主题
-     * @param principal 主要
-     */
-    @MessageMapping("/app/{topic}")
-    public void receive(@DestinationVariable String topic, Principal principal) {
-        messagingTemplate.convertAndSend("/topic/" + topic, "欢迎" + principal.getName() + "发送" + topic);
+//    @SendTo("/topic/pay")
+//    @MessageMapping("/pay")
+    public String pay(String msg) {
+        return msg;
     }
 }

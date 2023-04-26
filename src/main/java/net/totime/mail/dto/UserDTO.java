@@ -16,12 +16,19 @@ import javax.validation.constraints.Size;
 @Data
 public class UserDTO {
     /**
+     * 用户账户
+     */
+    @NotBlank
+    @Pattern(regexp = "^[a-zA-Z0-9\\pP]+$", message = "账户包含非法字符")
+    @Size(min = 4, max = 15, message = "昵称长度为4-15个字符")
+    private String name;
+    /**
      * 用户昵称
      */
     @NotBlank
     @Pattern(regexp = "^[a-zA-Z0-9\\u4e00-\\u9fa5\\pP]+$", message = "昵称包含非法字符")
     @Size(min = 4, max = 15, message = "昵称长度为4-15个字符")
-    private String name;
+    private String nickName;
     /**
      * 用户手机
      */
@@ -32,6 +39,7 @@ public class UserDTO {
      * 用户密码
      */
     @NotBlank
+    @Pattern(regexp = "^[a-zA-Z0-9\\pP]+$", message = "密码包含非法字符")
     @Size(min = 6, max = 16, message = "密码长度为6-16个字符")
     private String pwd;
     /**

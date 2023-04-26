@@ -2,22 +2,27 @@ package net.totime.mail.entity;
 
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
 
 /**
  * 邮件与信件评论表(Comment)表实体类
  *
  * @author JanYork
- * @since 2023-03-27 22:13:33
+ * @since 2023-04-23 14:54:45
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class Comment extends Model<Comment> {
+    private static final long serialVersionUID = 3949089601291348988L;
     /**
      * 评论ID
      */
+    @TableId
     private Long id;
     /**
      * 父级评论ID
@@ -32,7 +37,8 @@ public class Comment extends Model<Comment> {
      */
     private String mailOrLetterId;
     /**
-     * 评论对应表[mail：0，letter：1]     */
+     * 评论对应表[mail：0，letter：1]
+     */
     private Integer forType;
     /**
      * 评论深度

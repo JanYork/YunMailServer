@@ -19,7 +19,7 @@ import javax.annotation.Resource;
  * @since 1.0.0
  */
 @RestController
-@RequestMapping("/kaptcha")
+@RequestMapping("/open/kaptcha")
 @Api(tags = "人机图形验证接口")
 @ApiSupport(author = "JanYork")
 public class KaptchaApi {

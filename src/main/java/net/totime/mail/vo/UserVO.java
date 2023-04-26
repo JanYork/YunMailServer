@@ -15,17 +15,19 @@ import java.util.Date;
  * @since 1.0.0
  */
 @Data
-public class UserVO implements Serializable {
-    private static final long serialVersionUID = -5602808791804827752L;
+public class UserVO {
     /**
      * 用户自增ID
      */
     private Long id;
     /**
+     * 用户账户
+     */
+    private String name;
+    /**
      * 用户昵称
      */
-    @TableField("`name`")
-    private String name;
+    private String nickName;
     /**
      * 用户头像
      */

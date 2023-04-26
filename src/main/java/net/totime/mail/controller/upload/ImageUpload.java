@@ -18,7 +18,7 @@ import java.util.List;
  * @since 1.0.0
  */
 @RestController
-@RequestMapping("/image")
+@RequestMapping("/api/image")
 public class ImageUpload {
     @Resource
     private TencentUpload tud;
