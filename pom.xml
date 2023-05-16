@@ -258,6 +258,25 @@
             <artifactId>core</artifactId>
             <version>3.5.1</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>ma.glasnost.orika</groupId>
+            <artifactId>orika-core</artifactId>
+            <version>1.5.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.raycloud.open.sdk</groupId>
+            <artifactId>kdzs-sdk</artifactId>
+            <version>1.0.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/kdzs-open-api-sdk-20230301.jar</systemPath>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>

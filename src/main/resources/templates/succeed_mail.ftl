@@ -22,7 +22,7 @@
                                                     <tbody>
                                                     <tr>
                                                         <td style="font-size: 0px; word-break: break-word; width: 580px; text-align: center; padding: 10px;">
-                                                            <div><img height="auto" alt="拖拽生成HTML邮件-拉易网-17"
+                                                            <div><img height="auto" alt="云寄"
                                                                       width="87"
                                                                       src="https://a.ideaopen.cn/JanYork/Lm1xFAnM.png?imageslim"
                                                                       style="box-sizing: border-box; border: 0px; display: inline-block; outline: none; text-decoration: none; height: auto; max-width: 100%; padding: 0px;">
@@ -104,7 +104,7 @@
                                                                     <span style="font-size: 12px; text-align: center;">邮件编号: <span
                                                                                 style="color: #666666;"><a
                                                                                     style="color: rgb(102, 102, 102); text-decoration: underline; font-weight: normal;"
-                                                                                    href="https://totime.cn">MAIL3214983723</a></span></span>
+                                                                                    href="https://totime.cn">${mail_id}</a></span></span>
                                                                 </p></div>
                                                         </div>
                                                     </td>
@@ -132,9 +132,9 @@
                                                              style="font-family: 微软雅黑, &quot;Microsoft YaHei&quot;; overflow-wrap: break-word; margin: 0px; text-align: center; line-height: 1.6; color: rgb(102, 102, 102); font-size: 14px; font-weight: normal;">
                                                             <div>
                                                                 <p style="text-align: left; line-height: 1.6; text-size-adjust: none; word-break: break-word; font-size: 14px; margin: 0px;">
-                                                                    <span style="font-size: 14px;">您好，云寄时光机已经收到你的时光邮件<strong>《去看那书中的江湖》</strong>这封邮件将穿越 <span
-                                                                                style="color: #5e9efc;">10003</span> 个时空送至未来的时光节点 <span
-                                                                                style="color: #5e9efc;">2024.01.01</span> ，为了保证您的邮件不被系统放入垃圾箱，请将此邮箱设置为白名单。</span>
+                                                                    <span style="font-size: 14px;">您好，云寄时光机已经收到你的时光邮件<strong>《${mail_title}》</strong>这封邮件将穿越 <span
+                                                                                style="color: #5e9efc;">${mail_spacetime}</span> 个时空送至未来的时光节点 <span
+                                                                                style="color: #5e9efc;">${mail_time}</span> ，为了保证您的邮件不被系统放入垃圾箱，请将此邮箱设置为白名单。</span>
                                                                 </p></div>
                                                         </div>
                                                     </td>
@@ -188,7 +188,7 @@
                                                 <tbody>
                                                 <tr>
                                                     <td align="center" valign="middle"
-                                                        style="line-height: 1; background-color: rgb(94, 158, 252); padding: 10px 30px; border-radius: 20px; border-width: 2px; border-color: rgb(94, 158, 252); border-style: solid;">
+                                                        style="line-height: 1; background-color: #0094FF; padding: 10px 30px; border-radius: 20px; border-width: 2px; border-color: #0094FF; border-style: solid;">
                                                         <a target="_blank" href="https://totime.cn"
                                                            style="font-size: 0px; text-decoration: none;"><p
                                                                     style="font-family: 微软雅黑, &quot;Microsoft YaHei&quot;; margin: 0px; color: rgb(255, 255, 255); line-height: 1; font-size: 12px; font-weight: normal; text-decoration: none; text-transform: none;">
@@ -217,7 +217,7 @@
                                                              style="font-family: 微软雅黑, &quot;Microsoft YaHei&quot;; overflow-wrap: break-word; margin: 0px; text-align: center; line-height: 1.6; color: rgb(102, 102, 102); font-size: 14px; font-weight: normal;">
                                                             <div>
                                                                 <p style="text-size-adjust: none; word-break: break-word; line-height: 1.6; font-size: 14px; margin: 0px;">
-                                                                    <span style="font-size: 12px;">Copyright @ 2021-2023YunMail AIl Rights Reserved. 云寄团队 版权所有</span>
+                                                                    <span style="font-size: 12px;">Copyright @ 2021-2023 YunMail All Rights Reserved. 云寄团队 版权所有</span>
                                                                 </p>
                                                                 <p style="text-size-adjust: none; word-break: break-word; line-height: 1.6; font-size: 14px; margin: 0px;">
                                                                     <span style="font-size: 12px;">如有打扰请联系我们，祝平安喜乐</span>

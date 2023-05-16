@@ -14,7 +14,7 @@ public class IdUtils {
      * @return {@link String} 邮件id
      */
     public static String getMailId() {
-        return "mail" + System.currentTimeMillis();
+        return "MAIL" + System.currentTimeMillis();
     }
 
     /**
@@ -23,6 +23,6 @@ public class IdUtils {
      * @return {@link String}
      */
     public static String getLetterId() {
-        return "letter" + System.currentTimeMillis();
+        return "LETTER" + System.currentTimeMillis();
     }
 }
