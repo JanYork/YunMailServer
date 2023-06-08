@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2023. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+ * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+ * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+ * Vestibulum commodo. Ut rhoncus gravida arcu.
+ */
+
 package net.totime.mail.handler;
 
 import com.egzosn.pay.common.api.PayMessageHandler;
@@ -5,7 +13,6 @@ import com.egzosn.pay.common.api.PayService;
 import com.egzosn.pay.common.bean.PayOutMessage;
 import com.egzosn.pay.common.exception.PayErrorException;
 import com.egzosn.pay.wx.v3.bean.response.WxPayMessage;
-import com.egzosn.pay.wx.v3.bean.response.order.TradeState;
 import lombok.extern.slf4j.Slf4j;
 import net.totime.mail.context.SpringBeanContext;
 import net.totime.mail.domain.orders.OrdersOperateService;
@@ -18,8 +25,6 @@ import net.totime.mail.util.PayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
-import javax.annotation.Resource;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
 

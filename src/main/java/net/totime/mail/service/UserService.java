@@ -1,8 +1,13 @@
+/*
+ * Copyright (c) 2023. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+ * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+ * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+ * Vestibulum commodo. Ut rhoncus gravida arcu.
+ */
+
 package net.totime.mail.service;
 
-import com.alicp.jetcache.anno.CacheInvalidate;
-import com.alicp.jetcache.anno.CacheUpdate;
-import com.alicp.jetcache.anno.Cached;
 import com.baomidou.mybatisplus.extension.service.IService;
 import net.totime.mail.entity.User;
 
@@ -22,7 +27,6 @@ public interface UserService extends IService<User> {
      * @return boolean 是否成功
      */
     @Override
-    @Cached(name = "user::", key = "#entity.id", expire = 3600)
     default boolean save(User entity) {
         return IService.super.save(entity);
     }
@@ -34,7 +38,6 @@ public interface UserService extends IService<User> {
      * @return boolean 是否成功
      */
     @Override
-    @CacheInvalidate(name = "user::", key = "#entity.id")
     default boolean removeById(User entity) {
         return IService.super.removeById(entity);
     }
@@ -46,7 +49,6 @@ public interface UserService extends IService<User> {
      * @return boolean
      */
     @Override
-    @CacheUpdate(name = "user::", key = "#entity.id", value = "#entity")
     default boolean updateById(User entity) {
         return IService.super.updateById(entity);
     }
@@ -58,7 +60,6 @@ public interface UserService extends IService<User> {
      * @return {@link User}
      */
     @Override
-    @Cached(name = "user::", key = "#id", expire = 3600)
     default User getById(Serializable id) {
         return IService.super.getById(id);
     }

@@ -1,8 +1,13 @@
+/*
+ * Copyright (c) 2023. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+ * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+ * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+ * Vestibulum commodo. Ut rhoncus gravida arcu.
+ */
+
 package net.totime.mail.service.impl;
 
-import com.alicp.jetcache.anno.CacheInvalidate;
-import com.alicp.jetcache.anno.CacheUpdate;
-import com.alicp.jetcache.anno.Cached;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import net.totime.mail.entity.Role;
@@ -22,25 +27,21 @@ import java.util.List;
 @Service
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements RoleService {
     @Override
-    @Cached(name = "role:", key = "#entity.id", expire = 3600)
     public boolean save(Role entity) {
         return super.save(entity);
     }
 
     @Override
-    @CacheInvalidate(name = "role:", key = "#entity.id")
     public boolean removeById(Role entity) {
         return super.removeById(entity);
     }
 
     @Override
-    @CacheUpdate(name = "role:", key = "#entity.id", value = "#entity")
     public boolean updateById(Role entity) {
         return super.updateById(entity);
     }
 
     @Override
-    @Cached(name = "role:", key = "#id", expire = 3600)
     public Role getById(Serializable id) {
         return super.getById(id);
     }
@@ -51,7 +52,6 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     }
 
     @Override
-    @Cached(name = "role:", key = "list", expire = 3600)
     public List<Role> list() {
         return super.list();
     }

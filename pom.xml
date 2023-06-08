@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2023. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+  ~ Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+  ~ Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+  ~ Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+  ~ Vestibulum commodo. Ut rhoncus gravida arcu.
+  -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -24,18 +32,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>redis.clients</groupId>
-                    <artifactId>jedis</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
-            <version>4.2.0</version>
         </dependency>
 
         <dependency>
@@ -56,6 +52,12 @@
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>aliyun-sms-spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba.fastjson2</groupId>
+            <artifactId>fastjson2</artifactId>
+            <version>2.0.33</version>
         </dependency>
 
         <dependency>
@@ -166,11 +168,11 @@
             <version>1.1.0</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.alicp.jetcache</groupId>
-            <artifactId>jetcache-starter-redis</artifactId>
-            <version>2.7.3</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.alicp.jetcache</groupId>-->
+<!--            <artifactId>jetcache-starter-redis</artifactId>-->
+<!--            <version>2.7.3</version>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -207,16 +209,16 @@
             <version>1.4.0</version>
         </dependency>
 
-        <!--        <dependency>-->
-        <!--            <groupId>com.github.binarywang</groupId>-->
-        <!--            <artifactId>wx-java-mp-spring-boot-starter</artifactId>-->
-        <!--            <version>4.4.0</version>-->
-        <!--        </dependency>-->
+        <dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>wx-java-mp-spring-boot-starter</artifactId>
+            <version>4.5.0</version>
+        </dependency>
 
         <dependency>
             <groupId>com.github.binarywang</groupId>
             <artifactId>wx-java-miniapp-spring-boot-starter</artifactId>
-            <version>4.4.0</version>
+            <version>4.5.0</version>
         </dependency>
 
         <dependency>

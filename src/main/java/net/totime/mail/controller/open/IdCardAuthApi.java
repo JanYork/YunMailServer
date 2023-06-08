@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2023. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+ * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+ * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+ * Vestibulum commodo. Ut rhoncus gravida arcu.
+ */
+
 package net.totime.mail.controller.open;
 
 import com.alibaba.fastjson2.JSONObject;
@@ -52,7 +60,7 @@ public class IdCardAuthApi {
         if (!"0".equals(result.get("code"))) {
             return ApiResponse.fail("认证异常");
         }
-        HashMap<String, String> res = JSONObject.parseObject(JSONObject.toJSONString(result.get("result")), new TypeReference<HashMap<String, Object>>() {
+        HashMap<String, String> res = JSONObject.parseObject(JSONObject.toJSONString(result.get("result")), new TypeReference<>() {
         });
         String authCode = res.get("res");
         return "1".equals(authCode) ? ApiResponse.ok("认证成功") : ApiResponse.fail("认证失败");

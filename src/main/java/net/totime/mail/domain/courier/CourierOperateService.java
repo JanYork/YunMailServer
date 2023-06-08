@@ -1,9 +1,16 @@
+/*
+ * Copyright (c) 2023. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+ * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+ * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+ * Vestibulum commodo. Ut rhoncus gravida arcu.
+ */
+
 package net.totime.mail.domain.courier;
 
 import cn.hutool.crypto.digest.MD5;
 import com.raycloud.open.sdk.api.KdzsClient;
 import com.raycloud.open.sdk.api.base.exception.ApiRuleException;
-import com.raycloud.open.sdk.api.base.utils.SignUtils;
 import com.raycloud.open.sdk.api.request.KdzsLogisticsTraceSearchRequest;
 import com.raycloud.open.sdk.api.request.KdzsLogisticsTraceSubscribeRequest;
 import com.raycloud.open.sdk.api.response.KdzsLogisticsTraceSearchResponse;
@@ -17,8 +24,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author JanYork
