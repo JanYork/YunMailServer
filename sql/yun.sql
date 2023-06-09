@@ -11,7 +11,7 @@
  Target Server Version : 80012 (8.0.12)
  File Encoding         : 65001
 
- Date: 22/05/2023 09:07:46
+ Date: 09/06/2023 13:17:10
 */
 
 SET NAMES utf8mb4;
@@ -147,12 +147,12 @@ INSERT INTO `goods` VALUES (2, '信件', 10.00);
 -- ----------------------------
 DROP TABLE IF EXISTS `id_card_auth`;
 CREATE TABLE `id_card_auth`  (
-  `id` int(11) NOT NULL COMMENT '实名认证ID',
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '实名认证ID',
   `id_card` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '身份证号',
   `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '姓名',
   `other` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '其他证明身份图片[JSON]',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '实名认证表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '实名认证表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of id_card_auth
