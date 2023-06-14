@@ -10,6 +10,7 @@ package net.totime.mail.util;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
@@ -40,5 +41,21 @@ public class RedisUtil {
 
     public void delete(String key) {
         rt.delete(key);
+    }
+
+    /**
+     * 计数器
+     *
+     * @param key  键
+     * @param time 过期时间
+     * @return {@link Long}
+     */
+    public Long incr(String key, Long time) {
+        Long count = rt.opsForValue().increment(key);
+        Assert.notNull(count, "计数器异常");
+        if (count == 1) {
+            rt.expire(key, time, TimeUnit.SECONDS);
+        }
+        return count;
     }
 }

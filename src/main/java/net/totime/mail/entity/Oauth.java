@@ -8,29 +8,24 @@
 
 package net.totime.mail.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import net.totime.mail.enums.OauthType;
-
 import java.util.Date;
+
+import com.baomidou.mybatisplus.extension.activerecord.Model;
+
+import java.io.Serializable;
 
 /**
  * 用户第三方授权表(Oauth)表实体类
  *
  * @author JanYork
- * @since 2023-04-02 10:38:46
+ * @since 2023-06-14 22:59:43
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class Oauth extends Model<Oauth> {
-    private static final long serialVersionUID = 8757679743409972743L;
     /**
      * 第三方授权表ID
      */
-    @TableId(value = "`id`", type = IdType.AUTO)
     private Integer id;
     /**
      * 第三方授权绑定的用户ID
@@ -39,7 +34,7 @@ public class Oauth extends Model<Oauth> {
     /**
      * 第三方授权类型
      */
-    private OauthType provider;
+    private Integer provider;
     /**
      * 第三方授权唯一标识
      */

@@ -9,14 +9,12 @@
 package net.totime.mail.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import net.totime.mail.entity.RoleToPrem;
-import org.apache.ibatis.annotations.Mapper;
 
 /**
- * (RoleToPrem)表数据层
+ * 角色与权限中间表(RoleToPrem)表数据层
  *
  * @author JanYork
- * @since 2023-03-26 22:06:51
+ * @since 2023-06-14 22:59:41
  */
 @Mapper
 public interface RoleToPremMapper extends BaseMapper<RoleToPrem> {

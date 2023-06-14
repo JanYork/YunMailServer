@@ -17,8 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.totime.mail.context.SpringBeanContext;
 import net.totime.mail.domain.orders.OrdersOperateService;
 import net.totime.mail.domain.sponsor.SponsorOperateService;
-import net.totime.mail.entity.Orders;
-import net.totime.mail.entity.Sponsor;
+import net.totime.mail.entity.back.OrdersBuilder;
+import net.totime.mail.entity.back.Sponsor;
 import net.totime.mail.enums.PayState;
 import net.totime.mail.exception.PayException;
 import net.totime.mail.util.PayUtils;
@@ -57,8 +57,8 @@ public class WxV3PayMessageHandler implements PayMessageHandler<WxPayMessage, Pa
         if (SUCCESS.equals(state)) {
             Long outTradeNo = Long.parseLong(payMessage.getOutTradeNo());
             OrdersOperateService oos = SpringBeanContext.getBean(OrdersOperateService.class);
-            Orders ordersById = oos.getOrdersById(outTradeNo);
-            if (ObjectUtils.isEmpty(ordersById)) {
+            OrdersBuilder ordersBuilderById = oos.getOrdersById(outTradeNo);
+            if (ObjectUtils.isEmpty(ordersBuilderById)) {
                 SponsorOperateService sos = SpringBeanContext.getBean(SponsorOperateService.class);
                 Sponsor sponsorById = sos.getSponsorById(outTradeNo);
                 if (ObjectUtils.isNotEmpty(sponsorById)) {

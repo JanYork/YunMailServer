@@ -10,13 +10,12 @@ package net.totime.mail.domain.comment;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import net.totime.mail.entity.Comment;
+import net.totime.mail.entity.back.Comment;
 import net.totime.mail.service.CommentService;
 import net.totime.mail.vo.CommentVO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

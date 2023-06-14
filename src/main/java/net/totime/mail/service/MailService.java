@@ -9,13 +9,12 @@
 package net.totime.mail.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import net.totime.mail.entity.Mail;
 
 /**
- * (Mail)表服务接口
+ * 邮件任务表(Mail)表服务接口
  *
  * @author JanYork
- * @since 2023-03-26 17:54:03
+ * @since 2023-06-14 22:59:38
  */
 public interface MailService extends IService<Mail> {
 

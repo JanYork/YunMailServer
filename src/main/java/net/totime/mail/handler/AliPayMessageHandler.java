@@ -8,7 +8,6 @@
 
 package net.totime.mail.handler;
 
-import com.alibaba.fastjson2.JSON;
 import com.egzosn.pay.ali.api.AliPayService;
 import com.egzosn.pay.ali.bean.AliPayMessage;
 import com.egzosn.pay.common.api.PayMessageHandler;
@@ -18,14 +17,12 @@ import lombok.extern.slf4j.Slf4j;
 import net.totime.mail.context.SpringBeanContext;
 import net.totime.mail.domain.orders.OrdersOperateService;
 import net.totime.mail.domain.sponsor.SponsorOperateService;
-import net.totime.mail.entity.Orders;
-import net.totime.mail.entity.Sponsor;
+import net.totime.mail.entity.back.OrdersBuilder;
+import net.totime.mail.entity.back.Sponsor;
 import net.totime.mail.enums.PayState;
 import net.totime.mail.exception.PayException;
 import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
 
@@ -63,8 +60,8 @@ public class AliPayMessageHandler implements PayMessageHandler<AliPayMessage, Al
         if (SUCCESS.equals(tradeStatus) || FINISHED.equals(tradeStatus)) {
             Long outTradeNo = Long.parseLong(payMessage.getOutTradeNo());
             OrdersOperateService oos = SpringBeanContext.getBean(OrdersOperateService.class);
-            Orders ordersById = oos.getOrdersById(outTradeNo);
-            if (ObjectUtils.isEmpty(ordersById)) {
+            OrdersBuilder ordersBuilderById = oos.getOrdersById(outTradeNo);
+            if (ObjectUtils.isEmpty(ordersBuilderById)) {
                 SponsorOperateService sos = SpringBeanContext.getBean(SponsorOperateService.class);
                 Sponsor sponsorById = sos.getSponsorById(outTradeNo);
                 if (ObjectUtils.isNotEmpty(sponsorById)) {

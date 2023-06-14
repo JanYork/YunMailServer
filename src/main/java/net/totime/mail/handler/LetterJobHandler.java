@@ -10,7 +10,7 @@ package net.totime.mail.handler;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.xxl.job.core.handler.annotation.XxlJob;
-import net.totime.mail.entity.Letter;
+import net.totime.mail.entity.back.Letter;
 import net.totime.mail.response.ApiResponse;
 import net.totime.mail.service.LetterService;
 import org.springframework.context.annotation.Configuration;

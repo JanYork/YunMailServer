@@ -11,14 +11,14 @@ package net.totime.mail.entity;
 import java.util.Date;
 
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
 
 /**
  * 许愿表(Wish)表实体类
  *
  * @author JanYork
- * @since 2023-03-27 22:13:36
+ * @since 2023-06-14 22:59:39
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -47,4 +47,8 @@ public class Wish extends Model<Wish> {
      * 创建时间
      */
     private Date creatTime;
+    /**
+     * 心愿状态
+     */
+    private Integer state;
 }

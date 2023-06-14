@@ -8,7 +8,7 @@
 
 package net.totime.mail.domain.user;
 
-import net.totime.mail.entity.User;
+import net.totime.mail.entity.back.User;
 import net.totime.mail.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;

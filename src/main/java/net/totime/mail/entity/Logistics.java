@@ -11,8 +11,6 @@ package net.totime.mail.entity;
 import java.util.Date;
 
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 
@@ -20,16 +18,15 @@ import java.io.Serializable;
  * 信件物流表(Logistics)表实体类
  *
  * @author JanYork
- * @since 2023-05-12 15:27:22
+ * @since 2023-06-14 22:59:37
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class Logistics extends Model<Logistics> {
-    private static final long serialVersionUID = 2112410038577839855L;
     /**
      * 物流ID
      */
-    private Integer id;
+    private Long id;
     /**
      * 信件ID
      */

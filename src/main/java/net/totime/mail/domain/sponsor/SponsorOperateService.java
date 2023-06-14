@@ -10,8 +10,8 @@ package net.totime.mail.domain.sponsor;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import net.totime.mail.entity.Sponsor;
-import net.totime.mail.entity.User;
+import net.totime.mail.entity.back.Sponsor;
+import net.totime.mail.entity.back.User;
 import net.totime.mail.service.SponsorService;
 import net.totime.mail.service.UserService;
 import net.totime.mail.vo.SponsorInfoVO;

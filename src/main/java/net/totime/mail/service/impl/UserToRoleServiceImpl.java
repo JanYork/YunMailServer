@@ -9,16 +9,13 @@
 package net.totime.mail.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import net.totime.mail.entity.UserToRole;
-import net.totime.mail.mapper.UserToRoleMapper;
 import net.totime.mail.service.UserToRoleService;
-import org.springframework.stereotype.Service;
 
 /**
- * (UserToRole)表服务实现类
+ * 用户与角色中间表(UserToRole)表服务实现类
  *
  * @author JanYork
- * @since 2023-03-26 22:06:49
+ * @since 2023-06-14 22:59:39
  */
 @Service
 public class UserToRoleServiceImpl extends ServiceImpl<UserToRoleMapper, UserToRole> implements UserToRoleService {

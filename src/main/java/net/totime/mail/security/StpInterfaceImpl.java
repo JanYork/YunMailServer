@@ -10,10 +10,10 @@ package net.totime.mail.security;
 
 import cn.dev33.satoken.stp.StpInterface;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import net.totime.mail.entity.Perm;
-import net.totime.mail.entity.Role;
-import net.totime.mail.entity.UserToPrem;
-import net.totime.mail.entity.UserToRole;
+import net.totime.mail.entity.back.Perm;
+import net.totime.mail.entity.back.Role;
+import net.totime.mail.entity.back.UserToPrem;
+import net.totime.mail.entity.back.UserToRole;
 import net.totime.mail.service.*;
 import org.springframework.context.annotation.Configuration;
 

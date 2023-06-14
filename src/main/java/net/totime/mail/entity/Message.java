@@ -11,14 +11,14 @@ package net.totime.mail.entity;
 import java.util.Date;
 
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
 
 /**
  * 短信任务表(Message)表实体类
  *
  * @author JanYork
- * @since 2023-03-27 22:13:34
+ * @since 2023-06-14 22:59:38
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -26,7 +26,7 @@ public class Message extends Model<Message> {
     /**
      * 短信ID
      */
-    private Integer id;
+    private Long id;
     /**
      * 用户ID
      */

@@ -52,7 +52,7 @@ public class CommentVO {
     /**
      * 是否过滤
      */
-    private Integer isFilter;
+    private Boolean isFilter;
     /**
      * 子评论
      */

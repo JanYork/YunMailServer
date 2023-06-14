@@ -10,31 +10,26 @@ package net.totime.mail.entity;
 
 import java.util.Date;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+
+import java.io.Serializable;
 
 /**
  * 云寄用户表(User)表实体类
  *
  * @author JanYork
- * @since 2023-03-27 22:13:35
+ * @since 2023-06-14 22:59:40
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class User extends Model<User> {
-    private static final long serialVersionUID = 4149134366386885495L;
     /**
-     * 用户ID
+     * 用户自增ID
      */
-    @TableId
     private Long id;
     /**
      * 用户账户
      */
-    @TableField("`name`")
     private String name;
     /**
      * 用户昵称
@@ -57,6 +52,10 @@ public class User extends Model<User> {
      */
     private String pwd;
     /**
+     * 用户盐值
+     */
+    private String salt;
+    /**
      * 是否实名认证
      */
     private Integer authRealName;
@@ -68,8 +67,4 @@ public class User extends Model<User> {
      * 用户状态
      */
     private Integer state;
-    /**
-     * 用户盐值
-     */
-    private String salt;
 }

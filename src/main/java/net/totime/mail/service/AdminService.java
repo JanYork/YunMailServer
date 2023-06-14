@@ -9,13 +9,12 @@
 package net.totime.mail.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import net.totime.mail.entity.Admin;
 
 /**
- * (Admin)表服务接口
+ * 管理员信息表(Admin)表服务接口
  *
  * @author JanYork
- * @since 2023-03-26 17:54:04
+ * @since 2023-06-14 22:59:30
  */
 public interface AdminService extends IService<Admin> {
 

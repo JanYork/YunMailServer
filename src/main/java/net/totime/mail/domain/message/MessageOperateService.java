@@ -8,14 +8,12 @@
 
 package net.totime.mail.domain.message;
 
-import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.bean.BeanUtil;
 import net.totime.mail.dto.MessageDTO;
-import net.totime.mail.entity.Message;
+import net.totime.mail.entity.back.Message;
 import net.totime.mail.service.MessageService;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.annotation.Resource;
 import java.util.Date;

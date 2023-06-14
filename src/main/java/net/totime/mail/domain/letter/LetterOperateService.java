@@ -12,7 +12,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import net.totime.mail.dto.LetterDTO;
-import net.totime.mail.entity.Letter;
+import net.totime.mail.entity.back.Letter;
 import net.totime.mail.enums.LetterState;
 import net.totime.mail.service.LetterService;
 import net.totime.mail.util.IdUtils;

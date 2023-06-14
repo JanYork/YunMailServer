@@ -8,7 +8,7 @@
 
 package net.totime.mail.domain.orders;
 
-import net.totime.mail.entity.Orders;
+import net.totime.mail.entity.back.OrdersBuilder;
 import net.totime.mail.service.OrdersService;
 import org.springframework.stereotype.Service;
 
@@ -29,30 +29,30 @@ public class OrdersOperateService {
     /**
      * 创建订单
      *
-     * @param orders 订单信息
+     * @param ordersBuilder 订单信息
      * @return {@link Boolean} 是否创建成功
      */
-    public Boolean createOrders(Orders orders) {
-        return ordersService.save(orders);
+    public Boolean createOrders(OrdersBuilder ordersBuilder) {
+        return ordersService.save(ordersBuilder);
     }
 
     /**
      * 通过ID获取订单信息
      *
      * @param id 订单ID
-     * @return {@link Orders}
+     * @return {@link OrdersBuilder}
      */
-    public Orders getOrdersById(Long id) {
+    public OrdersBuilder getOrdersById(Long id) {
         return ordersService.getById(id);
     }
 
     /**
      * 更新订单信息
      *
-     * @param orders 订单信息
+     * @param ordersBuilder 订单信息
      * @return {@link Boolean} 是否更新成功
      */
-    public Boolean updateOrders(Orders orders) {
-        return ordersService.updateById(orders);
+    public Boolean updateOrders(OrdersBuilder ordersBuilder) {
+        return ordersService.updateById(ordersBuilder);
     }
 }

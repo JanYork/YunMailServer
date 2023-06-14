@@ -10,27 +10,23 @@ package net.totime.mail.entity;
 
 import java.util.Date;
 
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import net.totime.mail.enums.LetterState;
+
+import java.io.Serializable;
 
 /**
  * 时光信件表(Letter)表实体类
  *
  * @author JanYork
- * @since 2023-03-27 22:13:34
+ * @since 2023-06-14 22:59:36
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class Letter extends Model<Letter> {
-    private static final long serialVersionUID = 8349360044676853889L;
     /**
      * 信件唯一ID
      */
-    @TableId
-    private String letterId;
+    private Long letterId;
     /**
      * 用户ID
      */
@@ -50,7 +46,7 @@ public class Letter extends Model<Letter> {
     /**
      * 信件是否公开
      */
-    private Boolean isPublic;
+    private Integer isPublic;
     /**
      * 信件发送时间
      */
@@ -58,7 +54,7 @@ public class Letter extends Model<Letter> {
     /**
      * 信件是否发给自己
      */
-    private Boolean isYourself;
+    private Integer isYourself;
     /**
      * 信件发往地址
      */
@@ -76,11 +72,11 @@ public class Letter extends Model<Letter> {
      */
     private String remark;
     /**
-     * 信件发送状态
-     */
-    private LetterState state;
-    /**
      * 信件类型
      */
     private Integer letterType;
+    /**
+     * 信件状态
+     */
+    private Integer state;
 }
