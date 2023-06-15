@@ -6,7 +6,7 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package net.totime.mail.dto;
+package net.totime.mail.dto.back;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;

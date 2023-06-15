@@ -11,7 +11,7 @@ package net.totime.mail.controller.back.open;
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.TypeReference;
 import net.totime.mail.annotation.RateLimiter;
-import net.totime.mail.dto.IdCardAuthDTO;
+import net.totime.mail.dto.back.IdCardAuthDTO;
 import net.totime.mail.response.ApiResponse;
 import net.totime.mail.util.OkHttpUtil;
 import org.apache.commons.lang3.StringUtils;

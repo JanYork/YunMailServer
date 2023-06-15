@@ -17,7 +17,7 @@ import com.egzosn.pay.wx.v3.bean.WxTransactionType;
 import lombok.SneakyThrows;
 import net.totime.mail.annotation.RateLimiter;
 import net.totime.mail.domain.sponsor.SponsorOperateService;
-import net.totime.mail.dto.SponsorDTO;
+import net.totime.mail.dto.back.SponsorDTO;
 import net.totime.mail.entity.back.Sponsor;
 import net.totime.mail.enums.PayState;
 import net.totime.mail.enums.PayType;

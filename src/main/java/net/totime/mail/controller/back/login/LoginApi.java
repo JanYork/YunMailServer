@@ -15,7 +15,7 @@ import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.totime.mail.domain.open.VerifyService;
-import net.totime.mail.dto.UserDTO;
+import net.totime.mail.dto.back.UserDTO;
 import net.totime.mail.entity.back.User;
 import net.totime.mail.response.ApiResponse;
 import net.totime.mail.service.impl.UserServiceImpl;

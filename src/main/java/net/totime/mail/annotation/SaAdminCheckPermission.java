@@ -9,8 +9,7 @@
 
 package net.totime.mail.annotation;
 
-
-import cn.dev33.satoken.annotation.SaCheckRole;
+import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.annotation.SaMode;
 import cn.donglifeng.shop.security.config.StpAdminUtil;
 import org.springframework.core.annotation.AliasFor;
@@ -21,29 +20,27 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 角色认证(ADMIN)：必须具有指定角色标识才能进入该方法
- * <p> 可标注在函数、类上（效果等同于标注在此类的所有方法上）
+ * 权限认证(ADMIN)：必须具有指定权限才能进入该方法
+ * <p> 可标注在函数、类上（效果等同于标注在此类的所有方法上） </p>
+ * @author JanYork
  *
- * @author click33
  */
-@SaCheckRole(type = StpAdminUtil.TYPE)
+@SaCheckPermission(type = StpAdminUtil.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.TYPE})
-public @interface SaAdminCheckRole {
+@Target({ ElementType.METHOD, ElementType.TYPE})
+public @interface SaAdminCheckPermission {
+
     /**
-     * 需要校验的角色标识
-     *
-     * @return 需要校验的角色标识
+     * 需要校验的权限码
+     * @return 需要校验的权限码
      */
-    @AliasFor(annotation = SaCheckRole.class)
-    String[] value() default {};
+    @AliasFor(annotation = SaCheckPermission.class)
+    String [] value() default {};
 
     /**
      * 验证模式：AND | OR，默认AND
-     *
      * @return 验证模式
      */
-    @AliasFor(annotation = SaCheckRole.class)
+    @AliasFor(annotation = SaCheckPermission.class)
     SaMode mode() default SaMode.AND;
-
 }

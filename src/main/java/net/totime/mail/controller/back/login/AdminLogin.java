@@ -10,7 +10,7 @@ package net.totime.mail.controller.back.login;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import net.totime.mail.annotation.SaAdminCheckLogin;
-import net.totime.mail.dto.AdminLoginDTO;
+import net.totime.mail.dto.back.AdminLoginDTO;
 import net.totime.mail.entity.back.Admin;
 import net.totime.mail.response.ApiResponse;
 import net.totime.mail.security.StpAdminUtil;

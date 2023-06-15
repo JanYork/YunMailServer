@@ -10,7 +10,7 @@ package net.totime.mail.controller.back.user;
 
 import cn.dev33.satoken.annotation.SaMode;
 import net.totime.mail.annotation.SaAdminCheckRole;
-import net.totime.mail.dto.UserDTO;
+import net.totime.mail.dto.back.UserDTO;
 import net.totime.mail.entity.back.User;
 import net.totime.mail.response.ApiResponse;
 import net.totime.mail.service.UserService;

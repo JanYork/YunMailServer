@@ -6,19 +6,20 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package net.totime.mail.dto;
+package net.totime.mail.dto.back;
 
 import lombok.Data;
 
 /**
  * @author JanYork
  * @version 1.0.0
- * @date 2023/04/24
- * @description 后台登录
+ * @date 2023/04/13
+ * @description 实名认证要素
  * @since 1.0.0
  */
 @Data
-public class AdminLoginDTO {
-    private String username;
-    private String password;
+public class IdCardAuthDTO {
+    private String name;
+    private String idCard;
+    private String phone;
 }

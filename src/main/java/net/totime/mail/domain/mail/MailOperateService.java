@@ -11,7 +11,7 @@ package net.totime.mail.domain.mail;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import net.totime.mail.dto.MailDTO;
+import net.totime.mail.dto.back.MailDTO;
 import net.totime.mail.entity.back.Mail;
 import net.totime.mail.enums.MailState;
 import net.totime.mail.service.MailService;

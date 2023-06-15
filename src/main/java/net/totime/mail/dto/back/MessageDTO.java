@@ -6,30 +6,32 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package net.totime.mail.dto;
+package net.totime.mail.dto.back;
 
+import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
+import java.util.Date;
 
 /**
- * 赞助信息表(Sponsor)表实体类
+ * 短信任务表DTO
  *
  * @author JanYork
- * @since 2023-04-19 15:54:56
+ * @since 2023-03-27 22:13:34
  */
 @Data
-public class SponsorDTO {
+public class MessageDTO {
     /**
-     * 赞助留言
+     * 短信内容
      */
-    private String sponsorSay;
+    private String text;
     /**
-     * 赞助金额
+     * 短信发送时间
      */
-    @NotNull(message = "金额不能为空")
-    @DecimalMin(value = "1", message = "太小气啦~，不要这个，哼！")
-    private BigDecimal sponsorAmount;
+    private Date sendTime;
+    /**
+     * 短信是否匿名
+     */
+    private Integer isUnnamed;
 }
