@@ -8,25 +8,39 @@
 
 package net.totime.mail.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import java.io.Serializable;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
- * 祝福分类表(BlessingCategory)表实体类
+ * 祝福分类信息
  *
  * @author JanYork
  * @since 2023-06-14 22:59:33
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
+@ApiModel(value = "祝福分类信息", description = "字段与数据库一致")
 public class BlessingCategory extends Model<BlessingCategory> {
+    private static final long serialVersionUID = -634102198329007635L;
     /**
      * 祝福分类ID
      */
+    @TableId(type = IdType.AUTO)
+    @ApiModelProperty(value = "祝福分类ID", example = "1")
     private Integer id;
     /**
      * 祝福分类名称
      */
+    @ApiModelProperty(value = "祝福分类名称", example = "生日祝福", required = true)
+    @NotNull
+    @Size(min = 1, max = 6)
     private String name;
 }
