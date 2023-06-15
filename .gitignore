@@ -42,3 +42,4 @@ application.yml!/src/main/resources/application.yml
 /src/main/resources/cert/*.pem
 /src/main/resources/cert/*.cer
 /src/main/resources/cert/*.p12
+/src/main/java/net/totime/mail/entity/back/
