@@ -9,6 +9,8 @@
 package net.totime.mail.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import net.totime.mail.entity.Comment;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * 邮件与信件评论表(Comment)表数据层

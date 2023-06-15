@@ -9,6 +9,7 @@
 package net.totime.mail.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import net.totime.mail.entity.Issues;
 
 /**
  * 问题表(Issues)表服务接口

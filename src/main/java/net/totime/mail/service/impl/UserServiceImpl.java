@@ -9,7 +9,10 @@
 package net.totime.mail.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import net.totime.mail.entity.User;
+import net.totime.mail.mapper.UserMapper;
 import net.totime.mail.service.UserService;
+import org.springframework.stereotype.Service;
 
 /**
  * 云寄用户表(User)表服务实现类

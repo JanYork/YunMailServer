@@ -9,7 +9,10 @@
 package net.totime.mail.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import net.totime.mail.entity.Sponsor;
+import net.totime.mail.mapper.SponsorMapper;
 import net.totime.mail.service.SponsorService;
+import org.springframework.stereotype.Service;
 
 /**
  * 赞助信息表(Sponsor)表服务实现类

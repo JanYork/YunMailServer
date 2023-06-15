@@ -9,6 +9,7 @@
 package net.totime.mail.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import net.totime.mail.entity.Comment;
 
 /**
  * 邮件与信件评论表(Comment)表服务接口

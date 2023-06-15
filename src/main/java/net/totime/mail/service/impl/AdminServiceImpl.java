@@ -9,7 +9,11 @@
 package net.totime.mail.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import net.totime.mail.entity.Admin;
+import net.totime.mail.mapper.AdminMapper;
 import net.totime.mail.service.AdminService;
+import org.springframework.stereotype.Service;
+
 
 /**
  * 管理员信息表(Admin)表服务实现类

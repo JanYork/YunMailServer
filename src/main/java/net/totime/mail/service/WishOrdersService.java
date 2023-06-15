@@ -9,6 +9,7 @@
 package net.totime.mail.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import net.totime.mail.entity.WishOrders;
 
 /**
  * 信件订单表(WishOrders)表服务接口

@@ -9,6 +9,8 @@
 package net.totime.mail.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import net.totime.mail.entity.Wish;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * 许愿表(Wish)表数据层

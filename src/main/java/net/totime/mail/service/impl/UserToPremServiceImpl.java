@@ -9,7 +9,10 @@
 package net.totime.mail.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import net.totime.mail.entity.UserToPrem;
+import net.totime.mail.mapper.UserToPremMapper;
 import net.totime.mail.service.UserToPremService;
+import org.springframework.stereotype.Service;
 
 /**
  * 用户与权限中间表(UserToPrem)表服务实现类

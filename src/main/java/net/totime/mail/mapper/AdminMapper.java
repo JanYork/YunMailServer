@@ -8,7 +8,10 @@
 
 package net.totime.mail.mapper;
 
+
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import net.totime.mail.entity.Admin;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * 管理员信息表(Admin)表数据层

@@ -9,6 +9,8 @@
 package net.totime.mail.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import net.totime.mail.entity.IdCardAuth;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * 实名认证表(IdCardAuth)表数据层

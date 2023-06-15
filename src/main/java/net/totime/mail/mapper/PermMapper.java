@@ -9,6 +9,8 @@
 package net.totime.mail.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import net.totime.mail.entity.Perm;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * 权限表(Perm)表数据层

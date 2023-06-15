@@ -9,7 +9,10 @@
 package net.totime.mail.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import net.totime.mail.entity.BlessingToWish;
+import net.totime.mail.mapper.BlessingToWishMapper;
 import net.totime.mail.service.BlessingToWishService;
+import org.springframework.stereotype.Service;
 
 /**
  * 祝福语录表(BlessingToWish)表服务实现类

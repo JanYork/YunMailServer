@@ -11,7 +11,7 @@ package net.totime.mail.annotation;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.annotation.SaMode;
-import cn.donglifeng.shop.security.config.StpAdminUtil;
+import net.totime.mail.security.StpAdminUtil;
 import org.springframework.core.annotation.AliasFor;
 
 import java.lang.annotation.ElementType;

@@ -9,7 +9,10 @@
 package net.totime.mail.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import net.totime.mail.entity.IdCardAuth;
+import net.totime.mail.mapper.IdCardAuthMapper;
 import net.totime.mail.service.IdCardAuthService;
+import org.springframework.stereotype.Service;
 
 /**
  * 实名认证表(IdCardAuth)表服务实现类

@@ -9,6 +9,8 @@
 package net.totime.mail.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import net.totime.mail.entity.Sponsor;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * 赞助信息表(Sponsor)表数据层

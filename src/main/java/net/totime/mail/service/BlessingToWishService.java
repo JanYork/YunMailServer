@@ -9,6 +9,7 @@
 package net.totime.mail.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import net.totime.mail.entity.BlessingToWish;
 
 /**
  * 祝福语录表(BlessingToWish)表服务接口

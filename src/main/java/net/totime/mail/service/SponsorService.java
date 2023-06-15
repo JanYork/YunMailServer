@@ -9,6 +9,7 @@
 package net.totime.mail.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import net.totime.mail.entity.Sponsor;
 
 /**
  * 赞助信息表(Sponsor)表服务接口

@@ -9,6 +9,8 @@
 package net.totime.mail.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import net.totime.mail.entity.User;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * 云寄用户表(User)表数据层

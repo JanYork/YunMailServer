@@ -9,7 +9,10 @@
 package net.totime.mail.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import net.totime.mail.entity.Role;
+import net.totime.mail.mapper.RoleMapper;
 import net.totime.mail.service.RoleService;
+import org.springframework.stereotype.Service;
 
 /**
  * 角色表(Role)表服务实现类

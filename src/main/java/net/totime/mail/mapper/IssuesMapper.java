@@ -9,6 +9,8 @@
 package net.totime.mail.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import net.totime.mail.entity.Issues;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * 问题表(Issues)表数据层

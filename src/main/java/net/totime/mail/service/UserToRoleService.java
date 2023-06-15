@@ -9,6 +9,7 @@
 package net.totime.mail.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import net.totime.mail.entity.UserToRole;
 
 /**
  * 用户与角色中间表(UserToRole)表服务接口

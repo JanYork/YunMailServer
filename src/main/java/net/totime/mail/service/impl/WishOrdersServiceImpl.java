@@ -9,7 +9,10 @@
 package net.totime.mail.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import net.totime.mail.entity.WishOrders;
+import net.totime.mail.mapper.WishOrdersMapper;
 import net.totime.mail.service.WishOrdersService;
+import org.springframework.stereotype.Service;
 
 /**
  * 信件订单表(WishOrders)表服务实现类

@@ -9,6 +9,7 @@
 package net.totime.mail.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import net.totime.mail.entity.BlessingCategory;
 
 /**
  * 祝福分类表(BlessingCategory)表服务接口

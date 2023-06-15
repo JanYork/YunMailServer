@@ -9,7 +9,10 @@
 package net.totime.mail.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import net.totime.mail.entity.BlessingCategory;
+import net.totime.mail.mapper.BlessingCategoryMapper;
 import net.totime.mail.service.BlessingCategoryService;
+import org.springframework.stereotype.Service;
 
 /**
  * 祝福分类表(BlessingCategory)表服务实现类

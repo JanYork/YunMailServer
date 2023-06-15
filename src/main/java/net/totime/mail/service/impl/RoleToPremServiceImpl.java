@@ -9,7 +9,10 @@
 package net.totime.mail.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import net.totime.mail.entity.RoleToPrem;
+import net.totime.mail.mapper.RoleToPremMapper;
 import net.totime.mail.service.RoleToPremService;
+import org.springframework.stereotype.Service;
 
 /**
  * 角色与权限中间表(RoleToPrem)表服务实现类

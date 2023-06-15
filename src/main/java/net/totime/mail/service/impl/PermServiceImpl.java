@@ -9,7 +9,10 @@
 package net.totime.mail.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import net.totime.mail.entity.Perm;
+import net.totime.mail.mapper.PermMapper;
 import net.totime.mail.service.PermService;
+import org.springframework.stereotype.Service;
 
 /**
  * 权限表(Perm)表服务实现类

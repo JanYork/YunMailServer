@@ -9,6 +9,8 @@
 package net.totime.mail.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import net.totime.mail.entity.UserToRole;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * 用户与角色中间表(UserToRole)表数据层

@@ -9,6 +9,7 @@
 package net.totime.mail.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import net.totime.mail.entity.IdCardAuth;
 
 /**
  * 实名认证表(IdCardAuth)表服务接口

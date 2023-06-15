@@ -9,7 +9,10 @@
 package net.totime.mail.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import net.totime.mail.entity.LetterOrders;
+import net.totime.mail.mapper.LetterOrdersMapper;
 import net.totime.mail.service.LetterOrdersService;
+import org.springframework.stereotype.Service;
 
 /**
  * 信件订单表(LetterOrders)表服务实现类
