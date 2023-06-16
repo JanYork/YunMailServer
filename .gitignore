@@ -44,4 +44,4 @@ application.yml!/src/main/resources/application.yml
 /src/main/resources/cert/*.p12
 /src/main/java/net/totime/mail/entity/back/
 /src/main/java/net/totime/mail/dto/back/
-/src/main/java/net/totime/mail/domain/
+/src/main/java/net/totime/mail/domain/back/
