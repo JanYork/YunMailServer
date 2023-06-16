@@ -6,7 +6,7 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package net.totime.mail.controller.back.upload;
+package net.totime.mail.controller.open;
 
 import lombok.SneakyThrows;
 import net.totime.mail.response.ApiResponse;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * @author JanYork
@@ -26,7 +25,7 @@ import java.util.List;
  * @since 1.0.0
  */
 @RestController
-@RequestMapping("/api/image")
+@RequestMapping("/api/v1/img")
 public class ImageUpload {
     @Resource
     private TencentUpload tud;
@@ -41,17 +40,6 @@ public class ImageUpload {
     @RequestMapping("/upload/single")
     public ApiResponse<String> uploadImage(MultipartFile file) {
         return ApiResponse.ok(tud.upload(file));
-    }
-
-    /**
-     * 批量上传图片
-     *
-     * @param files 文件
-     * @return {@link ApiResponse}<{@link List}<{@link String}> 返回上传成功的URL
-     */
-    @RequestMapping("/upload/batch")
-    public ApiResponse<List<String>> uploadImage(MultipartFile[] files) {
-        return ApiResponse.ok(tud.batchUpload(files));
     }
 
     /**

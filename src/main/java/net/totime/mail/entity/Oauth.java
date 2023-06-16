@@ -15,6 +15,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import net.totime.mail.enums.OauthType;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -47,7 +48,7 @@ public class Oauth extends Model<Oauth> {
      */
     @ApiModelProperty(value = "第三方授权类型", example = "1", required = true)
     @NotNull(message = "类型不能为空")
-    private Integer provider;
+    private OauthType provider;
     /**
      * 第三方授权唯一标识
      */

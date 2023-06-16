@@ -6,7 +6,7 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package net.totime.mail.domain.courier;
+package net.totime.mail.domain;
 
 import cn.hutool.crypto.digest.MD5;
 import com.raycloud.open.sdk.api.KdzsClient;
@@ -33,7 +33,7 @@ import java.io.InputStreamReader;
  * @since 1.0.0
  */
 @Service
-public class CourierOperateService {
+public class CourierOperate {
     @Resource
     private KdzsClient kdzsClient;
 

@@ -8,10 +8,8 @@
 
 package net.totime.mail.vo;
 
-import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.util.Date;
 import java.util.List;
@@ -40,7 +38,7 @@ public class CommentVO {
     /**
      * 评论对应邮件或者信件
      */
-    private String mailOrLetterId;
+    private Long mailOrLetterId;
     /**
      * 评论内容
      */

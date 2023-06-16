@@ -82,5 +82,5 @@ public class Comment extends Model<Comment> {
      */
     @ApiModelProperty(value = "是否过滤", example = "0", required = true)
     @NotNull(message = "是否过滤必须")
-    private Integer isFilter;
+    private Boolean isFilter;
 }

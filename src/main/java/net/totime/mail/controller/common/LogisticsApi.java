@@ -5,8 +5,7 @@
  * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
-
-package net.totime.mail.controller.back.logistics;
+package net.totime.mail.controller.common;
 
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -16,10 +15,10 @@ import com.raycloud.open.sdk.api.request.KdzsLogisticsTraceSubscribeRequest;
 import com.raycloud.open.sdk.api.response.KdzsLogisticsTraceSearchResponse;
 import lombok.SneakyThrows;
 import ma.glasnost.orika.MapperFacade;
-import net.totime.mail.domain.courier.CourierOperateService;
+import net.totime.mail.domain.CourierOperate;
 import net.totime.mail.dto.CourierCallBackDTO;
 import net.totime.mail.dto.LogisticsDTO;
-import net.totime.mail.entity.back.Logistics;
+import net.totime.mail.entity.Logistics;
 import net.totime.mail.enums.LogisticsState;
 import net.totime.mail.mongo.MongoUtil;
 import net.totime.mail.response.ApiResponse;
@@ -44,12 +43,12 @@ import java.util.Map;
  * @since 1.0.0
  */
 @RestController
-@RequestMapping("/logistics")
+@RequestMapping("/common/logistics")
 public class LogisticsApi {
     @Resource
     private LogisticsService logisticsService;
     @Resource
-    private CourierOperateService courierOperate;
+    private CourierOperate courierOperate;
     @Resource
     private MongoUtil mongoUtil;
     @Resource

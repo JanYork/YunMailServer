@@ -6,14 +6,14 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package net.totime.mail.domain.auth;
+package net.totime.mail.domain;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.SneakyThrows;
 import net.totime.mail.dto.AuthCallBackDTO;
-import net.totime.mail.entity.back.Oauth;
-import net.totime.mail.entity.back.User;
+import net.totime.mail.entity.Oauth;
+import net.totime.mail.entity.User;
 import net.totime.mail.enums.OauthType;
 import net.totime.mail.response.ApiResponse;
 import net.totime.mail.service.OauthService;
@@ -37,7 +37,7 @@ import java.util.UUID;
  * @since 1.0.0
  */
 @Service
-public class OauthOperateService {
+public class OauthOperate {
     @Resource
     private OauthService oauthService;
     @Resource
@@ -137,9 +137,7 @@ public class OauthOperateService {
         user.setCreateTime(new Date());
         //填充随机密码与手机号，防止用户未绑定手机号
         String pwd = UUID.randomUUID().toString().substring(0, 8);
-        String gensalt = BcryptUtil.gensalt();
-        user.setPwd(BcryptUtil.encrypt(pwd, gensalt));
-        user.setSalt(gensalt);
+        user.setPwd(BcryptUtil.encrypt(pwd));
         user.setPhone("0");
         return user;
     }

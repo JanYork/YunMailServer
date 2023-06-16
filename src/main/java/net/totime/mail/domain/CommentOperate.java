@@ -6,11 +6,11 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package net.totime.mail.domain.comment;
+package net.totime.mail.domain;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import net.totime.mail.entity.back.Comment;
+import net.totime.mail.entity.Comment;
 import net.totime.mail.service.CommentService;
 import net.totime.mail.vo.CommentVO;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  * @since 1.0.0
  */
 @Service
-public class CommentOperateService {
+public class CommentOperate {
     @Resource
     private CommentService commentService;
 
@@ -54,12 +54,12 @@ public class CommentOperateService {
      * @return 评论
      */
     public List<CommentVO> getCommentByMailOrLetterId(String mailOrLetterId, Integer page, Integer size, Integer type) {
-        QueryWrapper<Comment> wrapper = new QueryWrapper<>();
-        wrapper.eq("mail_or_letter_id", mailOrLetterId);
-        wrapper.eq("for_type", type);
-        wrapper.eq("is_filter", 0);
-        wrapper.orderByDesc("create_time");
-        wrapper.eq("parent_id", 0);
+        LambdaQueryWrapper<Comment> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Comment::getMailOrLetterId, mailOrLetterId);
+        wrapper.eq(Comment::getForType, type);
+        wrapper.eq(Comment::getIsFilter, false);
+        wrapper.orderByDesc(Comment::getCreateTime);
+        wrapper.eq(Comment::getParentId, 0);
         List<Comment> comments = commentService.page(
                 new Page<>(page, size),
                 wrapper
@@ -76,10 +76,10 @@ public class CommentOperateService {
      * @return 子评论
      */
     public List<Comment> getCommentByParentId(Long parentId, Integer page, Integer size) {
-        QueryWrapper<Comment> wrapper = new QueryWrapper<>();
-        wrapper.eq("parent_id", parentId);
-        wrapper.eq("is_filter", 0);
-        wrapper.orderByDesc("create_time");
+        LambdaQueryWrapper<Comment> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Comment::getParentId, parentId);
+        wrapper.eq(Comment::getIsFilter, false);
+        wrapper.orderByDesc(Comment::getCreateTime);
         return commentService.page(
                 new Page<>(page, size),
                 wrapper
