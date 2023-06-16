@@ -8,9 +8,9 @@
 
 package net.totime.mail.handler;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xxl.job.core.handler.annotation.XxlJob;
-import net.totime.mail.entity.back.Letter;
+import net.totime.mail.entity.Letter;
 import net.totime.mail.response.ApiResponse;
 import net.totime.mail.service.LetterService;
 import org.springframework.context.annotation.Configuration;
@@ -33,10 +33,10 @@ public class LetterJobHandler {
     @XxlJob("LetterJobHandler")
     public ApiResponse<String> execute() {
         List<Letter> list = ls.list(
-                new QueryWrapper<Letter>()
-                        .eq("status", 0)
-                        .orderByAsc("go_to_time")
-                        .gt("go_to_time", System.currentTimeMillis() + 24 * 60 * 60 * 1000)
+                new LambdaQueryWrapper<Letter>()
+                        .eq(Letter::getState, 0)
+                        .orderByAsc(Letter::getGoToTime)
+                        .gt(Letter::getGoToTime, System.currentTimeMillis() + 24 * 60 * 60 * 1000)
         );
         //TODO:发送信件
         return ApiResponse.ok("信件任务处理器");
@@ -45,10 +45,10 @@ public class LetterJobHandler {
     @XxlJob("LetterRemind")
     public ApiResponse<String> remind() {
         List<Letter> list = ls.list(
-                new QueryWrapper<Letter>()
-                        .eq("status", 0)
-                        .orderByAsc("go_to_time")
-                        .lt("go_to_time", System.currentTimeMillis())
+                new LambdaQueryWrapper<Letter>()
+                      .eq(Letter::getState, 0)
+                      .orderByAsc(Letter::getGoToTime)
+                      .gt(Letter::getGoToTime, System.currentTimeMillis() + 24 * 60 * 60 * 1000)
         );
         //TODO:发送提醒
         return ApiResponse.ok("信件当日提醒处理器");

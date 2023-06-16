@@ -8,9 +8,9 @@
 
 package net.totime.mail.handler;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xxl.job.core.handler.annotation.XxlJob;
-import net.totime.mail.entity.back.Message;
+import net.totime.mail.entity.Message;
 import net.totime.mail.response.ApiResponse;
 import net.totime.mail.service.MessageService;
 import org.springframework.context.annotation.Configuration;
@@ -33,10 +33,10 @@ public class SmsJobHandler {
     @XxlJob("SmsJobHandler")
     public ApiResponse<String> execute() {
         List<Message> list = ms.list(
-                new QueryWrapper<Message>()
-                        .eq("status", 0)
-                        .orderByAsc("send_time")
-                        .gt("send_time", System.currentTimeMillis())
+                new LambdaQueryWrapper<Message>()
+                        .eq(Message::getState, 0)
+                        .orderByAsc(Message::getSendTime)
+                        .gt(Message::getSendTime, System.currentTimeMillis())
         );
         //TODO:发送短信
         return ApiResponse.ok("短信任务处理器");

@@ -8,7 +8,6 @@
 
 package net.totime.mail.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import io.swagger.annotations.ApiModel;
@@ -21,20 +20,20 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * 心愿订单信息
+ * 信件订单信息
  *
  * @author JanYork
- * @since 2023-06-14 22:59:38
+ * @since 2023-06-16 22:47:01
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@ApiModel(value = "心愿订单信息", description = "字段与数据库一致")
-public class WishOrders extends Model<WishOrders> {
-    private static final long serialVersionUID = 1693391783217522019L;
+@ApiModel(value = "信件订单信息", description = "字段与数据库一致")
+public class MessageOrders extends Model<MessageOrders> {
+    private static final long serialVersionUID = -2898299575318016128L;
     /**
      * 订单ID
      */
-    @TableId(type = IdType.AUTO)
+    @TableId
     @ApiModelProperty(value = "订单ID", example = "1")
     private Integer id;
     /**
@@ -51,12 +50,12 @@ public class WishOrders extends Model<WishOrders> {
     /**
      * 订单时间
      */
-    @ApiModelProperty(value = "订单时间", example = "2023-06-14 22:59:38")
+    @ApiModelProperty(value = "订单时间", example = "1")
     private Date date;
     /**
      * 支付时间
      */
-    @ApiModelProperty(value = "支付时间", example = "2023-06-14 22:59:38")
+    @ApiModelProperty(value = "支付时间", example = "1")
     private Date payTime;
     /**
      * 支付类型
@@ -67,8 +66,8 @@ public class WishOrders extends Model<WishOrders> {
     /**
      * 支付金额
      */
-    @ApiModelProperty(value = "支付金额", example = "1.00", required = true)
-    @NotNull(message = "金额不能为空")
+    @ApiModelProperty(value = "支付金额", example = "1", required = true)
+    @NotNull(message = "支付金额不能为空")
     private BigDecimal amount;
     /**
      * 支付商订单号
@@ -82,9 +81,9 @@ public class WishOrders extends Model<WishOrders> {
     @NotNull(message = "支付状态不能为空")
     private Integer state;
     /**
-     * 心愿ID
+     * 短信ID
      */
-    @ApiModelProperty(value = "心愿ID", example = "1", required = true)
-    @NotNull(message = "心愿对象不能为空")
-    private Long wishId;
+    @ApiModelProperty(value = "短信ID", example = "1", required = true)
+    @NotNull(message = "短信ID不能为空")
+    private Long messageId;
 }

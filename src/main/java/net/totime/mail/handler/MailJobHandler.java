@@ -8,9 +8,9 @@
 
 package net.totime.mail.handler;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xxl.job.core.handler.annotation.XxlJob;
-import net.totime.mail.entity.back.Mail;
+import net.totime.mail.entity.Mail;
 import net.totime.mail.response.ApiResponse;
 import net.totime.mail.service.MailService;
 import org.springframework.context.annotation.Configuration;
@@ -29,10 +29,6 @@ import java.util.List;
 public class MailJobHandler {
     @Resource
     private MailService ms;
-
-    private final static String STATUS = "status";
-    private final static String USE_SERVE = "use_serve";
-    private final static String GO_TO_TIME = "go_to_time";
 
     /**
      * 云寄定时邮件任务处理器
@@ -66,11 +62,11 @@ public class MailJobHandler {
      */
     private List<Mail> getMailList(Long time) {
         return ms.list(
-                new QueryWrapper<Mail>()
-                        .eq(STATUS, 0)
-                        .eq(USE_SERVE, 0)
-                        .orderByAsc(GO_TO_TIME)
-                        .lt(GO_TO_TIME, System.currentTimeMillis() - time)
+                new LambdaQueryWrapper<Mail>()
+                        .eq(Mail::getState, 0)
+                        .eq(Mail::getUseServe, 0)
+                        .orderByAsc(Mail::getGoToTime)
+                        .lt(Mail::getGoToTime, System.currentTimeMillis() - time)
         );
     }
 }

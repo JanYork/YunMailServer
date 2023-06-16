@@ -9,11 +9,12 @@
 package net.totime.mail.security;
 
 import cn.dev33.satoken.stp.StpInterface;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import net.totime.mail.entity.back.Perm;
-import net.totime.mail.entity.back.Role;
-import net.totime.mail.entity.back.UserToPrem;
-import net.totime.mail.entity.back.UserToRole;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import net.totime.mail.entity.Perm;
+import net.totime.mail.entity.Role;
+import net.totime.mail.entity.UserToPrem;
+import net.totime.mail.entity.UserToRole;
+import net.totime.mail.enums.AdminRole;
 import net.totime.mail.service.*;
 import org.springframework.context.annotation.Configuration;
 
@@ -55,8 +56,18 @@ public class StpInterfaceImpl implements StpInterface {
         if (ADMIN.equals(loginType)) {
             return null;
         }
-        List<String> list = userToPrem.listObjs(new QueryWrapper<UserToPrem>().eq("user_id", id).lambda().select(UserToPrem::getPremId), Object::toString);
-        return perm.listObjs(new QueryWrapper<Perm>().in("id", list).lambda().select(Perm::getPermissions), Object::toString);
+        List<String> list = userToPrem.listObjs(
+                new LambdaQueryWrapper<UserToPrem>()
+                        .eq(UserToPrem::getUserId, id)
+                        .select(UserToPrem::getPremId),
+                Object::toString
+        );
+        return perm.listObjs(
+                new LambdaQueryWrapper<Perm>()
+                        .in(Perm::getId, list)
+                        .select(Perm::getPermissions),
+                Object::toString
+        );
     }
 
     /**
@@ -70,10 +81,22 @@ public class StpInterfaceImpl implements StpInterface {
     public List<String> getRoleList(Object loginId, String loginType) {
         Long id = Long.valueOf(loginId.toString());
         if (ADMIN.equals(loginType)) {
-            String userRole = adminService.getById(id).getUserRole();
-            return List.of(userRole);
+            String userRole = AdminRole.getNameByCode(adminService.getById(id).getRole());
+            if (userRole != null) {
+                return List.of(userRole);
+            }
         }
-        List<String> list = userToRole.listObjs(new QueryWrapper<UserToRole>().eq("user_id", id).lambda().select(UserToRole::getRoleId), Object::toString);
-        return role.listObjs(new QueryWrapper<Role>().in("id", list).lambda().select(Role::getName), Object::toString);
+        List<String> list = userToRole.listObjs(
+                new LambdaQueryWrapper<UserToRole>()
+                        .eq(UserToRole::getUserId, id)
+                        .select(UserToRole::getRoleId),
+                Object::toString
+        );
+        return role.listObjs(
+                new LambdaQueryWrapper<Role>()
+                        .in(Role::getId, list)
+                        .select(Role::getName),
+                Object::toString
+        );
     }
 }

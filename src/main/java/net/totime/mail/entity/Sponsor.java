@@ -16,6 +16,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -51,7 +52,7 @@ public class Sponsor extends Model<Sponsor> {
      */
     @ApiModelProperty(value = "赞助金额", example = "1", required = true)
     @NotNull(message = "金额不能为空")
-    private Double sponsorAmount;
+    private BigDecimal sponsorAmount;
     /**
      * 支付类型
      */

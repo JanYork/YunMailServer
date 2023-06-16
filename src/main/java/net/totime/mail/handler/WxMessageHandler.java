@@ -41,6 +41,7 @@ public class WxMessageHandler {
     /**
      * 微信关注登录前缀
      */
+    @SuppressWarnings("FieldCanBeLocal")
     private final String WX_LOGIN_PREFIX = "qrscene_";
 
     /**
