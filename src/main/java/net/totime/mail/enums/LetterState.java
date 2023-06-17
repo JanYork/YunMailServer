@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * @see Enum
  * @since 1.0.0
  */
+@Deprecated
 public enum LetterState {
     /**
      * 未发送

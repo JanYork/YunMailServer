@@ -18,6 +18,8 @@ import com.egzosn.pay.wx.v3.api.WxPayService;
 import net.totime.mail.handler.AliPayMessageHandler;
 import net.totime.mail.handler.WxV3PayMessageHandler;
 import net.totime.mail.interceptor.AliPayMessageInterceptor;
+import net.totime.mail.pay.AliPayDefinedService;
+import net.totime.mail.pay.WxPayDefinedService;
 import net.totime.mail.properties.AliPayProperties;
 import net.totime.mail.properties.WeiXinPayProperties;
 import org.springframework.context.annotation.Bean;
@@ -49,7 +51,7 @@ public class PayConfigure {
      * @return {@link WxPayService} 微信支付服务
      */
     @Bean
-    public WxPayService getWxPayService() {
+    public WxPayDefinedService getWxPayService() {
         WxPayConfigStorage payConfigStorage = new WxPayConfigStorage();
         payConfigStorage.setAppId(wxp.getAppId());
         payConfigStorage.setMchId(wxp.getMchId());
@@ -60,7 +62,7 @@ public class PayConfigure {
         payConfigStorage.setCertSign(true);
         payConfigStorage.setApiClientKeyP12(wxp.getApiClientKeyP12());
         payConfigStorage.setCertStoreType(CertStoreType.PATH);
-        WxPayService wxPayService = new WxPayService(payConfigStorage);
+        WxPayDefinedService wxPayService = new WxPayDefinedService(payConfigStorage);
         wxPayService.setPayMessageHandler(new WxV3PayMessageHandler());
         return wxPayService;
     }
@@ -71,7 +73,7 @@ public class PayConfigure {
      * @return {@link AliPayService} 支付宝支付配置
      */
     @Bean
-    public AliPayService getAliPayService() {
+    public AliPayDefinedService getAliPayService() {
         AliPayConfigStorage aliPayConfigStorage = new AliPayConfigStorage();
         aliPayConfigStorage.setKeyPublic(this.getTxtString(alp.getKeyPublicPath()));
         aliPayConfigStorage.setKeyPrivate(this.getTxtString(alp.getKeyPrivatePath()));
@@ -85,7 +87,7 @@ public class PayConfigure {
         HttpConfigStorage httpConfigStorage = new HttpConfigStorage();
         httpConfigStorage.setMaxTotal(20);
         httpConfigStorage.setDefaultMaxPerRoute(10);
-        AliPayService aliPayService = new AliPayService(aliPayConfigStorage, httpConfigStorage);
+        AliPayDefinedService aliPayService = new AliPayDefinedService(aliPayConfigStorage, httpConfigStorage);
         aliPayService.addPayMessageInterceptor(new AliPayMessageInterceptor());
         aliPayService.setPayMessageHandler(new AliPayMessageHandler());
         return aliPayService;
@@ -98,7 +100,7 @@ public class PayConfigure {
      * @return {@link String} TXT文件内容
      */
     private String getTxtString(String path) {
-        try{
+        try {
             return readString(Paths.get(path));
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -18,6 +18,10 @@ package net.totime.mail.enums;
  */
 public enum SmsTemplate {
     /**
+     * 一般验证码
+     */
+    NORMAL("1837323", "一般验证码"),
+    /**
      * 信件驳回通知
      */
     LETTER_REJECT("1760442", "信件驳回"),

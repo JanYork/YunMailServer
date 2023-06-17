@@ -6,22 +6,26 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package net.totime.mail.controller;
+package net.totime.mail.controller.open;
 
+import net.totime.mail.util.GenerateAvatar;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+
 /**
- * 时光信件表(Letter)表接口层
- *
  * @author JanYork
  * @version 1.0.0
- * @date 2023/03/22
- * @description 描述
- * @since 2023-06-14 22:59:36
+ * @date 2023/04/17
+ * @description 头像接口
+ * @since 1.0.0
  */
 @RestController
-@RequestMapping("/")
-public class LetterApi {
-
+@RequestMapping("/api/avatar")
+public class AvatarApi {
+    @RequestMapping(value = "/getAvatar", produces = "image/png")
+    public byte[] getAvatar(String str) throws IOException {
+        return GenerateAvatar.generateAvatar((long) str.hashCode());
+    }
 }

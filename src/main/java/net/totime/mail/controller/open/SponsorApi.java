@@ -6,22 +6,31 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package net.totime.mail.controller.back.open;
+package net.totime.mail.controller.open;
 
 import cn.dev33.satoken.stp.StpUtil;
-import com.egzosn.pay.ali.api.AliPayService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.egzosn.pay.ali.bean.AliTransactionType;
 import com.egzosn.pay.common.bean.PayOrder;
-import com.egzosn.pay.wx.v3.api.WxPayService;
 import com.egzosn.pay.wx.v3.bean.WxTransactionType;
 import lombok.SneakyThrows;
+import ma.glasnost.orika.MapperFacade;
 import net.totime.mail.annotation.RateLimiter;
-import net.totime.mail.domain.sponsor.SponsorOperateService;
-import net.totime.mail.dto.back.SponsorDTO;
-import net.totime.mail.entity.back.Sponsor;
+import net.totime.mail.dto.SponsorDTO;
+import net.totime.mail.entity.Sponsor;
+import net.totime.mail.entity.User;
+import net.totime.mail.enums.PayCallbackUrlEnum;
 import net.totime.mail.enums.PayState;
 import net.totime.mail.enums.PayType;
+import net.totime.mail.exception.GloballyUniversalException;
+import net.totime.mail.handler.AliPayMessageHandler;
+import net.totime.mail.handler.WxV3PayMessageHandler;
+import net.totime.mail.pay.AliPayDefinedService;
+import net.totime.mail.pay.WxPayDefinedService;
 import net.totime.mail.response.ApiResponse;
+import net.totime.mail.service.SponsorService;
+import net.totime.mail.service.UserService;
 import net.totime.mail.util.OrderNumberUtil;
 import net.totime.mail.util.QrUtil;
 import net.totime.mail.vo.SponsorInfoVO;
@@ -33,9 +42,9 @@ import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
-import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author JanYork
@@ -48,12 +57,15 @@ import java.util.List;
 @RequestMapping("/sponsor")
 public class SponsorApi {
     @Resource
-    private AliPayService aliPay;
+    private AliPayDefinedService aliPay;
     @Resource
-    private WxPayService wxPay;
+    private WxPayDefinedService wxPay;
     @Resource
-    private SponsorOperateService sos;
-    private static final Integer SIZE = 5;
+    private SponsorService sponsorService;
+    @Resource
+    private UserService userService;
+    @Resource
+    private MapperFacade mapperFacade;
 
     /**
      * 支付宝赞助
@@ -73,12 +85,16 @@ public class SponsorApi {
         sponsor.setState(PayState.UNPAID.getValue());
         sponsor.setId(sponsorOrderNumber);
         sponsor.setPayType(PayType.ALI_PAY);
-        if (!sos.createSponsor(sponsor)) {
-            throw new GeneralSecurityException("赞助订单创建失败");
+        sponsor.setSponsorAmount(sponsorDTO.getSponsorAmount());
+        if (!sponsorService.save(sponsor)) {
+            throw new GloballyUniversalException(500, "赞助订单创建失败");
         }
         BigDecimal amount = sponsorDTO.getSponsorAmount();
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ImageIO.write(aliPay.genQrPay(new PayOrder("云寄赞助", "感谢对云寄服务的支持", amount, String.valueOf(sponsorOrderNumber), AliTransactionType.SWEEPPAY)), "JPEG", bos);
+        ImageIO.write(aliPay
+                .urlPath(PayCallbackUrlEnum.ALI_DONATE_CALLBACK_URL)
+                .backHandler(new AliPayMessageHandler.SponsorHandler())
+                .genQrPay(new PayOrder("云寄赞助", "感谢对云寄服务的支持", amount, String.valueOf(sponsorOrderNumber), AliTransactionType.SWEEPPAY)), "JPEG", bos);
         return bos.toByteArray();
     }
 
@@ -100,11 +116,15 @@ public class SponsorApi {
         sponsor.setState(PayState.UNPAID.getValue());
         sponsor.setId(sponsorOrderNumber);
         sponsor.setPayType(PayType.WX_PAY);
-        if (!sos.createSponsor(sponsor)) {
-            throw new GeneralSecurityException("赞助订单创建失败");
+        sponsor.setSponsorAmount(sponsorDTO.getSponsorAmount());
+        if (!sponsorService.save(sponsor)) {
+            throw new GloballyUniversalException(500, "赞助订单创建失败");
         }
         BigDecimal amount = sponsorDTO.getSponsorAmount();
-        String qrUrl = wxPay.getQrPay(new PayOrder("感谢对云寄服务的支持", "感谢对云寄服务的支持", amount, String.valueOf(sponsorOrderNumber), WxTransactionType.NATIVE));
+        String qrUrl = wxPay
+                .urlPath(PayCallbackUrlEnum.WX_DONATE_CALLBACK_URL)
+                .backHandler(new WxV3PayMessageHandler.SponsorHandler())
+                .getQrPay(new PayOrder("感谢对云寄服务的支持", "感谢对云寄服务的支持", amount, String.valueOf(sponsorOrderNumber), WxTransactionType.NATIVE));
         return QrUtil.getByteArrayWithLogo(qrUrl);
     }
 
@@ -115,7 +135,26 @@ public class SponsorApi {
      * @return {@link List}<{@link SponsorInfoVO}>
      */
     @RequestMapping("/query/{page}")
-    public ApiResponse<List<SponsorInfoVO>> querySponsor(@PathVariable Integer page) {
-        return ApiResponse.ok(sos.querySponsor(page, SIZE));
+    public ApiResponse<List<SponsorInfoVO>> querySponsor(@PathVariable Integer page, Integer size) {
+        if (size == null) {
+            size = 10;
+        }
+        if (page == null) {
+            page = 1;
+        }
+        List<SponsorInfoVO> collect = sponsorService.page(
+                new Page<>(page, size),
+                new LambdaQueryWrapper<>(new Sponsor())
+                        .eq(Sponsor::getState, PayState.PAID.getValue())
+                        .orderByDesc(Sponsor::getCreateTime)
+        ).getRecords().stream().map(sponsor -> {
+            SponsorInfoVO sponsorInfoVO = mapperFacade.map(sponsor, SponsorInfoVO.class);
+            // 获取用户信息
+            User user = userService.getById(sponsor.getUserId());
+            sponsorInfoVO.setUserNickname(user.getNickName());
+            sponsorInfoVO.setUserAvatar(user.getAvatar());
+            return sponsorInfoVO;
+        }).collect(Collectors.toList());
+        return ApiResponse.ok(collect);
     }
 }

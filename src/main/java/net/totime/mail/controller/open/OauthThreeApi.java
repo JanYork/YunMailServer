@@ -6,7 +6,7 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package net.totime.mail.controller.back.login;
+package net.totime.mail.controller.open;
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
@@ -27,7 +27,7 @@ import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
 import me.zhyd.oauth.model.AuthCallback;
 import me.zhyd.oauth.model.AuthResponse;
 import me.zhyd.oauth.utils.AuthStateUtils;
-import net.totime.mail.domain.auth.OauthOperateService;
+import net.totime.mail.domain.OauthOperate;
 import net.totime.mail.dto.AuthCallBackDTO;
 import net.totime.mail.enums.LoginState;
 import net.totime.mail.enums.WxMessageEvent;
@@ -70,14 +70,14 @@ import java.util.List;
 @CrossOrigin
 @ApiSupport(author = "JanYork")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-public class OauthApi {
+public class OauthThreeApi {
     private final AuthRequestFactory factory;
     @Resource
     private WxMaService wxService;
     @Resource
     private WxMpService wxMpService;
     @Resource
-    private OauthOperateService oos;
+    private OauthOperate oos;
     @Resource
     private RedisUtil rut;
     @Resource

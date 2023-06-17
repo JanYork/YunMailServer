@@ -6,7 +6,7 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package net.totime.mail.controller.back.login;
+package net.totime.mail.controller.open;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
@@ -14,9 +14,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import net.totime.mail.domain.open.VerifyService;
-import net.totime.mail.dto.back.UserDTO;
-import net.totime.mail.entity.back.User;
+import net.totime.mail.dto.UserDTO;
+import net.totime.mail.entity.User;
 import net.totime.mail.response.ApiResponse;
 import net.totime.mail.service.impl.UserServiceImpl;
 import net.totime.mail.util.BcryptUtil;
@@ -46,9 +45,6 @@ public class LoginApi {
     @Resource
     private UserServiceImpl userService;
 
-    @Resource
-    private VerifyService verify;
-
     /**
      * 云寄登录接口
      *
@@ -63,7 +59,7 @@ public class LoginApi {
                 new QueryWrapper<User>().eq("name", username)
         );
         Optional.ofNullable(user).orElseThrow(() -> new RuntimeException("用户不存在"));
-        if (!BcryptUtil.verify(password, user.getPwd(), user.getSalt())) {
+        if (!BcryptUtil.verify(password, user.getPwd())) {
             throw new RuntimeException("密码错误");
         }
         if (user.getState() == 0) {
@@ -85,9 +81,6 @@ public class LoginApi {
     @RequestMapping("/login/phone")
     @ApiOperation(value = "登录云寄账户", notes = "手机号登录")
     public ApiResponse<String> phoneLogin(String phone, String code) {
-        if (!verify.verifyCode(phone, code)) {
-            return ApiResponse.fail("验证码错误");
-        }
         User user = userService.getOne(
                 new QueryWrapper<User>().eq("phone", phone)
         );
@@ -125,22 +118,17 @@ public class LoginApi {
     @RequestMapping("/register")
     @ApiOperation(value = "注册云寄账户", notes = "注册强依赖于手机号")
     public ApiResponse<String> register(@Valid @RequestBody UserDTO userDTO) {
-        if (!verify.verifyCode(userDTO.getPhone(), userDTO.getCode())) {
-            return ApiResponse.fail("验证码错误");
-        }
         if (existName(userDTO.getNickName())) {
             return ApiResponse.fail("账户名已存在");
         }
         if (existPhone(userDTO.getPhone())) {
             return ApiResponse.fail("手机号已存在");
         }
-        String gensalt = BcryptUtil.gensalt();
         User user = new User();
         BeanUtils.copyProperties(userDTO, user);
         user.setId(SnowflakeUtil.getSnowflakeId());
         user.setCreateTime(new Date());
-        user.setPwd(BcryptUtil.encrypt(userDTO.getPwd(), gensalt));
-        user.setSalt(gensalt);
+        user.setPwd(BcryptUtil.encrypt(userDTO.getPwd()));
         if (!userService.save(user)) {
             return ApiResponse.fail("注册失败").message("系统错误");
         }
@@ -160,9 +148,6 @@ public class LoginApi {
     @RequestMapping("/bind/phone")
     @ApiOperation(value = "绑定手机号", notes = "绑定手机号")
     public ApiResponse<String> bindPhone(String phone, String code) {
-        if (!verify.verifyCode(phone, code)) {
-            return ApiResponse.fail("验证码错误");
-        }
         if (existPhone(phone)) {
             return ApiResponse.fail("手机号已存在");
         }
@@ -183,16 +168,11 @@ public class LoginApi {
     @RequestMapping("/reset")
     @ApiOperation(value = "重置云寄账户密码", notes = "重置强依赖于手机号")
     public ApiResponse<String> reset(@Valid @RequestBody UserDTO userDTO) {
-        if (!verify.verifyCode(userDTO.getPhone(), userDTO.getCode())) {
-            return ApiResponse.fail("验证码错误");
-        }
         User user = userService.getOne(
                 new QueryWrapper<User>().eq("phone", userDTO.getPhone())
         );
         Optional.ofNullable(user).orElseThrow(() -> new RuntimeException("用户不存在"));
-        String gensalt = BcryptUtil.gensalt();
-        user.setPwd(BcryptUtil.encrypt(userDTO.getPwd(), gensalt));
-        user.setSalt(gensalt);
+        user.setPwd(BcryptUtil.encrypt(userDTO.getPwd()));
         if (!userService.updateById(user)) {
             return ApiResponse.fail("重置失败").message("系统错误");
         }

@@ -21,6 +21,7 @@ import net.totime.mail.enums.GlobalState;
 import net.totime.mail.enums.PayState;
 import net.totime.mail.exception.PayException;
 import net.totime.mail.service.*;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.util.Date;
 import java.util.Map;
@@ -134,6 +135,8 @@ public class AliPayMessageHandler implements PayMessageHandler<AliPayMessage, Al
                 sponsor.setTradeNo(payMessage.getTradeNo());
                 sponsor.setSponsorAmount(payMessage.getBuyerPayAmount());
                 if (bean.updateById(sponsor)) {
+                    SimpMessagingTemplate smt = SpringBeanContext.getBean(SimpMessagingTemplate.class);
+                    smt.convertAndSendToUser(String.valueOf(sponsor.getUserId()), "/third/pay", "ok");
                     return payService.getPayOutMessage("success", "成功");
                 }
                 throw new PayException("支付宝", payMessage.getOutTradeNo());

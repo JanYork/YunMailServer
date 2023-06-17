@@ -6,12 +6,12 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package net.totime.mail.controller.back.open;
+package net.totime.mail.controller.open;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.TypeReference;
 import net.totime.mail.annotation.RateLimiter;
-import net.totime.mail.dto.back.IdCardAuthDTO;
+import net.totime.mail.dto.IdCardAuthDTO;
 import net.totime.mail.response.ApiResponse;
 import net.totime.mail.util.OkHttpUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -30,7 +30,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/open/")
-public class IdCardAuthApi {
+public class IdCardAuthThreeApi {
     @Value("${third.three-element.url}")
     private String threeElementUrl;
     @Value("${third.two-element.url}")

@@ -8,43 +8,29 @@
 
 package net.totime.mail.enums;
 
-import com.baomidou.mybatisplus.annotation.EnumValue;
-import com.fasterxml.jackson.annotation.JsonValue;
-
 /**
  * @author JanYork
  * @version 1.0.0
- * @date 2023/04/14
- * @description 支付类型
+ * @date 2023/06/17
+ * @description 业务场景类型
  * @see Enum
  * @since 1.0.0
  */
-public enum PayType {
+public enum ScenarioType {
     /**
-     * 支付宝
+     * 赞助
      */
-    ALI_PAY(1, "支付宝"),
+    SPONSOR(1, "赞助"),
     /**
-     * 微信
+     * 信件
      */
-    WX_PAY(2, "微信");
-    @EnumValue
+    LETTER(2, "信件");
     private final Integer id;
-    @JsonValue
     private final String desc;
 
-    PayType(Integer id, String desc) {
+    ScenarioType(Integer id, String desc) {
         this.id = id;
         this.desc = desc;
-    }
-
-    public static PayType getPayTypeEnum(Integer payType) {
-        for (PayType payTypeEnum : PayType.values()) {
-            if (payTypeEnum.getId().equals(payType)) {
-                return payTypeEnum;
-            }
-        }
-        return null;
     }
 
     public Integer getId() {

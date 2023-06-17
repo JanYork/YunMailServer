@@ -6,22 +6,19 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package net.totime.mail.controller;
+package net.totime.mail.dto;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.Data;
 
 /**
- * 赞助信息表(Sponsor)表接口层
- *
  * @author JanYork
  * @version 1.0.0
- * @date 2023/03/22
- * @description 描述
- * @since 2023-06-14 22:59:40
+ * @date 2023/04/24
+ * @description 后台登录
+ * @since 1.0.0
  */
-@RestController
-@RequestMapping("/")
-public class SponsorApi {
-
+@Data
+public class AdminLoginDTO {
+    private String username;
+    private String password;
 }

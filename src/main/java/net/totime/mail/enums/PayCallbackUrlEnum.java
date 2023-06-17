@@ -20,35 +20,35 @@ public enum PayCallbackUrlEnum {
     /**
      * 微信信件回调地址
      */
-    WX_CALLBACK_URL("/pay/wx/callback"),
+    WX_CALLBACK_URL("/wx/callback"),
     /**
      * 支付宝信件回调地址
      */
-    ALI_CALLBACK_URL("/pay/ali/callback"),
+    ALI_CALLBACK_URL("/ali/callback"),
     /**
      * 微信赞助回调地址
      */
-    WX_DONATE_CALLBACK_URL("/pay/wx/sponsor/callback"),
+    WX_DONATE_CALLBACK_URL("/wx/sponsor/callback"),
     /**
      * 支付宝赞助回调地址
      */
-    ALI_DONATE_CALLBACK_URL("/pay/ali/sponsor/callback"),
+    ALI_DONATE_CALLBACK_URL("/ali/sponsor/callback"),
     /**
      * 微信心愿回调地址
      */
-    WX_WISH_CALLBACK_URL("/pay/wx/wish/callback"),
+    WX_WISH_CALLBACK_URL("/wx/wish/callback"),
     /**
      * 支付宝心愿回调地址
      */
-    ALI_WISH_CALLBACK_URL("/pay/ali/wish/callback"),
+    ALI_WISH_CALLBACK_URL("/ali/wish/callback"),
     /**
      * 微信短信回调地址
      */
-    WX_SMS_CALLBACK_URL("/pay/wx/msg/callback"),
+    WX_SMS_CALLBACK_URL("/wx/msg/callback"),
     /**
      * 支付宝短信回调地址
      */
-    ALI_SMS_CALLBACK_URL("/pay/ali/msg/callback");
+    ALI_SMS_CALLBACK_URL("/ali/msg/callback");
     private String value;
 
     PayCallbackUrlEnum(String value) {
@@ -56,7 +56,8 @@ public enum PayCallbackUrlEnum {
     }
 
     public String getValue() {
-        return value;
+        String baseUrl = "http://hmrprp.natappfree.cc/api/v2/pay";
+        return baseUrl + value;
     }
 
     public void setValue(String value) {

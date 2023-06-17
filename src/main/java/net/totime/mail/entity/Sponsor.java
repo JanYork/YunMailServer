@@ -14,6 +14,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import net.totime.mail.enums.PayType;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -58,7 +59,7 @@ public class Sponsor extends Model<Sponsor> {
      */
     @ApiModelProperty(value = "支付类型", example = "1", required = true)
     @NotNull(message = "支付类型不能为空")
-    private Integer payType;
+    private PayType payType;
     /**
      * 支付商订单号
      */

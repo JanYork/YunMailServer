@@ -8,9 +8,11 @@
 
 package net.totime.mail.vo;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import net.totime.mail.enums.PayType;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -26,33 +28,47 @@ public class SponsorInfoVO {
     /**
      * 赞助表ID
      */
+    @ApiModelProperty(value = "赞助表ID", example = "1")
     private Long id;
+
     /**
      * 赞助用户
      */
+    @ApiModelProperty(value = "赞助用户", example = "1", required = true)
+    @NotNull(message = "赞助用户不能为空")
     private Long userId;
-    /**
-     * 赞助用户昵称
-     */
-    private String userNickname;
-    /**
-     * 赞助用户头像
-     */
-    private String userAvatar;
     /**
      * 赞助留言
      */
+    @ApiModelProperty(value = "赞助留言", example = "1")
     private String sponsorSay;
     /**
      * 赞助金额
      */
+    @ApiModelProperty(value = "赞助金额", example = "1", required = true)
+    @NotNull(message = "金额不能为空")
     private BigDecimal sponsorAmount;
     /**
      * 支付类型
      */
+    @ApiModelProperty(value = "支付类型", example = "1", required = true)
+    @NotNull(message = "支付类型不能为空")
     private PayType payType;
+
     /**
      * 支付时间
      */
+    @ApiModelProperty(value = "支付时间", example = "2023-06-14 22:59:40")
     private Date payTime;
+
+    /**
+     * 赞助用户昵称
+     */
+    @ApiModelProperty(value = "赞助用户昵称", example = "1")
+    private String userNickname;
+    /**
+     * 赞助用户头像
+     */
+    @ApiModelProperty(value = "赞助用户头像", example = "1")
+    private String userAvatar;
 }

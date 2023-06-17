@@ -44,7 +44,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/common/logistics")
-public class LogisticsApi {
+public class LogisticsKdzsApi {
     @Resource
     private LogisticsService logisticsService;
     @Resource

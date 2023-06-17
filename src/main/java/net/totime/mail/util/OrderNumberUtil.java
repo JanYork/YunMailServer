@@ -9,8 +9,8 @@
 package net.totime.mail.util;
 
 import cn.hutool.core.util.RandomUtil;
-import net.totime.mail.enums.PayState;
 import net.totime.mail.enums.PayType;
+import net.totime.mail.enums.ScenarioType;
 
 /**
  * @author JanYork
@@ -27,5 +27,14 @@ public class OrderNumberUtil {
      */
     public static Long createSponsorOrderNumber(PayType type) {
         return Long.parseLong(System.currentTimeMillis() + RandomUtil.randomNumbers(4) + type.getId());
+    }
+
+    /**
+     * 生成一般订单号
+     *
+     * @return {@link Long}
+     */
+    public static String createOrderNumber(ScenarioType type) {
+        return System.currentTimeMillis() + RandomUtil.randomNumbers(4) + type.getId();
     }
 }

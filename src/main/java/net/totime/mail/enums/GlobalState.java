@@ -44,7 +44,11 @@ public enum GlobalState {
     /**
      * 已取消
      */
-    CANCELED(6, "已取消");
+    CANCELED(6, "已取消"),
+    /**
+     * 已删除
+     */
+    DELETED(7, "已删除");
 
     private final Integer state;
     private final String desc;

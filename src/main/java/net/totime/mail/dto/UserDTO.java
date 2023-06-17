@@ -6,7 +6,7 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package net.totime.mail.dto.back;
+package net.totime.mail.dto;
 
 import lombok.Data;
 
