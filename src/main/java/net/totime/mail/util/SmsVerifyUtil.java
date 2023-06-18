@@ -43,7 +43,7 @@ public class SmsVerifyUtil {
      * @param time    有效时间
      * @return {@link ApiResponse}<{@link Boolean}>
      */
-    public ApiResponse<Boolean> code(String phone, KeyType keyType, Integer time) {
+    public ApiResponse<Boolean> code(String phone, KeyType keyType, Long cacheTime, Integer time) {
         String regex = "^1[3-9]\\d{9}$";
         if (!phone.matches(regex)) {
             return ApiResponse.fail(false).message("手机号格式不正确");
@@ -56,7 +56,7 @@ public class SmsVerifyUtil {
         String code = CodeUtil.generateCode(6);
         SendSmsRequest build = SmsRequestBuild.builder()
                 .phoneNumber(phoneNumbers)
-                .templateId(SmsTemplate.REGISTER)
+                .templateId(SmsTemplate.NORMAL)
                 .params(new String[]{
                         code, String.valueOf(time)
                 })
@@ -65,7 +65,7 @@ public class SmsVerifyUtil {
         if (!SMS_OK.equals(response.getSendStatusSet()[0].getCode())) {
             return ApiResponse.fail(false).message("发送失败");
         }
-        rut.set(keyType.getKey() + phone, code, 120L);
+        rut.set(keyType.getKey() + phone, code, cacheTime);
         return ApiResponse.ok(true).message("发送成功");
     }
 

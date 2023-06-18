@@ -262,6 +262,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.baidu.aip</groupId>
+            <artifactId>java-sdk</artifactId>
+            <version>4.16.16</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.raycloud.open.sdk</groupId>
             <artifactId>kdzs-sdk</artifactId>
             <version>1.0.0</version>

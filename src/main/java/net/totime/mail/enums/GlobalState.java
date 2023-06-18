@@ -48,7 +48,15 @@ public enum GlobalState {
     /**
      * 已删除
      */
-    DELETED(7, "已删除");
+    DELETED(7, "已删除"),
+    /**
+     * 人工复审
+     */
+    MANUAL_REVIEW(8, "人工复审"),
+    /**
+     * 修改后再次复审
+     */
+    MANUAL_REVIEW_AGAIN(9, "修改复审");
 
     private final Integer state;
     private final String desc;

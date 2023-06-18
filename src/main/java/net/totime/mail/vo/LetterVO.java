@@ -8,11 +8,8 @@
 
 package net.totime.mail.vo;
 
-import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
-import net.totime.mail.enums.LetterState;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -75,7 +72,7 @@ public class LetterVO {
     /**
      * 信件发送状态
      */
-    private LetterState state;
+    private Integer state;
     /**
      * 信件类型
      */

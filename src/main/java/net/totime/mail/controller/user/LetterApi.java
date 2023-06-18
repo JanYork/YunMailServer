@@ -17,12 +17,14 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import ma.glasnost.orika.MapperFacade;
 import net.totime.mail.builder.LetterOrdersBuilder;
+import net.totime.mail.dto.LetterChangeDTO;
 import net.totime.mail.dto.LetterDTO;
 import net.totime.mail.entity.Letter;
 import net.totime.mail.entity.LetterOrders;
 import net.totime.mail.entity.User;
 import net.totime.mail.enums.*;
 import net.totime.mail.exception.GloballyUniversalException;
+import net.totime.mail.handler.BaiDuAiHandler;
 import net.totime.mail.pay.AliPayDefinedService;
 import net.totime.mail.pay.WxPayDefinedService;
 import net.totime.mail.response.ApiResponse;
@@ -34,6 +36,7 @@ import net.totime.mail.util.CheckReturn;
 import net.totime.mail.util.OrderNumberUtil;
 import net.totime.mail.util.QrUtil;
 import net.totime.mail.util.RedisUtil;
+import net.totime.mail.vo.LetterVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -50,7 +53,7 @@ import java.util.Date;
  * @description 信件相关接口
  * @since 1.0.0
  */
-@Api("[用户]信件相关接口")
+@Api(tags = "[用户]信件相关接口")
 @RestController
 @RequestMapping("/api/letter")
 @Validated
@@ -68,6 +71,8 @@ public class LetterApi {
     @Resource
     private WxPayDefinedService wxPayService;
     @Resource
+    private BaiDuAiHandler aiHandler;
+    @Resource
     private MapperFacade mapperFacade;
     @Resource
     private RedisUtil rut;
@@ -80,17 +85,17 @@ public class LetterApi {
      */
     @PostMapping("/delivery")
     @ApiOperation("信件投递")
-    public ApiResponse<Boolean> delivery(@RequestBody @Valid LetterDTO letterDTO) {
+    public ApiResponse<String> delivery(@RequestBody @Valid LetterDTO letterDTO) {
         CheckReturn<Letter> check = check(letterDTO);
         if (!check.getStatus()) {
-            return ApiResponse.fail(false).message(check.getMsg());
+            return ApiResponse.<String>fail(null).message(check.getMsg());
         }
         Letter letter = check.getValue();
         letter.setUserId(StpUtil.getLoginIdAsLong());
         letter.setLetterCreateTime(new Date());
         letter.setState(GlobalState.WAITING_FOR_PAYMENT.getState());
         boolean save = letterService.save(letter);
-        return save ? ApiResponse.ok(true).message("构建成功") : ApiResponse.fail(false).message("构建失败");
+        return save ? ApiResponse.ok(letter.getLetterId().toString()).message("构建成功") : ApiResponse.fail(letter.getLetterId().toString()).message("构建失败");
     }
 
     /**
@@ -101,7 +106,7 @@ public class LetterApi {
      */
     @PostMapping("/delete")
     @ApiOperation("信件软删除")
-    public ApiResponse<Boolean> delete(@Valid @NotNull(message = "信件ID不能为空") String letterId) {
+    public ApiResponse<Boolean> delete(@RequestParam @Valid @NotNull(message = "信件ID不能为空") String letterId) {
         Letter letter = letterService.getById(letterId);
         if (null == letter) {
             return ApiResponse.fail(false).message("信件不存在");
@@ -115,6 +120,78 @@ public class LetterApi {
     }
 
     /**
+     * 信件修改
+     *
+     * @param letterChangeDTO 信件信息
+     * @return {@link ApiResponse}<{@link Boolean}>
+     */
+    @PostMapping("/update")
+    @ApiOperation("信件修改")
+    public ApiResponse<Boolean> update(@RequestBody @Valid LetterChangeDTO letterChangeDTO) {
+        // 查询信件是否存在
+        Letter oldLetter = letterService.getById(letterChangeDTO.getLetterId());
+        if (null == oldLetter) {
+            return ApiResponse.fail(false).message("信件不存在");
+        }
+        // 判断是否是自己的信件
+        if (!oldLetter.getUserId().equals(StpUtil.getLoginIdAsLong())) {
+            return ApiResponse.fail(false).message("信件不存在");
+        }
+        // 判断信件状态是否为待投递/待付款
+        if (!oldLetter.getState().equals(GlobalState.WAITING_FOR_PAYMENT.getState()) && !oldLetter.getState().equals(GlobalState.WAITING_FOR_DELIVERY.getState())) {
+            return ApiResponse.fail(false).message("非法状态");
+        }
+        User user = userService.getById(StpUtil.getLoginIdAsLong());
+        // 重新走内容校验 TODO：可改为MD5校验
+        String checkMsg = aiHandler.letterChangeAiCheck(letterChangeDTO);
+        if (StringUtils.isNotBlank(checkMsg)) {
+            oldLetter.setState(GlobalState.MANUAL_REVIEW_AGAIN.getState());
+            oldLetter.setAiCheckMsg(checkMsg);
+        }
+        // 判断手机号是否更改
+        if (!oldLetter.getPhone().equals(letterChangeDTO.getPhone())) {
+            // 校验验证码
+            String code;
+            if (oldLetter.getIsYourself()) {
+                code = (String) rut.get(KeyType.NORMAL.getKey() + letterChangeDTO.getPhone());
+            } else {
+                // 获取当前登录用户手机号
+                code = (String) rut.get(KeyType.NORMAL.getKey() + user.getPhone());
+            }
+            if (StringUtils.isBlank(code) || !code.equals(letterChangeDTO.getSmsCode())) {
+                return ApiResponse.fail(false).message("验证码错误");
+            }
+            // 校验通过，删除验证码
+            rut.delete(KeyType.NORMAL.getKey() + letterChangeDTO.getPhone());
+        }
+        mapperFacade.map(letterChangeDTO, oldLetter);
+        boolean update = letterService.updateById(oldLetter);
+        return update ? ApiResponse.ok(true).message("修改成功") : ApiResponse.fail(false).message("修改失败");
+    }
+
+    /**
+     * 信件查询(根据ID)
+     *
+     * @param letterId 信件ID
+     * @return {@link ApiResponse}<{@link LetterVO}>
+     */
+    @GetMapping("/query/{letterId}")
+    @ApiOperation("信件查询(根据ID)")
+    public ApiResponse<LetterVO> query(@PathVariable @Valid @NotNull(message = "信件ID不能为空") String letterId) {
+        Letter letter = letterService.getById(letterId);
+        if (null == letter) {
+            return ApiResponse.<LetterVO>fail(null).message("信件不存在");
+        }
+        if (!letter.getUserId().equals(StpUtil.getLoginIdAsLong())) {
+            return ApiResponse.<LetterVO>fail(null).message("信件不存在");
+        }
+        if (letter.getState().equals(GlobalState.DELETED.getState())) {
+            return ApiResponse.<LetterVO>fail(null).message("信件不存在");
+        }
+        return ApiResponse.ok(mapperFacade.map(letter, LetterVO.class)).message("查询成功");
+    }
+
+    /**
      * 取消订单
      *
      * @param orderId 订单ID
@@ -122,7 +199,7 @@ public class LetterApi {
      */
     @PostMapping("/cancel")
     @ApiOperation("取消订单")
-    public ApiResponse<Boolean> cancel(@Valid @NotNull(message = "订单ID不能为空") String orderId) {
+    public ApiResponse<Boolean> cancel(@RequestParam @Valid @NotNull(message = "订单ID不能为空") String orderId) {
         LetterOrders letterOrders = letterOrdersService.getOne(
                 new LambdaQueryWrapper<LetterOrders>()
                         .eq(LetterOrders::getOrdersSerial, orderId)
@@ -145,7 +222,7 @@ public class LetterApi {
      */
     @PostMapping("/cancelById")
     @ApiOperation("取消订单")
-    public ApiResponse<Boolean> cancelById(@Valid @NotNull(message = "订单ID不能为空") String id) {
+    public ApiResponse<Boolean> cancelById(@RequestParam @Valid @NotNull(message = "订单ID不能为空") String id) {
         LetterOrders letterOrders = letterOrdersService.getOne(
                 new LambdaQueryWrapper<LetterOrders>()
                         .eq(LetterOrders::getId, id)
@@ -324,16 +401,17 @@ public class LetterApi {
      * @param letterDTO 信件
      */
     private CheckReturn<Letter> check(LetterDTO letterDTO) {
-        //TODO：用户是否绑定手机号
+        User user = userService.getById(StpUtil.getLoginIdAsLong());
+        if (user.getPhone() == null) {
+            return CheckReturn.fail("请先绑定手机号");
+        }
         // 校验验证码
-        String code = "";
+        String code;
         if (letterDTO.getIsYourself()) {
             code = (String) rut.get(KeyType.NORMAL.getKey() + letterDTO.getPhone());
         } else {
             // 获取当前登录用户手机号
-            User user = userService.getById(StpUtil.getLoginIdAsLong());
             code = (String) rut.get(KeyType.NORMAL.getKey() + user.getPhone());
-            // TODO：短信
         }
         if (StringUtils.isBlank(code) || !code.equals(letterDTO.getSmsCode())) {
             return CheckReturn.fail("验证码错误");
@@ -341,6 +419,8 @@ public class LetterApi {
         if (letterTypeService.getById(letterDTO.getLetterType()) == null) {
             return CheckReturn.fail("信件类型不存在");
         }
+        // 删除验证码
+        rut.delete(KeyType.NORMAL.getKey() + user.getPhone());
         return CheckReturn.ok(mapperFacade.map(letterDTO, Letter.class));
     }
 }

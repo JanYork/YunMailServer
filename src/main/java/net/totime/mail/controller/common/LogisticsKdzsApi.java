@@ -13,6 +13,7 @@ import com.raycloud.open.sdk.api.base.exception.ApiRuleException;
 import com.raycloud.open.sdk.api.request.KdzsLogisticsTraceSearchRequest;
 import com.raycloud.open.sdk.api.request.KdzsLogisticsTraceSubscribeRequest;
 import com.raycloud.open.sdk.api.response.KdzsLogisticsTraceSearchResponse;
+import io.swagger.annotations.Api;
 import lombok.SneakyThrows;
 import ma.glasnost.orika.MapperFacade;
 import net.totime.mail.domain.CourierOperate;
@@ -44,6 +45,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/common/logistics")
+@Api(tags = "物流相关接口")
 public class LogisticsKdzsApi {
     @Resource
     private LogisticsService logisticsService;

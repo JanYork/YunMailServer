@@ -6,12 +6,12 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package net.totime.mail.controller.user;
+package net.totime.mail.controller;
 
-import io.swagger.annotations.Api;
-import net.totime.mail.enums.KeyType;
+import com.alibaba.fastjson2.JSON;
+import com.baidu.aip.contentcensor.AipContentCensor;
+import net.totime.mail.pojo.BaiDuAiBack;
 import net.totime.mail.response.ApiResponse;
-import net.totime.mail.util.SmsVerifyUtil;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,25 +21,20 @@ import javax.annotation.Resource;
 /**
  * @author JanYork
  * @version 1.0.0
- * @date 2023/06/17
- * @description 短信验证码
+ * @date 2023/06/18
+ * @description TEST
  * @since 1.0.0
  */
 @RestController
-@Api(tags = "短信验证码(需登录)")
-@RequestMapping("/api/sms")
-public class SmsCodeApi {
+@RequestMapping
+public class Test {
     @Resource
-    private SmsVerifyUtil smsVerifyUtil;
+    private AipContentCensor ai;
 
-    /**
-     * 获取短信验证码
-     *
-     * @param phone 手机号
-     * @return {@link ApiResponse}<{@link Boolean}>
-     */
-    @GetMapping("/get")
-    public ApiResponse<Boolean> getSmsCode(String phone) {
-        return smsVerifyUtil.code(phone, KeyType.NORMAL, 120L, 2);
+    @GetMapping("/test")
+    public ApiResponse<String> test(String text) {
+        BaiDuAiBack baiDuAiBack = JSON.parseObject(ai.textCensorUserDefined(text).toString(), BaiDuAiBack.class);
+        boolean compliance = baiDuAiBack.isCompliance();
+        return compliance ? ApiResponse.ok("合规") : ApiResponse.fail("内容不合规").message(baiDuAiBack.getData().get(0).getMsg());
     }
 }

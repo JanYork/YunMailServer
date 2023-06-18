@@ -8,6 +8,8 @@
 
 package net.totime.mail.exception;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.UUID;
 
 /**
@@ -17,6 +19,7 @@ import java.util.UUID;
  * @description 运行时异常且触发短信通知
  * @since 1.0.0
  */
+@Slf4j
 public class RuntimeExceptionToMsgException extends RuntimeException {
     private static final long serialVersionUID = 672562990424079492L;
 
@@ -27,6 +30,7 @@ public class RuntimeExceptionToMsgException extends RuntimeException {
         super(msg);
         this.msg = msg;
         this.errorId = UUID.randomUUID().toString();
+        log.error("异常ID：{}，异常信息：{}", this.errorId, msg);
     }
 
     public String getMsg() {

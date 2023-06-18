@@ -89,7 +89,8 @@ public class AliPayMessageHandler implements PayMessageHandler<AliPayMessage, Al
                     log.error("信件更新失败，信件号：{}", letterOrders.getLetterId());
                     return payService.getPayOutMessage("fail", "失败");
                 }
-                // TODO：发送心愿AI审核消息通知
+                BaiDuAiHandler aiHandler = SpringBeanContext.getBean(BaiDuAiHandler.class);
+                aiHandler.letterAiCheck(letter);
                 return payService.getPayOutMessage("success", "成功");
             }
             throw new PayException("支付宝", payMessage.getOutTradeNo());

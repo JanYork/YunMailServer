@@ -22,6 +22,14 @@ public enum SmsTemplate {
      */
     NORMAL("1837323", "一般验证码"),
     /**
+     * 信件内容AI过滤后人工复审通知
+     */
+    LETTER_AI_REVIEW("1837675", "信件内容AI过滤后人工复审通知"),
+    /**
+     * 信件收件人通知(代发出)
+     */
+    LETTER_RECEIVER_NOTICE("1837681", "信件收件人通知"),
+    /**
      * 信件驳回通知
      */
     LETTER_REJECT("1760442", "信件驳回"),
