@@ -15,7 +15,7 @@ import net.totime.mail.enums.KeyType;
 import net.totime.mail.exception.GloballyUniversalException;
 import net.totime.mail.response.ApiResponse;
 import net.totime.mail.service.UserService;
-import net.totime.mail.util.SmsVerifyUtil;
+import net.totime.mail.util.MailVerifyUtil;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,43 +25,44 @@ import javax.annotation.Resource;
 /**
  * @author JanYork
  * @version 1.0.0
- * @date 2023/06/17
- * @description 短信验证码
+ * @date 2023/06/19
+ * @description 邮件验证码
  * @since 1.0.0
  */
 @RestController
-@Api(tags = "短信验证码(需登录)")
-@RequestMapping("/user/sms")
-public class SmsCodeApi {
+@Api(tags = "邮件验证码(需登录)")
+@RequestMapping("/user/mail/code")
+public class MailCodeApi {
     @Resource
-    private SmsVerifyUtil smsVerifyUtil;
+    private MailVerifyUtil mailVerifyUtil;
+
     @Resource
     private UserService userService;
 
     /**
-     * 获取短信验证码
+     * 获取邮件验证码
      *
-     * @param phone 手机号
+     * @param mail 邮箱
      * @return {@link ApiResponse}<{@link Boolean}>
      */
     @GetMapping("/get")
-    @ApiOperation("获取短信验证码")
-    public ApiResponse<Boolean> getSmsCode(String phone) {
-        return smsVerifyUtil.code(phone, KeyType.NORMAL, 120L, 2);
+    @ApiOperation("获取邮件验证码")
+    public ApiResponse<Boolean> getMailCode(String mail) {
+        return mailVerifyUtil.code(mail, KeyType.NORMAL, 120L);
     }
 
     /**
-     * 获取短信验证码
+     * 获取邮件验证码
      *
      * @return {@link ApiResponse}<{@link Boolean}>
      */
     @GetMapping("/getByUser")
-    @ApiOperation("获取短信验证码")
-    public ApiResponse<Boolean> getSmsCodeByUser() {
-        String phone = userService.getById(StpUtil.getLoginIdAsLong()).getPhone();
-        if (phone == null) {
-            throw new GloballyUniversalException(666, "请先绑定手机号");
+    @ApiOperation("获取邮件验证码")
+    public ApiResponse<Boolean> getMailCodeByUser() {
+        String mail = userService.getById(StpUtil.getLoginIdAsLong()).getEmail();
+        if (mail == null) {
+            throw new GloballyUniversalException(666, "请先绑定邮箱");
         }
-        return smsVerifyUtil.code(phone, KeyType.NORMAL, 120L, 2);
+        return mailVerifyUtil.code(mail, KeyType.NORMAL, 120L);
     }
 }

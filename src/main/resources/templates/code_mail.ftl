@@ -132,7 +132,7 @@
                                                              style="font-family: 微软雅黑, &quot;Microsoft YaHei&quot;; overflow-wrap: break-word; margin: 0px; text-align: center; line-height: 1.2; color: rgb(0, 148, 255); font-size: 50px; font-weight: normal;">
                                                             <div>
                                                                 <p style="text-align: center; text-size-adjust: none; word-break: break-word; line-height: 1.2; font-size: 50px; margin: 0px;">
-                                                                    <span style=""><strong>109834</strong></span>
+                                                                    <span style=""><strong>${code}</strong></span>
                                                                 </p></div>
                                                         </div>
                                                     </td>

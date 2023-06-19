@@ -81,7 +81,7 @@ public class LetterApi {
      * 信件投递
      *
      * @param letterDTO 信件信息
-     * @return {@link ApiResponse}<{@link Boolean}>
+     * @return {@link ApiResponse}<{@link String}>
      */
     @PostMapping("/delivery")
     @ApiOperation("信件投递")
@@ -407,6 +407,7 @@ public class LetterApi {
         }
         // 校验验证码
         String code;
+        String key;
         if (letterDTO.getIsYourself()) {
             code = (String) rut.get(KeyType.NORMAL.getKey() + letterDTO.getPhone());
         } else {

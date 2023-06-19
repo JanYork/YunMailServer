@@ -78,15 +78,19 @@ public class Test {
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setFrom("747945307@qq.com");
         helper.setTo(to);
+
         helper.setSubject("验证码模板");
         helper.setText(html1, true);
         mailSender.send(message);
+
         helper.setSubject("成功投递模板");
         helper.setText(html2, true);
         mailSender.send(message);
+
         helper.setSubject("时光邮件模板");
         helper.setText(html3, true);
         mailSender.send(message);
+
         helper.setSubject("邮件审核模板");
         helper.setText(html4, true);
         mailSender.send(message);

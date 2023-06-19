@@ -47,6 +47,9 @@ public class IpUtils {
             ip = request.getRemoteAddr();
         }
 
+        if (ip != null && ip.contains(",")) {
+            ip = ip.substring(0, ip.indexOf(",")).trim();
+        }
         return "0:0:0:0:0:0:0:1".equals(ip) ? "127.0.0.1" : ip;
     }
 

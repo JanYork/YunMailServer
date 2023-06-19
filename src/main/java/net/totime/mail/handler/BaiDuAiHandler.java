@@ -10,8 +10,10 @@ package net.totime.mail.handler;
 
 import com.alibaba.fastjson2.JSON;
 import com.baidu.aip.contentcensor.AipContentCensor;
+import com.baidu.aip.contentcensor.EImgType;
 import net.totime.mail.dto.LetterChangeDTO;
 import net.totime.mail.entity.Letter;
+import net.totime.mail.entity.Mail;
 import net.totime.mail.entity.User;
 import net.totime.mail.enums.GlobalState;
 import net.totime.mail.exception.RuntimeExceptionToMsgException;
@@ -79,12 +81,43 @@ public class BaiDuAiHandler {
             if (!r) {
                 throw new RuntimeExceptionToMsgException("信件审核失败");
             }
-            Boolean smsR = tso.sendLetterAiReview(letter.getPhone(), String.valueOf(letter.getLetterId()), letter.getGoToTime());
+            String uPhone;
+            if (letter.getIsYourself()) {
+                uPhone = letter.getPhone();
+            } else {
+                User user = userService.getById(letter.getUserId());
+                uPhone = user.getPhone();
+            }
+            Boolean smsR = tso.sendLetterAiReview(uPhone, String.valueOf(letter.getLetterId()), letter.getGoToTime());
             if (!smsR) {
                 throw new RuntimeExceptionToMsgException("人工复审提醒失败，方法：sendLetterAiReview");
             }
         }
     }
+
+    /**
+     * 邮件内容审核
+     *
+     * @param mail 邮件
+     */
+    public Mail mailAiCheck(Mail mail) {
+        String text = mail.getMailTitle() + mail.getMailContent();
+        BaiDuAiBack baiDuAiBack = JSON.parseObject(ai.textCensorUserDefined(text).toString(), BaiDuAiBack.class);
+        boolean compliance = baiDuAiBack.isCompliance();
+        if (!compliance) {
+            List<BaiDuAiBack.Data> data = baiDuAiBack.getData();
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < data.size() && i < 3; i++) {
+                sb.append(data.get(i).getMsg()).append(";");
+            }
+            mail.setState(GlobalState.MANUAL_REVIEW.getState());
+            mail.setAiCheckMsg(sb.toString());
+            return mail;
+        }
+        mail.setState(GlobalState.WAITING_FOR_DELIVERY.getState());
+        return mail;
+    }
+
 
     /**
      * 信件修改后内容审核
@@ -103,5 +136,26 @@ public class BaiDuAiHandler {
             return sb.toString();
         }
         return null;
+    }
+
+    /**
+     * 图片URL审核
+     *
+     * @param url 图片URL
+     */
+    public void imageAiCheck(String url) {
+        //noinspection AlibabaUndefineMagicConstant
+        if (!url.startsWith("http")) {
+            throw new RuntimeExceptionToMsgException("图片URL不合法");
+        }
+        BaiDuAiBack baiDuAiBack = JSON.parseObject(ai.imageCensorUserDefined(url, EImgType.URL, null).toString(), BaiDuAiBack.class);
+        if (!baiDuAiBack.isCompliance()) {
+            List<BaiDuAiBack.Data> data = baiDuAiBack.getData();
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < data.size() && i < 3; i++) {
+                sb.append(data.get(i).getMsg()).append(";");
+            }
+            throw new RuntimeExceptionToMsgException(sb.toString());
+        }
     }
 }

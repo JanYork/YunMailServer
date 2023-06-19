@@ -10,6 +10,7 @@ package net.totime.mail.controller.open;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import io.swagger.annotations.Api;
@@ -56,11 +57,14 @@ public class LoginApi {
     @ApiOperation(value = "登录云寄账户", notes = "默认密码和用户名登录")
     public ApiResponse<String> login(String username, String password) {
         User user = userService.getOne(
-                new QueryWrapper<User>().eq("name", username)
+                new LambdaQueryWrapper<>(new User())
+                        .eq(User::getName, username)
         );
-        Optional.ofNullable(user).orElseThrow(() -> new RuntimeException("用户不存在"));
+        if (ObjectUtils.isEmpty(user)) {
+            return ApiResponse.fail("账户不存在");
+        }
         if (!BcryptUtil.verify(password, user.getPwd())) {
-            throw new RuntimeException("密码错误");
+            return ApiResponse.fail("密码错误");
         }
         if (user.getState() == 0) {
             return ApiResponse.fail("账户已被禁用");
