@@ -149,15 +149,19 @@ public class MailApi {
         Mail oldMail = mailService.getById(mailChangeDTO.getMailId());
         // 查询信件是否存在
         if (null == oldMail) {
-            return ApiResponse.fail(false).message("信件不存在");
+            return ApiResponse.fail(false).message("邮件不存在");
         }
         // 判断是否是自己的信件
         if (!oldMail.getUserId().equals(StpUtil.getLoginIdAsLong())) {
-            return ApiResponse.fail(false).message("信件不存在");
+            return ApiResponse.fail(false).message("邮件不存在");
+        }
+        // 判断是否删除
+        if (oldMail.getState().equals(GlobalState.DELETED.getState())) {
+            return ApiResponse.fail(false).message("邮件不存在");
         }
         // 判断信件状态是否为待投递
         if (!oldMail.getState().equals(GlobalState.WAITING_FOR_DELIVERY.getState())) {
-            return ApiResponse.fail(false).message("信件状态不可修改");
+            return ApiResponse.fail(false).message("邮件状态不可修改");
         }
         // 判断是否离投递时间小于48小时
         long betweenDay = DateUtil.between(oldMail.getGoToTime(), new Date(), DateUnit.HOUR);

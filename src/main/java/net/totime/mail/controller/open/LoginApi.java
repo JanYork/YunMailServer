@@ -17,18 +17,18 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.totime.mail.dto.UserDTO;
 import net.totime.mail.entity.User;
+import net.totime.mail.enums.UserState;
 import net.totime.mail.response.ApiResponse;
 import net.totime.mail.service.impl.UserServiceImpl;
 import net.totime.mail.util.BcryptUtil;
 import net.totime.mail.util.SnowflakeUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Optional;
 
@@ -40,7 +40,7 @@ import java.util.Optional;
  * @since 1.0.0
  */
 @RestController
-@Api(tags = "云寄注册与登录接口")
+@Api(tags = "[开放]云寄注册与登录接口")
 @ApiSupport(author = "JanYork")
 public class LoginApi {
     @Resource
@@ -53,21 +53,36 @@ public class LoginApi {
      * @param password 密码
      * @return {@link ApiResponse}<{@link String}> 登录结果
      */
-    @RequestMapping("/login")
-    @ApiOperation(value = "登录云寄账户", notes = "默认密码和用户名登录")
-    public ApiResponse<String> login(String username, String password) {
-        User user = userService.getOne(
-                new LambdaQueryWrapper<>(new User())
-                        .eq(User::getName, username)
-        );
+    @PostMapping("/login")
+    @ApiOperation(value = "登录云寄账户", notes = "默认密码和用户名登录，账户名可以是用户名、手机号、邮箱")
+    public ApiResponse<String> login(
+            @RequestParam @Valid @NotNull(message = "账户为空") String username,
+            @RequestParam @Valid @NotNull(message = "密码为空") String password
+    ) {
+        LambdaQueryWrapper<User> qw = new LambdaQueryWrapper<>();
+        // 手机号正则
+        String regexPhone = "^1[3-9]\\d{9}$";
+        // 邮箱正则
+        String regexEmail = "^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$";
+        if (username.matches(regexPhone)) {
+            qw.eq(User::getPhone, username);
+        } else if (username.matches(regexEmail)) {
+            qw.eq(User::getEmail, username);
+        } else {
+            qw.eq(User::getName, username);
+        }
+        User user = userService.getOne(qw);
         if (ObjectUtils.isEmpty(user)) {
-            return ApiResponse.fail("账户不存在");
+            return ApiResponse.fail("此账户不存在");
         }
         if (!BcryptUtil.verify(password, user.getPwd())) {
             return ApiResponse.fail("密码错误");
         }
-        if (user.getState() == 0) {
+        if (user.getState().equals(UserState.FROZEN.getCode())) {
             return ApiResponse.fail("账户已被禁用");
+        }
+        if (user.getState().equals(UserState.DELETED.getCode())) {
+            return ApiResponse.fail("账户不存在");
         }
         StpUtil.login(user.getId());
         String tokenValue = StpUtil.getTokenValue();

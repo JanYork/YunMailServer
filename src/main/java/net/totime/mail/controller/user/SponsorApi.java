@@ -6,14 +6,17 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package net.totime.mail.controller.open;
+package net.totime.mail.controller.user;
 
+import cn.dev33.satoken.annotation.SaIgnore;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.egzosn.pay.ali.bean.AliTransactionType;
 import com.egzosn.pay.common.bean.PayOrder;
 import com.egzosn.pay.wx.v3.bean.WxTransactionType;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.SneakyThrows;
 import ma.glasnost.orika.MapperFacade;
 import net.totime.mail.annotation.RateLimiter;
@@ -34,6 +37,7 @@ import net.totime.mail.service.UserService;
 import net.totime.mail.util.OrderNumberUtil;
 import net.totime.mail.util.QrUtil;
 import net.totime.mail.vo.SponsorInfoVO;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -54,7 +58,8 @@ import java.util.stream.Collectors;
  * @since 1.0.0
  */
 @RestController
-@RequestMapping("/sponsor")
+@RequestMapping("/user/sponsor")
+@Api(tags = "[用户]云寄赞助接口")
 public class SponsorApi {
     @Resource
     private AliPayDefinedService aliPay;
@@ -75,7 +80,8 @@ public class SponsorApi {
      */
     @SneakyThrows
     @RateLimiter(count = 3)
-    @RequestMapping(value = "/aliPay", produces = "image/jpeg;charset=UTF-8")
+    @GetMapping(value = "/aliPay", produces = "image/jpeg;charset=UTF-8")
+    @ApiOperation(value = "支付宝赞助")
     public byte[] aliPaySponsor(SponsorDTO sponsorDTO) {
         Long sponsorOrderNumber = OrderNumberUtil.createSponsorOrderNumber(PayType.ALI_PAY);
         Sponsor sponsor = new Sponsor();
@@ -106,7 +112,8 @@ public class SponsorApi {
      */
     @SneakyThrows
     @RateLimiter(count = 3)
-    @RequestMapping(value = "/wxPay", produces = "image/jpeg;charset=UTF-8")
+    @GetMapping(value = "/wxPay", produces = "image/jpeg;charset=UTF-8")
+    @ApiOperation(value = "微信赞助")
     public byte[] wxPaySponsor(SponsorDTO sponsorDTO) {
         Long sponsorOrderNumber = OrderNumberUtil.createSponsorOrderNumber(PayType.WX_PAY);
         Sponsor sponsor = new Sponsor();
@@ -134,7 +141,10 @@ public class SponsorApi {
      * @param page 页码
      * @return {@link List}<{@link SponsorInfoVO}>
      */
-    @RequestMapping("/query/{page}")
+    @GetMapping("/query/{page}")
+    @RateLimiter(count = 10)
+    @ApiOperation(value = "获取赞助信息-分页", notes = "获取赞助信息，此接口不需要登录")
+    @SaIgnore
     public ApiResponse<List<SponsorInfoVO>> querySponsor(@PathVariable Integer page, Integer size) {
         if (size == null) {
             size = 10;

@@ -11,32 +11,34 @@ package net.totime.mail.enums;
 /**
  * @author JanYork
  * @version 1.0.0
- * @date 2023/06/17
- * @description 缓存key枚举
- * @see Enum
+ * @date 2023/06/20
+ * @description 用户状态枚举
  * @since 1.0.0
  */
-public enum KeyType {
+public enum UserState {
     /**
-     * 一般验证码
+     * 正常
      */
-    NORMAL("normal:", "一般验证码"),
-
+    NORMAL(1, "正常"),
     /**
-     * 开放接口验证码
+     * 已删除
      */
-    OPEN_PHONE("open:","开放接口验证码");
+    DELETED(-1, "已删除"),
+    /**
+     * 已冻结
+     */
+    FROZEN(0, "已冻结");
 
-    private final String key;
+    private final Integer code;
     private final String desc;
 
-    KeyType(String key, String desc) {
-        this.key = key;
+    UserState(Integer code, String desc) {
+        this.code = code;
         this.desc = desc;
     }
 
-    public String getKey() {
-        return key;
+    public Integer getCode() {
+        return code;
     }
 
     public String getDesc() {

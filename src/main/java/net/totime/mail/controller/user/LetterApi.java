@@ -141,8 +141,15 @@ public class LetterApi {
         if (!oldLetter.getUserId().equals(StpUtil.getLoginIdAsLong())) {
             return ApiResponse.fail(false).message("信件不存在");
         }
-        // 判断信件状态是否为待投递/待付款
-        if (!oldLetter.getState().equals(GlobalState.WAITING_FOR_PAYMENT.getState()) && !oldLetter.getState().equals(GlobalState.WAITING_FOR_DELIVERY.getState())) {
+        // 判断是否删除
+        if (oldLetter.getState().equals(GlobalState.DELETED.getState())) {
+            return ApiResponse.fail(false).message("信件已删除");
+        }
+        // 判断信件状态是否为待付款或待投递
+        if (
+                !oldLetter.getState().equals(GlobalState.WAITING_FOR_PAYMENT.getState()) &&
+                        !oldLetter.getState().equals(GlobalState.WAITING_FOR_DELIVERY.getState())
+        ) {
             return ApiResponse.fail(false).message("非法状态");
         }
         // 判断是否离投递时间小于48小时
