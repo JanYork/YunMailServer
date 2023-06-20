@@ -85,7 +85,33 @@ public class MailOperate {
             helper.setText(html, true);
             mailSender.send(message);
         } catch (Exception e) {
-            log.error("发送二次审核通知邮件失败", e);
+            log.error("发送二次审核通知邮件失败：" + "收件人：" + to + "，邮件ID：" + mailId, e);
+        }
+    }
+
+    /**
+     * 发送投递成功后收信人邮件通知
+     *
+     * @param to 收件人
+     */
+    public void sendToSucceedMail(String to, String mailId, String mailTitle, String mailSpacetime, Date time) {
+        try {
+            Template template = freeMarker.getConfiguration().getTemplate("to_succeed_mail.ftl");
+            Map<String, Object> map = new HashMap<>(8);
+            map.put("mail_id", mailId);
+            map.put("mail_title", mailTitle);
+            map.put("mail_spacetime", mailSpacetime);
+            map.put("mail_time", timeFormat(time, "yyyy.MM.dd"));
+            String html = FreeMarkerTemplateUtils.processTemplateIntoString(template, map);
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setFrom(from);
+            helper.setTo(to);
+            helper.setSubject("云寄通知：您将在未来收到一封时光信件");
+            helper.setText(html, true);
+            mailSender.send(message);
+        } catch (Exception e) {
+            log.error("发送投递成功后收信人邮件通知失败：" + "收件人：" + to + "，邮件ID：" + mailId, e);
         }
     }
 

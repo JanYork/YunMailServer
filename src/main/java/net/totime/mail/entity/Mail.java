@@ -8,6 +8,7 @@
 
 package net.totime.mail.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import io.swagger.annotations.ApiModel;
@@ -34,7 +35,7 @@ public class Mail extends Model<Mail> {
     /**
      * 邮件唯一ID
      */
-    @TableId
+    @TableId(type = IdType.AUTO)
     @ApiModelProperty(value = "邮件唯一ID", example = "1")
     private Long mailId;
     /**

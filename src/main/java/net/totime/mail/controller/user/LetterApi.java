@@ -9,7 +9,10 @@
 package net.totime.mail.controller.user;
 
 import cn.dev33.satoken.stp.StpUtil;
+import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.egzosn.pay.ali.bean.AliTransactionType;
 import com.egzosn.pay.common.bean.PayOrder;
 import com.egzosn.pay.wx.v3.bean.WxTransactionType;
@@ -45,6 +48,7 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author JanYork
@@ -141,28 +145,39 @@ public class LetterApi {
         if (!oldLetter.getState().equals(GlobalState.WAITING_FOR_PAYMENT.getState()) && !oldLetter.getState().equals(GlobalState.WAITING_FOR_DELIVERY.getState())) {
             return ApiResponse.fail(false).message("非法状态");
         }
-        User user = userService.getById(StpUtil.getLoginIdAsLong());
-        // 重新走内容校验 TODO：可改为MD5校验
-        String checkMsg = aiHandler.letterChangeAiCheck(letterChangeDTO);
-        if (StringUtils.isNotBlank(checkMsg)) {
-            oldLetter.setState(GlobalState.MANUAL_REVIEW_AGAIN.getState());
-            oldLetter.setAiCheckMsg(checkMsg);
+        // 判断是否离投递时间小于48小时
+        long betweenDay = DateUtil.between(oldLetter.getGoToTime(), new Date(), DateUnit.HOUR);
+        if (betweenDay < 48) {
+            return ApiResponse.fail(false).message("离投递时间小于48小时");
         }
+        // TODO：修改次数
+        User user = userService.getById(StpUtil.getLoginIdAsLong());
+        String key = null;
         // 判断手机号是否更改
         if (!oldLetter.getPhone().equals(letterChangeDTO.getPhone())) {
             // 校验验证码
             String code;
             if (oldLetter.getIsYourself()) {
                 code = (String) rut.get(KeyType.NORMAL.getKey() + letterChangeDTO.getPhone());
+                key = KeyType.NORMAL.getKey() + letterChangeDTO.getPhone();
             } else {
                 // 获取当前登录用户手机号
                 code = (String) rut.get(KeyType.NORMAL.getKey() + user.getPhone());
+                key = KeyType.NORMAL.getKey() + user.getPhone();
             }
             if (StringUtils.isBlank(code) || !code.equals(letterChangeDTO.getSmsCode())) {
                 return ApiResponse.fail(false).message("验证码错误");
             }
-            // 校验通过，删除验证码
-            rut.delete(KeyType.NORMAL.getKey() + letterChangeDTO.getPhone());
+        }
+        // 重新走内容校验 TODO：可改为MD5校验
+        String checkMsg = aiHandler.letterChangeAiCheck(letterChangeDTO);
+        if (StringUtils.isNotBlank(checkMsg)) {
+            oldLetter.setState(GlobalState.MANUAL_REVIEW_AGAIN.getState());
+            oldLetter.setAiCheckMsg(checkMsg);
+        }
+        // 删除验证码
+        if (key != null) {
+            rut.delete(key);
         }
         mapperFacade.map(letterChangeDTO, oldLetter);
         boolean update = letterService.updateById(oldLetter);
@@ -178,7 +193,7 @@ public class LetterApi {
     @GetMapping("/query/{letterId}")
     @ApiOperation("信件查询(根据ID)")
     public ApiResponse<LetterVO> query(@PathVariable @Valid @NotNull(message = "信件ID不能为空") String letterId) {
-        Letter letter = letterService.getById(letterId);
+        Letter letter = letterService.getById(Long.parseLong(letterId));
         if (null == letter) {
             return ApiResponse.<LetterVO>fail(null).message("信件不存在");
         }
@@ -189,6 +204,28 @@ public class LetterApi {
             return ApiResponse.<LetterVO>fail(null).message("信件不存在");
         }
         return ApiResponse.ok(mapperFacade.map(letter, LetterVO.class)).message("查询成功");
+    }
+
+    /**
+     * 信件查询(根据用户)
+     *
+     * @param page 页面
+     * @param size 大小
+     * @return {@link ApiResponse}<{@link List}<{@link LetterVO}>>
+     */
+    @GetMapping("/query/{page}/{size}")
+    @ApiOperation("信件查询(根据用户)")
+    public ApiResponse<List<LetterVO>> query(
+            @PathVariable @Valid @NotNull(message = "页码不能为空") Integer page,
+            @PathVariable @Valid @NotNull(message = "页数不能为空") Integer size) {
+        List<Letter> letter = letterService.page(
+                new Page<>(page, size),
+                new LambdaQueryWrapper<Letter>()
+                        .eq(Letter::getUserId, StpUtil.getLoginIdAsLong())
+                        .ne(Letter::getState, GlobalState.DELETED.getState())
+                        .orderByDesc(Letter::getLetterCreateTime)
+        ).getRecords();
+        return ApiResponse.ok(mapperFacade.mapAsList(letter, LetterVO.class)).message("查询成功");
     }
 
     /**

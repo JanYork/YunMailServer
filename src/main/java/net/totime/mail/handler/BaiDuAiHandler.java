@@ -12,6 +12,7 @@ import com.alibaba.fastjson2.JSON;
 import com.baidu.aip.contentcensor.AipContentCensor;
 import com.baidu.aip.contentcensor.EImgType;
 import net.totime.mail.dto.LetterChangeDTO;
+import net.totime.mail.dto.MailChangeDTO;
 import net.totime.mail.entity.Letter;
 import net.totime.mail.entity.Mail;
 import net.totime.mail.entity.User;
@@ -126,6 +127,25 @@ public class BaiDuAiHandler {
      */
     public String letterChangeAiCheck(LetterChangeDTO letter) {
         String text = letter.getLetterTitle() + letter.getLetterContent();
+        BaiDuAiBack baiDuAiBack = JSON.parseObject(ai.textCensorUserDefined(text).toString(), BaiDuAiBack.class);
+        if (!baiDuAiBack.isCompliance()) {
+            List<BaiDuAiBack.Data> data = baiDuAiBack.getData();
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < data.size() && i < 3; i++) {
+                sb.append(data.get(i).getMsg()).append(";");
+            }
+            return sb.toString();
+        }
+        return null;
+    }
+
+    /**
+     * 邮件修改后内容审核
+     *
+     * @param mail 邮件
+     */
+    public String mailChangeAiCheck(MailChangeDTO mail) {
+        String text = mail.getMailTitle() + mail.getMailContent();
         BaiDuAiBack baiDuAiBack = JSON.parseObject(ai.textCensorUserDefined(text).toString(), BaiDuAiBack.class);
         if (!baiDuAiBack.isCompliance()) {
             List<BaiDuAiBack.Data> data = baiDuAiBack.getData();
