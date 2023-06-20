@@ -15,6 +15,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import com.xkcoding.justauth.AuthRequestFactory;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -66,7 +67,7 @@ import java.util.List;
 @Controller
 @Slf4j
 @RequestMapping("/oauth")
-@Api(tags = "云寄第三方注册与登录接口")
+@Api(tags = "[开放]云寄第三方OAUTH登录")
 @CrossOrigin
 @ApiSupport(author = "JanYork")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
@@ -90,6 +91,7 @@ public class OauthThreeApi {
      */
     @GetMapping
     @ResponseBody
+    @ApiOperation(value = "获取第三方登录类型列表")
     public ApiResponse<List<String>> list() {
         return ApiResponse.ok(factory.oauthList());
     }
@@ -101,6 +103,7 @@ public class OauthThreeApi {
      */
     @GetMapping("/login/{type}")
     @ResponseBody
+    @ApiOperation(value = "第三方登录吊起")
     public ApiResponse<String> login(@PathVariable String type) {
         return ApiResponse.ok(factory.get(type).authorize(AuthStateUtils.createState()));
     }
@@ -114,6 +117,7 @@ public class OauthThreeApi {
      */
     @RequestMapping("/{type}/callback")
     @RequestBody
+    @ApiOperation(value = "第三方登录回调")
     public String login(@PathVariable String type, AuthCallback callback, Model model) {
         @SuppressWarnings("rawtypes") AuthResponse login = factory.get(type).login(callback);
         if (login.ok()) {
@@ -126,6 +130,7 @@ public class OauthThreeApi {
 
     @GetMapping("/wx/mini")
     @ResponseBody
+    @ApiOperation(value = "微信小程序登录")
     public ApiResponse<HashMap<String, String>> wxMini(@RequestParam String code) {
         WxMaJscode2SessionResult sessionInfo;
         try {
@@ -175,6 +180,7 @@ public class OauthThreeApi {
     @SneakyThrows
     @GetMapping("/wx/mp/code")
     @ResponseBody
+    @ApiOperation(value = "微信公众号登录(校验码模式)永久二维码")
     public ApiResponse<String> wxMpLogin() {
         WxMpQrCodeTicket wxMpQrCodeTicket = wxMpService.getQrcodeService().qrCodeCreateLastTicket(WxMpSceneEnum.LOGIN.getScene());
         String ticket = wxMpQrCodeTicket.getTicket();
@@ -190,6 +196,7 @@ public class OauthThreeApi {
     @SneakyThrows
     @GetMapping("/wx/mp")
     @ResponseBody
+    @ApiOperation(value = "微信公众号登录(扫码模式)")
     public ApiResponse<HashMap<String, String>> wxMpLoginScan() {
         String code = CodeUtil.generateCode(10);
         WxMpQrCodeTicket wxMpQrCodeTicket = wxMpService.getQrcodeService().qrCodeCreateTmpTicket("wl" + code, 300);
@@ -210,6 +217,7 @@ public class OauthThreeApi {
      */
     @GetMapping("/wx/mp/state")
     @ResponseBody
+    @ApiOperation(value = "微信公众号登录(扫码模式)获取状态轮询接口")
     public ApiResponse<String> wxMpLoginState(String code) {
         Integer state = (Integer) rut.get(code);
         if (state == null) {
@@ -232,6 +240,7 @@ public class OauthThreeApi {
     @SneakyThrows
     @PostMapping("/wx/mp/callback")
     @ResponseBody
+    @ApiOperation(value = "微信公众号登录回调")
     public String wxMpLoginCallback(HttpServletRequest request) {
         WxMpXmlMessage message = WxMpXmlMessage.fromXml(request.getInputStream());
         // 登录事件

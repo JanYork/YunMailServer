@@ -6,10 +6,12 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package net.totime.mail.controller.open;
+package net.totime.mail.controller.user;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.TypeReference;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import net.totime.mail.annotation.RateLimiter;
 import net.totime.mail.dto.IdCardAuthDTO;
 import net.totime.mail.response.ApiResponse;
@@ -29,7 +31,8 @@ import java.util.Map;
  * @since 1.0.0
  */
 @RestController
-@RequestMapping("/api/open/")
+@RequestMapping("/user/auth/")
+@Api(tags = "[用户]实名认证接口")
 public class IdCardAuthThreeApi {
     @Value("${third.three-element.url}")
     private String threeElementUrl;
@@ -44,8 +47,9 @@ public class IdCardAuthThreeApi {
      * @param cardInfo 实名认证要素
      * @return {@link ApiResponse} 实名认证结果
      */
-    @GetMapping("/idCard/auth")
+    @GetMapping("/idCard/auth3")
     @RateLimiter(count = 3, time = 60 * 60 * 24 * 7)
+    @ApiOperation(value = "实名认证-三要素")
     public ApiResponse<String> idCardAuth(@RequestBody IdCardAuthDTO cardInfo) {
         Map<String, String> param = new HashMap<>(16);
         param.put("idcard", cardInfo.getIdCard());
@@ -74,6 +78,7 @@ public class IdCardAuthThreeApi {
      * @return {@link ApiResponse}<{@link String}> 实名认证结果
      */
     @GetMapping("/idCard/auth2")
+    @ApiOperation(value = "实名认证-二要素")
     @RateLimiter(count = 3, time = 60 * 60 * 24 * 7)
     public ApiResponse<String> idCardAuth2(@RequestParam String idCard, @RequestParam String name) {
         Map<String, String> param = new HashMap<>(16);

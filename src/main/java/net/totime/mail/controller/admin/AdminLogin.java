@@ -6,9 +6,10 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package net.totime.mail.controller.open;
+package net.totime.mail.controller.admin;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import io.swagger.annotations.Api;
 import net.totime.mail.annotation.SaAdminCheckLogin;
 import net.totime.mail.dto.AdminLoginDTO;
 import net.totime.mail.entity.Admin;
@@ -34,6 +35,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/admin")
+@Api(tags = "[后台]运营台登录")
 public class AdminLogin {
     @Resource
     private AdminService adminService;

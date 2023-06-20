@@ -6,8 +6,9 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package net.totime.mail.controller.open;
+package net.totime.mail.controller.common;
 
+import io.swagger.annotations.Api;
 import lombok.SneakyThrows;
 import net.totime.mail.response.ApiResponse;
 import net.totime.mail.storage.tencent.service.TencentUpload;
@@ -26,6 +27,7 @@ import javax.annotation.Resource;
  */
 @RestController
 @RequestMapping("/api/v1/img")
+@Api(tags = "[公共]图片上传接口")
 public class ImageUpload {
     @Resource
     private TencentUpload tud;

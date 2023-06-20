@@ -45,7 +45,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/common/logistics")
-@Api(tags = "物流相关接口")
+@Api(tags = "[公共]物流接口")
 public class LogisticsKdzsApi {
     @Resource
     private LogisticsService logisticsService;

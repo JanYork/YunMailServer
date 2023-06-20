@@ -30,7 +30,7 @@ import javax.annotation.Resource;
  * @since 1.0.0
  */
 @RestController
-@Api(tags = "邮件验证码(需登录)")
+@Api(tags = "[用户]邮件验证码")
 @RequestMapping("/user/mail/code")
 public class MailCodeApi {
     @Resource
