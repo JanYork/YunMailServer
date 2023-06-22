@@ -99,7 +99,7 @@ public class LetterApi {
         letter.setLetterCreateTime(new Date());
         letter.setState(GlobalState.WAITING_FOR_PAYMENT.getState());
         boolean save = letterService.save(letter);
-        return save ? ApiResponse.ok(letter.getLetterId().toString()).message("构建成功") : ApiResponse.fail(letter.getLetterId().toString()).message("构建失败");
+        return save ? ApiResponse.ok(letter.getLetterId().toString()).message("构建成功") : ApiResponse.<String>fail(null).message("系统异常");
     }
 
     /**
@@ -384,7 +384,7 @@ public class LetterApi {
                 .letterId(letter.getLetterId())
                 .ordersSerial(OrderNumberUtil.createOrderNumber(ScenarioType.LETTER))
                 .date(new Date())
-                .payType(PayType.WX_PAY.getId())
+                .payType(payTypeEnum.getId())
                 .state(PayState.UNPAID.getValue())
                 .userId(StpUtil.getLoginIdAsLong())
                 .build();
@@ -454,9 +454,11 @@ public class LetterApi {
         String key;
         if (letterDTO.getIsYourself()) {
             code = (String) rut.get(KeyType.NORMAL.getKey() + letterDTO.getPhone());
+            key = KeyType.NORMAL.getKey() + user.getPhone();
         } else {
             // 获取当前登录用户手机号
             code = (String) rut.get(KeyType.NORMAL.getKey() + user.getPhone());
+            key = KeyType.NORMAL.getKey() + letterDTO.getPhone();
         }
         if (StringUtils.isBlank(code) || !code.equals(letterDTO.getSmsCode())) {
             return CheckReturn.fail("验证码错误");
@@ -465,7 +467,7 @@ public class LetterApi {
             return CheckReturn.fail("信件类型不存在");
         }
         // 删除验证码
-        rut.delete(KeyType.NORMAL.getKey() + user.getPhone());
+        rut.delete(key);
         return CheckReturn.ok(mapperFacade.map(letterDTO, Letter.class));
     }
 }

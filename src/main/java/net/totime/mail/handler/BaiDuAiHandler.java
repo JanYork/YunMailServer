@@ -11,15 +11,18 @@ package net.totime.mail.handler;
 import com.alibaba.fastjson2.JSON;
 import com.baidu.aip.contentcensor.AipContentCensor;
 import com.baidu.aip.contentcensor.EImgType;
+import lombok.extern.slf4j.Slf4j;
 import net.totime.mail.dto.LetterChangeDTO;
 import net.totime.mail.dto.MailChangeDTO;
 import net.totime.mail.entity.Letter;
 import net.totime.mail.entity.Mail;
+import net.totime.mail.entity.Message;
 import net.totime.mail.entity.User;
 import net.totime.mail.enums.GlobalState;
 import net.totime.mail.exception.RuntimeExceptionToMsgException;
 import net.totime.mail.pojo.BaiDuAiBack;
 import net.totime.mail.service.LetterService;
+import net.totime.mail.service.MessageService;
 import net.totime.mail.service.UserService;
 import net.totime.mail.sms.tencent.TencentSmsOption;
 import org.springframework.stereotype.Component;
@@ -35,11 +38,14 @@ import java.util.List;
  * @since 1.0.0
  */
 @Component
+@Slf4j
 public class BaiDuAiHandler {
     @Resource
     private AipContentCensor ai;
     @Resource
     private LetterService letterService;
+    @Resource
+    private MessageService messageService;
     @Resource
     private TencentSmsOption tso;
     @Resource
@@ -119,6 +125,52 @@ public class BaiDuAiHandler {
         return mail;
     }
 
+    /**
+     * 短信内容审核
+     *
+     * @param message 短信
+     */
+    public void messageAiCheck(Message message) {
+        String text = message.getText();
+        BaiDuAiBack baiDuAiBack = JSON.parseObject(ai.textCensorUserDefined(text).toString(), BaiDuAiBack.class);
+        boolean compliance = baiDuAiBack.isCompliance();
+        if (!compliance) {
+            List<BaiDuAiBack.Data> data = baiDuAiBack.getData();
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < data.size() && i < 3; i++) {
+                sb.append(data.get(i).getMsg()).append(";");
+            }
+            message.setState(GlobalState.MANUAL_REVIEW.getState());
+            message.setAiCheckMsg(sb.toString());
+            boolean r = messageService.updateById(message);
+            if (!r) {
+                log.error("短信更新失败，短信ID：{}", message.getId());
+                throw new RuntimeExceptionToMsgException("审核系统异常");
+            }
+        } else {
+            message.setState(GlobalState.WAITING_FOR_AUDIT.getState());
+            boolean r = messageService.updateById(message);
+            if (!r) {
+                log.error("短信更新失败，短信ID：{}", message.getId());
+                throw new RuntimeExceptionToMsgException("系统异常");
+            }
+            String name = message.getIsUnnamed() ? "(匿名)" : message.getUserId().toString();
+            // 如果审核通过，直接发送短信
+            Boolean smsR = tso.sendMessageCode(message.getPhone(), name, message.getId().toString());
+            if (!smsR) {
+                log.error("短信通知失败，短信ID：{}", message.getId());
+                throw new RuntimeExceptionToMsgException("短信通知失败，方法：sendMessageCode");
+            }
+        }
+        // 获取用户手机号
+        User user = userService.getById(message.getUserId());
+        // 发送短信通知
+        Boolean r = tso.sendMessageSubmit(user.getPhone(), String.valueOf(message.getId()), message.getSendTime());
+        if (!r) {
+            log.error("短信取信码通知失败，短信ID：{}", message.getId());
+            throw new RuntimeExceptionToMsgException("短信取信码通知失败，方法：sendMessageSubmit");
+        }
+    }
 
     /**
      * 信件修改后内容审核

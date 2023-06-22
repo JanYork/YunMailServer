@@ -19,6 +19,7 @@ import net.totime.mail.context.SpringBeanContext;
 import net.totime.mail.entity.*;
 import net.totime.mail.enums.GlobalState;
 import net.totime.mail.enums.PayState;
+import net.totime.mail.enums.PayType;
 import net.totime.mail.exception.PayException;
 import net.totime.mail.service.*;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -244,6 +245,8 @@ public class AliPayMessageHandler implements PayMessageHandler<AliPayMessage, Al
                 MessageOrders messageOrders = bean.getOne(
                         new LambdaQueryWrapper<MessageOrders>()
                                 .eq(MessageOrders::getOrdersSerial, outTradeNo)
+                                // TODO
+                                .eq(MessageOrders::getPayType, PayType.ALI_PAY.getId())
                 );
                 if (messageOrders == null) {
                     log.error("订单不存在，订单号：{}", outTradeNo);
@@ -269,7 +272,8 @@ public class AliPayMessageHandler implements PayMessageHandler<AliPayMessage, Al
                         log.error("信息更新失败，消息号：{}", messageOrders.getMessageId());
                         return payService.getPayOutMessage("fail", "失败");
                     }
-                    // TODO：发送心愿AI审核消息通知
+                    BaiDuAiHandler aiHandler = SpringBeanContext.getBean(BaiDuAiHandler.class);
+                    aiHandler.messageAiCheck(msg);
                     return payService.getPayOutMessage("success", "成功");
                 }
                 throw new PayException("支付宝", payMessage.getOutTradeNo());

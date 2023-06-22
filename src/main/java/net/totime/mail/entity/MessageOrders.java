@@ -8,6 +8,7 @@
 
 package net.totime.mail.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import io.swagger.annotations.ApiModel;
@@ -33,7 +34,7 @@ public class MessageOrders extends Model<MessageOrders> {
     /**
      * 订单ID
      */
-    @TableId
+    @TableId(type = IdType.AUTO)
     @ApiModelProperty(value = "订单ID", example = "1")
     private Integer id;
     /**

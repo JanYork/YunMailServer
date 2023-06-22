@@ -6,15 +6,11 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package net.totime.mail.entity;
+package net.totime.mail.dto;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -22,28 +18,14 @@ import javax.validation.constraints.Size;
 import java.util.Date;
 
 /**
- * 短信任务信息
+ * 短信投递数据
  *
  * @author JanYork
  * @since 2023-06-14 22:59:38
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
-@ApiModel(value = "短信任务信息", description = "字段与数据库一致")
-public class Message extends Model<Message> {
-    private static final long serialVersionUID = 537104535127795029L;
-    /**
-     * 短信ID
-     */
-    @TableId(type = IdType.AUTO)
-    @ApiModelProperty(value = "短信ID", example = "1")
-    private Long id;
-    /**
-     * 用户ID
-     */
-    @ApiModelProperty(value = "用户ID", example = "1", required = true)
-    @NotNull(message = "用户不能为空")
-    private Long userId;
+@ApiModel(value = "短信投递数据", description = "用户ID会根据token自动填充，必须登录，字段字数均有限制")
+public class MessageDTO {
     /**
      * 短信内容
      */
@@ -58,17 +40,6 @@ public class Message extends Model<Message> {
     @NotNull(message = "发送时间不能为空")
     private Date sendTime;
     /**
-     * 短信创建时间
-     */
-    @ApiModelProperty(value = "短信创建时间", example = "1")
-    private Date createTime;
-    /**
-     * 短信是否匿名
-     */
-    @ApiModelProperty(value = "短信是否匿名", example = "true", required = true)
-    @NotNull(message = "是否匿名?")
-    private Boolean isUnnamed;
-    /**
      * 手机号
      */
     @ApiModelProperty(value = "手机号", example = "1", required = true)
@@ -76,14 +47,15 @@ public class Message extends Model<Message> {
     @Pattern(regexp = "^1[3456789]\\d{9}$", message = "手机号格式不正确")
     private String phone;
     /**
-     * 短信状态
+     * 短信是否匿名
      */
-    @ApiModelProperty(value = "短信状态", example = "1", required = true)
-    @NotNull(message = "状态不能为空")
-    private Integer state;
+    @ApiModelProperty(value = "短信是否匿名", example = "true", required = true)
+    @NotNull(message = "是否匿名?")
+    private Boolean isUnnamed;
     /**
-     * AI审核消息
+     * 校验码
      */
-    @ApiModelProperty(value = "AI审核消息", example = "1")
-    private String aiCheckMsg;
+    @ApiModelProperty(value = "校验码", example = "1", required = true)
+    @NotNull(message = "校验码不能为空")
+    private String code;
 }

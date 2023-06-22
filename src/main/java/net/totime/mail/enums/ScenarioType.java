@@ -24,7 +24,11 @@ public enum ScenarioType {
     /**
      * 信件
      */
-    LETTER(2, "信件");
+    LETTER(2, "信件"),
+    /**
+     * 短信
+     */
+    SMS(3, "短信");
     private final Integer id;
     private final String desc;
 

@@ -257,7 +257,8 @@ public class WxV3PayMessageHandler implements PayMessageHandler<WxPayMessage, Wx
                         log.error("信息更新失败，信息号：{}", orders.getMessageId());
                         return payService.getPayOutMessage("fail", "失败");
                     }
-                    // TODO：发送心愿AI审核消息通知
+                    BaiDuAiHandler aiHandler = SpringBeanContext.getBean(BaiDuAiHandler.class);
+                    aiHandler.messageAiCheck(msg);
                     return payService.getPayOutMessage("success", "成功");
                 }
                 throw new PayException("微信", payMessage.getOutTradeNo());

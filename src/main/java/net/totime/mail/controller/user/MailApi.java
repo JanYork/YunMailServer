@@ -46,7 +46,7 @@ import java.util.List;
  * @author JanYork
  * @version 1.0.0
  * @date 2023/03/22
- * @description 描述
+ * @description 邮件相关接口
  * @since 2023-06-14 22:59:37
  */
 @RestController
@@ -75,10 +75,10 @@ public class MailApi {
      */
     @PostMapping("/delivery")
     @ApiOperation("邮件投递")
-    public ApiResponse<String> delivery(@RequestBody @Valid MailDTO mailDTO) {
+    public ApiResponse<Boolean> delivery(@RequestBody @Valid MailDTO mailDTO) {
         CheckReturn<Mail> check = check(mailDTO);
         if (!check.getStatus()) {
-            return ApiResponse.<String>fail(null).message(check.getMsg());
+            return ApiResponse.fail(false).message(check.getMsg());
         }
         Mail mail = check.getValue();
         mail.setUserId(StpUtil.getLoginIdAsLong());
@@ -86,7 +86,7 @@ public class MailApi {
         Mail mailAiCheck = aiHandler.mailAiCheck(mail);
         boolean save = mailService.save(mailAiCheck);
         if (!save) {
-            return ApiResponse.fail("系统异常");
+            return ApiResponse.fail(false).message("系统异常");
         }
         if (mailAiCheck.getState().equals(GlobalState.WAITING_FOR_DELIVERY.getState())) {
             Long second = getSecond(mailAiCheck.getGoToTime(), new Date());
@@ -113,7 +113,7 @@ public class MailApi {
             }
             mailOperate.sendAuditMail(uMail, String.valueOf(mailAiCheck.getMailId()));
         }
-        return ApiResponse.ok("投递成功");
+        return ApiResponse.ok(true).message("投递成功");
     }
 
     /**

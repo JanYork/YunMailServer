@@ -22,7 +22,11 @@ public enum PayAmount {
     /**
      * 信件价格
      */
-    LETTER_PRICE(new BigDecimal("0.01"));
+    LETTER_PRICE(new BigDecimal("0.01")),
+    /**
+     * 短信价格
+     */
+    SMS_PRICE(new BigDecimal("0.01"));
 
     private BigDecimal amount;
 

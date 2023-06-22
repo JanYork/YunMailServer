@@ -115,6 +115,57 @@ public class TencentSmsOption {
     }
 
     /**
+     * 短信提交后通知
+     *
+     * @param phone 电话
+     * @param id    信件ID
+     * @param time  投递时间
+     */
+    public Boolean sendMessageSubmit(String phone, String id, Date time) {
+        String[] phoneNumbers = {phone};
+        // 第二个参数
+        String secondParam = timeFormat(time, "yyyy-MM-dd");
+        // 判断是否是今天
+        if (secondParam.equals(timeFormat(new Date(), "yyyy-MM-dd"))) {
+            secondParam = "今天";
+        }
+        SendSmsRequest build = SmsRequestBuild.builder()
+                .phoneNumber(phoneNumbers)
+                .templateId(SmsTemplate.SMS_DELIVERY)
+                .params(new String[]{
+                        id,
+                        secondParam
+                })
+                .build();
+        SendSmsResponse response = sut.sendSms(build);
+        return SMS_OK.equals(response.getSendStatusSet()[0].getCode());
+    }
+
+    /**
+     * 取信码通知
+     *
+     * @param phone 电话
+     * @param userId 用户ID
+     * @param code 取信码
+     */
+    public Boolean sendMessageCode(String phone, String userId, String code) {
+        String[] phoneNumbers = {phone};
+        SendSmsRequest build = SmsRequestBuild.builder()
+                .phoneNumber(phoneNumbers)
+                .templateId(SmsTemplate.LETTER_CODE)
+                .params(new String[]{
+                        userId,
+                        code,
+                        "公众号",
+                        "["+wxMpName+"]",
+                        wxMpName
+                })
+                .build();
+        SendSmsResponse response = sut.sendSms(build);
+        return SMS_OK.equals(response.getSendStatusSet()[0].getCode());
+    }
+
+    /**
      * 实体信件日报表
      */
     public Boolean sendLetterDailyReport(int count) {

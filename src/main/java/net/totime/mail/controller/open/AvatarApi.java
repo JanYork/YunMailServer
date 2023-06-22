@@ -26,7 +26,7 @@ import java.io.IOException;
  */
 @RestController
 @RequestMapping("/api/v1/avatar")
-@Api(tags = "头像接口")
+@Api(tags = "[开放]头像接口")
 public class AvatarApi {
     /**
      * 获取头像根据字符串的哈希值

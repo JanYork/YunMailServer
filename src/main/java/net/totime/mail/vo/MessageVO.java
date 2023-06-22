@@ -6,15 +6,13 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package net.totime.mail.entity;
+package net.totime.mail.vo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -22,16 +20,14 @@ import javax.validation.constraints.Size;
 import java.util.Date;
 
 /**
- * 短信任务信息
+ * 短信信息
  *
  * @author JanYork
  * @since 2023-06-14 22:59:38
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
-@ApiModel(value = "短信任务信息", description = "字段与数据库一致")
-public class Message extends Model<Message> {
-    private static final long serialVersionUID = 537104535127795029L;
+@ApiModel(value = "短信信息", description = "用户端数据")
+public class MessageVO {
     /**
      * 短信ID
      */
@@ -63,12 +59,6 @@ public class Message extends Model<Message> {
     @ApiModelProperty(value = "短信创建时间", example = "1")
     private Date createTime;
     /**
-     * 短信是否匿名
-     */
-    @ApiModelProperty(value = "短信是否匿名", example = "true", required = true)
-    @NotNull(message = "是否匿名?")
-    private Boolean isUnnamed;
-    /**
      * 手机号
      */
     @ApiModelProperty(value = "手机号", example = "1", required = true)
@@ -76,14 +66,15 @@ public class Message extends Model<Message> {
     @Pattern(regexp = "^1[3456789]\\d{9}$", message = "手机号格式不正确")
     private String phone;
     /**
+     * 短信是否匿名
+     */
+    @ApiModelProperty(value = "短信是否匿名", example = "true", required = true)
+    @NotNull(message = "是否匿名?")
+    private Boolean isUnnamed;
+    /**
      * 短信状态
      */
     @ApiModelProperty(value = "短信状态", example = "1", required = true)
     @NotNull(message = "状态不能为空")
     private Integer state;
-    /**
-     * AI审核消息
-     */
-    @ApiModelProperty(value = "AI审核消息", example = "1")
-    private String aiCheckMsg;
 }
