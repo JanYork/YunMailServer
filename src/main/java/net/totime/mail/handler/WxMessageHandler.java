@@ -93,6 +93,8 @@ public class WxMessageHandler {
             if (message.getEventKey().equals(WX_LOGIN_PREFIX + WxMpSceneEnum.LOGIN.getScene())) {
                 content = content + "\n\n" +
                         "嗯！对啦！你已经成功登录云寄星球，有什么事情可以和小云说哦！";
+                String unionId = message.getUnionId();
+                // TODO: 2023/06/12 登录
             }
             WxMpXmlOutTextMessage texts = WxMpXmlOutTextMessage
                     .TEXT()

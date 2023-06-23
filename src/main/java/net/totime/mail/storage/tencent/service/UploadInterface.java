@@ -44,6 +44,18 @@ public interface UploadInterface {
      *
      * @param url 文件链接
      * @return {@link String}
+     * @throws IOException ioexception
      */
     String upload(String url) throws IOException;
+
+
+
+    /**
+     * 上传
+     *
+     * @param img 文件
+     * @return {@link String}
+     * @throws IOException ioexception
+     */
+    String upload(byte[] img) throws IOException;
 }

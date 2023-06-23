@@ -80,7 +80,7 @@ public class TencentUpload implements UploadInterface {
             throw new GloballyUniversalException(500, "不支持的文件类型");
         }
         String md5 = Md5Utils.md5Hex(fileUrl);
-        String url = (String)rut.get(md5);
+        String url = (String) rut.get(md5);
         if (!StringUtils.isEmpty(url)) {
             return url;
         }
@@ -96,6 +96,34 @@ public class TencentUpload implements UploadInterface {
             throw new GloballyUniversalException(500, "上传失败");
         }
         url = this.url + "/" + randomName;
+        rut.set(md5, url, CACHE_TIME);
+        return url;
+    }
+
+    /**
+     * 上传
+     *
+     * @param img 文件
+     * @return {@link String}
+     * @throws IOException ioexception
+     */
+    @Override
+    public String upload(byte[] img) throws IOException {
+        String md5 = Md5Utils.md5Hex(img);
+        String url = (String) rut.get(md5);
+        if (!StringUtils.isEmpty(url)) {
+            return url;
+        }
+        String fileName = ImageUtils.getRandomName("jpg");
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentLength(img.length);
+        InputStream inputStream = new ByteArrayInputStream(img);
+        try {
+            cos.putObject(bucketName, fileName, inputStream, objectMetadata);
+        } catch (Exception e) {
+            throw new GloballyUniversalException(500, "上传失败");
+        }
+        url = this.url + "/" + fileName;
         rut.set(md5, url, CACHE_TIME);
         return url;
     }

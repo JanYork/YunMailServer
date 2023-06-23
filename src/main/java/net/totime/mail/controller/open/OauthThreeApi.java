@@ -36,6 +36,7 @@ import net.totime.mail.dto.AuthCallBackDTO;
 import net.totime.mail.enums.*;
 import net.totime.mail.exception.GloballyUniversalException;
 import net.totime.mail.handler.WxMessageHandler;
+import net.totime.mail.pojo.WxMpLoginInfo;
 import net.totime.mail.response.ApiResponse;
 import net.totime.mail.util.CodeUtil;
 import net.totime.mail.util.RedisUtil;
@@ -118,7 +119,7 @@ public class OauthThreeApi {
      */
     @RequestMapping("/{type}/callback")
     @RequestBody
-    @ApiOperation(value = "第三方登录回调")
+    @ApiOperation(value = "第三方登录回调", notes = "第三方登录回调，返回子页面，利用父子窗口通信实现登录回调前端")
     public String login(@PathVariable String type, AuthCallback callback, Model model) {
         @SuppressWarnings("rawtypes") AuthResponse login = factory.get(type).login(callback);
         if (login.ok()) {
@@ -131,7 +132,7 @@ public class OauthThreeApi {
 
     @GetMapping("/wx/mini")
     @ResponseBody
-    @ApiOperation(value = "微信小程序登录")
+    @ApiOperation(value = "微信小程序登录（未完成）")
     public ApiResponse<HashMap<String, String>> wxMini(@RequestParam String code) {
         WxMaJscode2SessionResult sessionInfo;
         try {
@@ -205,7 +206,7 @@ public class OauthThreeApi {
         String ticket = wxMpQrCodeTicket.getTicket();
         String url = wxMpService.getQrcodeService().qrCodePictureUrl(ticket);
         rut.set("wl" + code, code, 180L);
-        rut.set(code, LoginState.NOT_LOGIN.getState(), 300L);
+        rut.set(code, new WxMpLoginInfo(LoginState.NOT_LOGIN.getState(), null), 300L);
         HashMap<String, String> res = new HashMap<>(6);
         res.put("state", code);
         res.put("url", url);
@@ -221,16 +222,43 @@ public class OauthThreeApi {
     @ResponseBody
     @ApiOperation(value = "微信公众号登录(扫码模式)获取状态轮询接口")
     public ApiResponse<String> wxMpLoginState(String code) {
-        Integer state = (Integer) rut.get(code);
-        if (state == null) {
+        WxMpLoginInfo info = (WxMpLoginInfo) rut.get(code);
+        if (info == null) {
             throw new GloballyUniversalException(500, "登录状态已过期");
         }
-        if (state == LoginState.LOGGED_IN.getState()) {
-            return ApiResponse.ok("登录成功");
-        } else if (state == LoginState.NOT_LOGIN.getState()) {
+        if (info.getState() == LoginState.LOGGED_IN.getState()) {
+            rut.delete(code);
+            return ApiResponse.ok(info.getToken()).message("登录成功");
+        } else if (info.getState() == LoginState.NOT_LOGIN.getState()) {
             return ApiResponse.fail("未登录").message("Go On").code(-1);
         }
         return ApiResponse.fail("登录异常").code(-2).message("未知错误");
+    }
+
+    /**
+     * 微信公众号登录(授权码模式)获取状态接口
+     *
+     * @param code 授权码
+     * @return {@link ApiResponse}<{@link String}>
+     */
+    @GetMapping("/wx/mp/state/{code}")
+    @ResponseBody
+    @ApiOperation(value = "微信公众号登录(授权码模式)获取状态接口")
+    public ApiResponse<String> wxMpLoginStateCode(@PathVariable String code) {
+        if (code == null) {
+            return ApiResponse.fail("空参错误").message("授权码不能为空");
+        }
+        String key = "wx_" + code;
+        String unionId = (String) rut.get(key);
+        if (unionId == null) {
+            return ApiResponse.fail("授权码错误").message("授权码已过期");
+        }
+        String token = wxUnionIdLogin(unionId);
+        if (token == null) {
+            return ApiResponse.fail("登录失败").message("系统未知错误");
+        }
+        rut.delete(key);
+        return ApiResponse.ok(token).message("登录成功");
     }
 
     /**
@@ -259,7 +287,8 @@ public class OauthThreeApi {
                 return texts.toXml();
             }
             String code = CodeUtil.generateCodeMixHalf(6);
-            rut.set(code, openId, 60L);
+            // 缓存授权码对应的唯一标识
+            rut.set("wx_" + code, message.getUnionId(), 120L);
             LocalDateTime now = LocalDateTime.now();
             now = now.plusHours(8);
             String time = now.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss SSS"));
@@ -267,16 +296,18 @@ public class OauthThreeApi {
                     .TEXT()
                     .toUser(message.getFromUser())
                     .fromUser(message.getToUser())
-                    .content("获取成功，欢迎开启云寄时空裂缝!" +
+                    .content("获取成功，欢迎开启云寄时空裂缝，本次裂缝预计在两分钟左右被空间法则修复，请尽快使用哦!" +
                             "\n你不在的日子里，发生了很多很多事情呢，快来看看吧!\n" +
                             "时空节点" + time +
                             "\n授权码：" + code)
                     .build();
             return texts.toXml();
         }
+        // 登录事件(扫码模式)
         if (isToLoginTmp(message)) {
-            // 获取场景值，即授权码
+            // 获取场景值
             String code = message.getEventKey();
+            // 获取授权码
             String authCode = (String) rut.get(code);
             if (StringUtils.isEmpty(authCode)) {
                 WxMpXmlOutTextMessage texts = WxMpXmlOutTextMessage
@@ -288,9 +319,21 @@ public class OauthThreeApi {
                         .build();
                 return texts.toXml();
             }
-            //TODO：登录处理
+            // 删除场景值缓存
             rut.delete(code);
-            rut.set(authCode, LoginState.LOGGED_IN.getState());
+            String token = wxUnionIdLogin(message.getUnionId());
+            if (StringUtils.isEmpty(token)) {
+                WxMpXmlOutTextMessage texts = WxMpXmlOutTextMessage
+                        .TEXT()
+                        .toUser(message.getFromUser())
+                        .fromUser(message.getToUser())
+                        .content("哎呀呀，云寄时光机出现了故障呢，本次登录失败了！\n" +
+                                "尝试重新获取登录二维码或者向云寄官方反馈吧！")
+                        .build();
+                return texts.toXml();
+            }
+            // 设置登录信息
+            rut.set(authCode, new WxMpLoginInfo(LoginState.LOGGED_IN.getState(), token), 300L);
             WxMpXmlOutTextMessage texts = WxMpXmlOutTextMessage
                     .TEXT()
                     .toUser(message.getFromUser())
@@ -332,6 +375,25 @@ public class OauthThreeApi {
                         message.getEventKey().startsWith("wl")
         );
     }
+
+    /**
+     * 微信unionId登录处理
+     *
+     * @param openId 唯一标识
+     * @return token {@link String} token
+     */
+    private String wxUnionIdLogin(String openId) {
+        AuthVO login = oos.login(openId, OauthType.WECHAT_MP);
+        if (login == null) {
+            return null;
+        }
+        if (login.getCode() != 200) {
+            log.error("微信登录失败，失败原因：{}", login.getMsg());
+            return null;
+        }
+        return login.getToken().getTokenValue();
+    }
+
 
     /**
      * 微信验证签名

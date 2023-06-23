@@ -27,7 +27,7 @@ public enum OauthType {
     /**
      * 微信小程序
      */
-    WECHAT("2", "微信小程序"),
+    WECHAT_MINI("2", "微信小程序"),
     /**
      * GITEE
      */
@@ -39,7 +39,11 @@ public enum OauthType {
     /**
      * 抖音
      */
-    DOUYIN("5", "抖音");
+    DOUYIN("5", "抖音"),
+    /**
+     * 微信公众号
+     */
+    WECHAT_MP("6", "微信公众号");
 
     @EnumValue
     private final String type;
