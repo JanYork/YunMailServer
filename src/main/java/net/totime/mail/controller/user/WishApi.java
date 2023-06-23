@@ -57,7 +57,7 @@ import java.util.List;
  * @since 2023-06-14 22:59:39
  */
 @RestController
-@RequestMapping("/api/wish")
+@RequestMapping("/user/wish")
 @Api(tags = "[用户]许愿相关接口")
 @Slf4j
 public class WishApi {

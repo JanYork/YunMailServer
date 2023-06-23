@@ -26,7 +26,7 @@ import javax.annotation.Resource;
  * @since 1.0.0
  */
 @RestController
-@RequestMapping("/api/v1/img")
+@RequestMapping("/common/v1/img")
 @Api(tags = "[公共]图片上传接口")
 public class ImageUpload {
     @Resource

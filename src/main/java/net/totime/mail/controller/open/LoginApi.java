@@ -44,6 +44,7 @@ import java.util.Date;
 @RestController
 @Api(tags = "[开放]云寄注册与登录接口")
 @Validated
+@RequestMapping("/api/v1")
 public class LoginApi {
     @Resource
     private UserServiceImpl userService;
@@ -268,7 +269,7 @@ public class LoginApi {
         User user = userService.getById(StpUtil.getLoginIdAsLong());
         String msg;
         if (user.getEmail() != null) {
-            // TODO
+            // TODO：短信
             msg = "改绑成功";
         } else {
             msg = "绑定成功";
@@ -309,7 +310,7 @@ public class LoginApi {
         if (ObjectUtils.isEmpty(user)) {
             return ApiResponse.fail("账户不存在");
         }
-        // TODO
+        // TODO：短信
         String key = KeyType.CHANGE_PASSWORD.getKey() + phone;
         String cacheCode = (String) rut.get(key);
         if (StringUtils.isEmpty(cacheCode)) {

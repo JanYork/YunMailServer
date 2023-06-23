@@ -59,7 +59,7 @@ import java.util.List;
  */
 @Api(tags = "[用户]信件相关接口")
 @RestController
-@RequestMapping("/api/letter")
+@RequestMapping("/user/letter")
 @Validated
 public class LetterApi {
     @Resource

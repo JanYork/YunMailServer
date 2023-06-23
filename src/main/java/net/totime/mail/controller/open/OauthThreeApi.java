@@ -10,6 +10,7 @@ package net.totime.mail.controller.open;
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
+import cn.dev33.satoken.annotation.SaIgnore;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.github.xiaoymin.knife4j.annotations.ApiSupport;
@@ -28,12 +29,11 @@ import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
 import me.zhyd.oauth.model.AuthCallback;
 import me.zhyd.oauth.model.AuthResponse;
 import me.zhyd.oauth.utils.AuthStateUtils;
+import net.totime.mail.annotation.SaAdminCheckLogin;
+import net.totime.mail.annotation.SaAdminCheckRole;
 import net.totime.mail.domain.OauthOperate;
 import net.totime.mail.dto.AuthCallBackDTO;
-import net.totime.mail.enums.LoginState;
-import net.totime.mail.enums.WxMessageEvent;
-import net.totime.mail.enums.WxMessageType;
-import net.totime.mail.enums.WxMpSceneEnum;
+import net.totime.mail.enums.*;
 import net.totime.mail.exception.GloballyUniversalException;
 import net.totime.mail.handler.WxMessageHandler;
 import net.totime.mail.response.ApiResponse;
@@ -70,6 +70,7 @@ import java.util.List;
 @Api(tags = "[开放]云寄第三方OAUTH登录")
 @CrossOrigin
 @ApiSupport(author = "JanYork")
+@SaIgnore
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class OauthThreeApi {
     private final AuthRequestFactory factory;
@@ -173,7 +174,6 @@ public class OauthThreeApi {
 
     /**
      * 微信公众号登录(校验码模式)永久二维码
-     * TODO：超管可调用
      *
      * @return {@link ApiResponse}<{@link String}>
      */
@@ -181,6 +181,8 @@ public class OauthThreeApi {
     @GetMapping("/wx/mp/code")
     @ResponseBody
     @ApiOperation(value = "微信公众号登录(校验码模式)永久二维码")
+    @SaAdminCheckRole("super_admin")
+    @SaAdminCheckLogin
     public ApiResponse<String> wxMpLogin() {
         WxMpQrCodeTicket wxMpQrCodeTicket = wxMpService.getQrcodeService().qrCodeCreateLastTicket(WxMpSceneEnum.LOGIN.getScene());
         String ticket = wxMpQrCodeTicket.getTicket();

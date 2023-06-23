@@ -36,7 +36,7 @@ import java.util.List;
  * @since 2023-06-14 22:59:31
  */
 @RestController
-@RequestMapping("/user/blessing")
+@RequestMapping("/common/blessing")
 @Api(tags = "[公共]祝福语录信息")
 @Validated
 public class BlessingApi {

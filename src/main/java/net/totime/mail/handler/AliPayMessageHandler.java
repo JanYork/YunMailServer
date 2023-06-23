@@ -19,7 +19,6 @@ import net.totime.mail.context.SpringBeanContext;
 import net.totime.mail.entity.*;
 import net.totime.mail.enums.GlobalState;
 import net.totime.mail.enums.PayState;
-import net.totime.mail.enums.PayType;
 import net.totime.mail.exception.PayException;
 import net.totime.mail.service.*;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -246,8 +245,6 @@ public class AliPayMessageHandler implements PayMessageHandler<AliPayMessage, Al
                 MessageOrders messageOrders = bean.getOne(
                         new LambdaQueryWrapper<MessageOrders>()
                                 .eq(MessageOrders::getOrdersSerial, outTradeNo)
-                                // TODO
-                                .eq(MessageOrders::getPayType, PayType.ALI_PAY.getId())
                 );
                 if (messageOrders == null) {
                     log.error("订单不存在，订单号：{}", outTradeNo);

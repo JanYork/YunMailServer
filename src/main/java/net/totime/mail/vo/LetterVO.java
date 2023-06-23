@@ -75,7 +75,7 @@ public class LetterVO{
     @NotNull(message = "是否发给自己?")
     private Boolean isYourself;
     /**
-     * 信件发往地址 TODO：优化为省市区经纬度
+     * 信件发往地址
      */
     @ApiModelProperty(value = "信件发往地址", example = "1", required = true)
     @NotNull(message = "地址不能为空")

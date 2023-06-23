@@ -55,7 +55,7 @@ import java.util.List;
  * @since 1.0.0 TODO：支付
  */
 @RestController
-@RequestMapping("/api/message")
+@RequestMapping("/user/message")
 @Api(tags = "[用户]短信相关接口")
 @Slf4j
 public class MessageApi {

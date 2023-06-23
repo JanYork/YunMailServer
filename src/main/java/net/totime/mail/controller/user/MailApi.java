@@ -50,7 +50,7 @@ import java.util.List;
  * @since 2023-06-14 22:59:37
  */
 @RestController
-@RequestMapping("/api/mail")
+@RequestMapping("/user/mail")
 @Api(tags = "[用户]邮件相关接口")
 @Slf4j
 public class MailApi {
