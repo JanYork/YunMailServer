@@ -42,6 +42,10 @@ public enum SmsTemplate {
      */
     LETTER_RETURN("1760438", "信件退回通知"),
     /**
+     * 许愿成功通知
+     */
+    WISH_SUCCESS("1842331", "许愿成功通知"),
+    /**
      * 手机改绑验证码
      */
     PHONE_CHANGE("1760437", "手机改绑验证码"),

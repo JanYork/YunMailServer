@@ -6,32 +6,44 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package net.totime.mail.dto.back;
+package net.totime.mail.builder;
 
-import com.baomidou.mybatisplus.extension.activerecord.Model;
+import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.util.Date;
 
 /**
- * 短信任务表DTO
+ * 心愿订单构建器
  *
  * @author JanYork
- * @since 2023-03-27 22:13:34
+ * @since 2023-06-14 22:59:36
  */
 @Data
-public class MessageDTO {
+@Builder
+public class WishOrdersBuilder {
     /**
-     * 短信内容
+     * 订单编号
      */
-    private String text;
+    private String ordersSerial;
     /**
-     * 短信发送时间
+     * 用户ID
      */
-    private Date sendTime;
+    private Long userId;
     /**
-     * 短信是否匿名
+     * 订单时间
      */
-    private Integer isUnnamed;
+    private Date date;
+    /**
+     * 支付类型
+     */
+    private Integer payType;
+    /**
+     * 支付状态
+     */
+    private Integer state;
+    /**
+     * 信件ID
+     */
+    private Long wishId;
 }

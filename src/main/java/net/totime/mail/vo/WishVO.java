@@ -6,15 +6,11 @@
  * Vestibulum commodo. Ut rhoncus gravida arcu.
  */
 
-package net.totime.mail.entity;
+package net.totime.mail.vo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -26,15 +22,12 @@ import java.util.Date;
  * @author JanYork
  * @since 2023-06-14 22:59:39
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
-@ApiModel(value = "心愿信息", description = "字段与数据库一致")
-public class Wish extends Model<Wish> {
-    private static final long serialVersionUID = -6659428340822708387L;
+@ApiModel(value = "心愿信息", description = "用户端数据")
+public class WishVO {
     /**
      * 愿望ID
      */
-    @TableId(type = IdType.AUTO)
     @ApiModelProperty(value = "愿望ID", example = "1")
     private Long id;
     /**
@@ -66,9 +59,4 @@ public class Wish extends Model<Wish> {
     @ApiModelProperty(value = "心愿状态", example = "1", required = true)
     @NotNull(message = "状态不能为空")
     private Integer state;
-    /**
-     * AI审核消息
-     */
-    @ApiModelProperty(value = "AI审核消息", example = "1")
-    private String aiCheckMsg;
 }

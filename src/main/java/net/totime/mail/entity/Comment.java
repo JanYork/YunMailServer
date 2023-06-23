@@ -81,6 +81,17 @@ public class Comment extends Model<Comment> {
      * 是否过滤
      */
     @ApiModelProperty(value = "是否过滤", example = "0", required = true)
-    @NotNull(message = "是否过滤必须")
+    @NotNull(message = "是否过滤")
     private Boolean isFilter;
+    /**
+     * 是否敏感
+     */
+    @ApiModelProperty(value = "是否敏感", example = "0", required = true)
+    @NotNull(message = "是否敏感")
+    private Boolean isSensitive;
+    /**
+     * AI审核消息
+     */
+    @ApiModelProperty(value = "AI审核消息", example = "1")
+    private String aiCheckMsg;
 }

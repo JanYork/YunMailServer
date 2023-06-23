@@ -8,51 +8,80 @@
 
 package net.totime.mail.vo;
 
-import lombok.Builder;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.util.Date;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 /**
- * 邮件与信件评论表(Comment)表实体类
+ * 邮件与信件评论信息
  *
  * @author JanYork
- * @since 2023-04-23 14:54:45
+ * @since 2023-06-14 22:59:35
  */
 @Data
-@Builder
+@ApiModel(value = "邮件与信件评论信息", description = "用户端数据")
 public class CommentVO {
     /**
      * 评论ID
      */
+    @ApiModelProperty(value = "评论ID", example = "1")
     private Long id;
     /**
      * 父级评论ID
      */
+    @ApiModelProperty(value = "父级评论ID", example = "0")
     private Long parentId;
-    /**
-     * 评论用户ID
-     */
-    private Long userId;
     /**
      * 评论对应邮件或者信件
      */
+    @ApiModelProperty(value = "评论对应邮件或者信件", example = "10001", required = true)
+    @NotNull(message = "评论对象不能为空")
     private Long mailOrLetterId;
+    /**
+     * 评论用户ID
+     */
+    @ApiModelProperty(value = "评论用户ID", example = "1432543643654754", required = true)
+    @NotNull(message = "用户不能为空")
+    private Long userId;
     /**
      * 评论内容
      */
+    @ApiModelProperty(value = "评论内容", example = "你好", required = true)
+    @NotNull(message = "评论内容不能为空")
+    @Size(min = 1, max = 255, message = "内容长度非法")
     private String content;
     /**
-     * 评论时间
+     * 评论用户信息
      */
-    private Date createTime;
+    @ApiModelProperty(value = "评论用户信息")
+    private UserVO user;
     /**
-     * 是否过滤
+     * 子评论信息
      */
-    private Boolean isFilter;
-    /**
-     * 子评论
-     */
+    @ApiModelProperty(value = "子评论信息")
     private List<CommentVO> children;
+
+    @Data
+    @ApiModel(value = "用户信息", description = "用户端数据")
+    public static class UserVO {
+        /**
+         * 用户ID
+         */
+        @ApiModelProperty(value = "用户ID", example = "1")
+        private Long id;
+        /**
+         * 用户昵称
+         */
+        @ApiModelProperty(value = "用户昵称", example = "JanYork")
+        private String nickName;
+        /**
+         * 用户头像
+         */
+        @ApiModelProperty(value = "用户头像", example = "https://www.baidu.com/img/bd_logo1.png")
+        private String avatar;
+    }
 }

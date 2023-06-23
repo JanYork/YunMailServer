@@ -14,16 +14,11 @@ import com.baidu.aip.contentcensor.EImgType;
 import lombok.extern.slf4j.Slf4j;
 import net.totime.mail.dto.LetterChangeDTO;
 import net.totime.mail.dto.MailChangeDTO;
-import net.totime.mail.entity.Letter;
-import net.totime.mail.entity.Mail;
-import net.totime.mail.entity.Message;
-import net.totime.mail.entity.User;
+import net.totime.mail.entity.*;
 import net.totime.mail.enums.GlobalState;
 import net.totime.mail.exception.RuntimeExceptionToMsgException;
 import net.totime.mail.pojo.BaiDuAiBack;
-import net.totime.mail.service.LetterService;
-import net.totime.mail.service.MessageService;
-import net.totime.mail.service.UserService;
+import net.totime.mail.service.*;
 import net.totime.mail.sms.tencent.TencentSmsOption;
 import org.springframework.stereotype.Component;
 
@@ -46,6 +41,10 @@ public class BaiDuAiHandler {
     private LetterService letterService;
     @Resource
     private MessageService messageService;
+    @Resource
+    private WishService wishService;
+    @Resource
+    private CommentService commentService;
     @Resource
     private TencentSmsOption tso;
     @Resource
@@ -140,7 +139,7 @@ public class BaiDuAiHandler {
             for (int i = 0; i < data.size() && i < 3; i++) {
                 sb.append(data.get(i).getMsg()).append(";");
             }
-            message.setState(GlobalState.MANUAL_REVIEW.getState());
+            message.setState(GlobalState.WAITING_FOR_AUDIT.getState());
             message.setAiCheckMsg(sb.toString());
             boolean r = messageService.updateById(message);
             if (!r) {
@@ -148,14 +147,14 @@ public class BaiDuAiHandler {
                 throw new RuntimeExceptionToMsgException("审核系统异常");
             }
         } else {
-            message.setState(GlobalState.WAITING_FOR_AUDIT.getState());
+            message.setState(GlobalState.DELIVERED.getState());
             boolean r = messageService.updateById(message);
             if (!r) {
                 log.error("短信更新失败，短信ID：{}", message.getId());
                 throw new RuntimeExceptionToMsgException("系统异常");
             }
             String name = message.getIsUnnamed() ? "(匿名)" : message.getUserId().toString();
-            // 如果审核通过，直接发送短信
+            // 审核通过，直接发送短信
             Boolean smsR = tso.sendMessageCode(message.getPhone(), name, message.getId().toString());
             if (!smsR) {
                 log.error("短信通知失败，短信ID：{}", message.getId());
@@ -169,6 +168,63 @@ public class BaiDuAiHandler {
         if (!r) {
             log.error("短信取信码通知失败，短信ID：{}", message.getId());
             throw new RuntimeExceptionToMsgException("短信取信码通知失败，方法：sendMessageSubmit");
+        }
+    }
+
+    /**
+     * 心愿内容审核
+     *
+     * @param wish 心愿
+     */
+    public void wishAiCheck(Wish wish) {
+        String text = wish.getText();
+        BaiDuAiBack baiDuAiBackText = JSON.parseObject(ai.textCensorUserDefined(text).toString(), BaiDuAiBack.class);
+        boolean complianceText = baiDuAiBackText.isCompliance();
+        String imgUrl = wish.getImage();
+        BaiDuAiBack baiDuAiBackImg = null;
+        if (imgUrl != null) {
+            baiDuAiBackImg = JSON.parseObject(ai.imageCensorUserDefined(imgUrl, EImgType.URL, null).toString(), BaiDuAiBack.class);
+        }
+        // 为空默认通过
+        boolean complianceImg = baiDuAiBackImg == null || baiDuAiBackImg.isCompliance();
+        if (!complianceText || !complianceImg) {
+            String checkMsg = null;
+            if (!complianceText) {
+                List<BaiDuAiBack.Data> data = baiDuAiBackText.getData();
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < data.size() && i < 3; i++) {
+                    sb.append(data.get(i).getMsg()).append(";");
+                }
+                checkMsg = sb.toString();
+            }
+            if (!complianceImg) {
+                List<BaiDuAiBack.Data> data = baiDuAiBackImg.getData();
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < data.size() && i < 3; i++) {
+                    sb.append(data.get(i).getMsg()).append(";");
+                }
+                checkMsg = checkMsg == null ? sb.toString() : checkMsg + ";" + sb;
+            }
+            wish.setState(GlobalState.WAITING_FOR_AUDIT.getState());
+            wish.setAiCheckMsg(checkMsg);
+            boolean r = wishService.updateById(wish);
+            if (!r) {
+                log.error("心愿更新失败，心愿ID：{}", wish.getId());
+                throw new RuntimeExceptionToMsgException("审核系统异常");
+            }
+        } else {
+            wish.setState(GlobalState.COMPLETED.getState());
+            boolean r = wishService.updateById(wish);
+            if (!r) {
+                log.error("心愿更新失败，心愿ID：{}", wish.getId());
+                throw new RuntimeExceptionToMsgException("系统异常");
+            }
+            // 如果审核通过，直接发送短信
+            Boolean smsR = tso.sendWishSuccess(wish.getId().toString());
+            if (!smsR) {
+                log.error("心愿通知失败，心愿ID：{}", wish.getId());
+                throw new RuntimeExceptionToMsgException("心愿通知失败，方法：sendWishSubmit");
+            }
         }
     }
 
@@ -208,6 +264,30 @@ public class BaiDuAiHandler {
             return sb.toString();
         }
         return null;
+    }
+
+    /**
+     * 评论内容审核
+     *
+     * @param comment 评论
+     */
+    public void commentAiCheck(Comment comment) {
+        String text = comment.getContent();
+        BaiDuAiBack baiDuAiBack = JSON.parseObject(ai.textCensorUserDefined(text).toString(), BaiDuAiBack.class);
+        if (!baiDuAiBack.isCompliance()) {
+            List<BaiDuAiBack.Data> data = baiDuAiBack.getData();
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < data.size() && i < 3; i++) {
+                sb.append(data.get(i).getMsg()).append(";");
+            }
+            comment.setIsSensitive(true);
+            comment.setAiCheckMsg(sb.toString());
+            boolean r = commentService.updateById(comment);
+            if (!r) {
+                log.error("评论更新失败，评论ID：{}", comment.getId());
+                throw new RuntimeExceptionToMsgException("系统异常");
+            }
+        }
     }
 
     /**

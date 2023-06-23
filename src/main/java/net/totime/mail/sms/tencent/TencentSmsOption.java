@@ -144,9 +144,9 @@ public class TencentSmsOption {
     /**
      * 取信码通知
      *
-     * @param phone 电话
+     * @param phone  电话
      * @param userId 用户ID
-     * @param code 取信码
+     * @param code   取信码
      */
     public Boolean sendMessageCode(String phone, String userId, String code) {
         String[] phoneNumbers = {phone};
@@ -157,8 +157,24 @@ public class TencentSmsOption {
                         userId,
                         code,
                         "公众号",
-                        "["+wxMpName+"]",
+                        "[" + wxMpName + "]",
                         wxMpName
+                })
+                .build();
+        SendSmsResponse response = sut.sendSms(build);
+        return SMS_OK.equals(response.getSendStatusSet()[0].getCode());
+    }
+
+    /**
+     * 许愿成功通知
+     */
+    public Boolean sendWishSuccess(String id) {
+        String[] phone = operatorPhone.toArray(new String[0]);
+        SendSmsRequest build = SmsRequestBuild.builder()
+                .phoneNumber(phone)
+                .templateId(SmsTemplate.WISH_SUCCESS)
+                .params(new String[]{
+                        id
                 })
                 .build();
         SendSmsResponse response = sut.sendSms(build);

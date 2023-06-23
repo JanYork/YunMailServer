@@ -47,7 +47,7 @@ public class IdCardAuthThreeApi {
      * @param cardInfo 实名认证要素
      * @return {@link ApiResponse} 实名认证结果
      */
-    @GetMapping("/idCard/auth3")
+    @PostMapping("/idCard/auth3")
     @RateLimiter(count = 3, time = 60 * 60 * 24 * 7)
     @ApiOperation(value = "实名认证-三要素")
     public ApiResponse<String> idCardAuth(@RequestBody IdCardAuthDTO cardInfo) {
@@ -77,7 +77,7 @@ public class IdCardAuthThreeApi {
      * @param name   姓名
      * @return {@link ApiResponse}<{@link String}> 实名认证结果
      */
-    @GetMapping("/idCard/auth2")
+    @PostMapping("/idCard/auth2")
     @ApiOperation(value = "实名认证-二要素")
     @RateLimiter(count = 3, time = 60 * 60 * 24 * 7)
     public ApiResponse<String> idCardAuth2(@RequestParam String idCard, @RequestParam String name) {
