@@ -70,6 +70,105 @@ public class SmsVerifyUtil {
     }
 
     /**
+     * 发送短信验证码，用于修改密码
+     *
+     * @param phone 手机号
+     * @param time  有效时间
+     * @return {@link ApiResponse}<{@link Boolean}>
+     */
+    public ApiResponse<Boolean> codeByChangePwd(String phone, Long cacheTime, Integer time) {
+        String regex = "^1[3-9]\\d{9}$";
+        if (!phone.matches(regex)) {
+            return ApiResponse.fail(false).message("手机号格式不正确");
+        }
+        Long incr = rut.incr(phone, 60L);
+        if (incr > 3) {
+            return ApiResponse.fail(false).message("获取过于频繁");
+        }
+        String[] phoneNumbers = {phone};
+        String code = CodeUtil.generateCode(6);
+        SendSmsRequest build = SmsRequestBuild.builder()
+                .phoneNumber(phoneNumbers)
+                .templateId(SmsTemplate.RESET_PASSWORD)
+                .params(new String[]{
+                        code, String.valueOf(time)
+                })
+                .build();
+        SendSmsResponse response = sut.sendSms(build);
+        if (!SMS_OK.equals(response.getSendStatusSet()[0].getCode())) {
+            return ApiResponse.fail(false).message("发送失败");
+        }
+        rut.set(KeyType.CHANGE_PASSWORD.getKey() + phone, code, cacheTime);
+        return ApiResponse.ok(true).message("发送成功");
+    }
+
+    /**
+     * 发送短信验证码，用于绑定手机号
+     *
+     * @param phone 手机号
+     * @param time  有效时间
+     * @return {@link ApiResponse}<{@link Boolean}>
+     */
+    public ApiResponse<Boolean> codeByBindPhone(String phone, Long cacheTime, Integer time) {
+        String regex = "^1[3-9]\\d{9}$";
+        if (!phone.matches(regex)) {
+            return ApiResponse.fail(false).message("手机号格式不正确");
+        }
+        Long incr = rut.incr(phone, 60L);
+        if (incr > 3) {
+            return ApiResponse.fail(false).message("获取过于频繁");
+        }
+        String[] phoneNumbers = {phone};
+        String code = CodeUtil.generateCode(6);
+        SendSmsRequest build = SmsRequestBuild.builder()
+                .phoneNumber(phoneNumbers)
+                .templateId(SmsTemplate.BIND_PHONE)
+                .params(new String[]{
+                        code, String.valueOf(time)
+                })
+                .build();
+        SendSmsResponse response = sut.sendSms(build);
+        if (!SMS_OK.equals(response.getSendStatusSet()[0].getCode())) {
+            return ApiResponse.fail(false).message("发送失败");
+        }
+        rut.set(KeyType.BIND_PHONE.getKey() + phone, code, cacheTime);
+        return ApiResponse.ok(true).message("发送成功");
+    }
+
+    /**
+     * 发送短信验证码，用于改绑手机号
+     *
+     * @param phone 手机号
+     * @param time  有效时间
+     * @return {@link ApiResponse}<{@link Boolean}>
+     */
+    public ApiResponse<Boolean> codeByChangeBindPhone(String phone, Long cacheTime, Integer time) {
+        String regex = "^1[3-9]\\d{9}$";
+        if (!phone.matches(regex)) {
+            return ApiResponse.fail(false).message("手机号格式不正确");
+        }
+        Long incr = rut.incr(phone, 60L);
+        if (incr > 3) {
+            return ApiResponse.fail(false).message("获取过于频繁");
+        }
+        String[] phoneNumbers = {phone};
+        String code = CodeUtil.generateCode(6);
+        SendSmsRequest build = SmsRequestBuild.builder()
+                .phoneNumber(phoneNumbers)
+                .templateId(SmsTemplate.PHONE_CHANGE)
+                .params(new String[]{
+                        code, String.valueOf(time)
+                })
+                .build();
+        SendSmsResponse response = sut.sendSms(build);
+        if (!SMS_OK.equals(response.getSendStatusSet()[0].getCode())) {
+            return ApiResponse.fail(false).message("发送失败");
+        }
+        rut.set(KeyType.CHANGE_PHONE.getKey() + phone, code, cacheTime);
+        return ApiResponse.ok(true).message("发送成功");
+    }
+
+    /**
      * 验证短信验证码
      *
      * @param phone   电话

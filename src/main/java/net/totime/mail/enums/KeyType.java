@@ -41,7 +41,19 @@ public enum KeyType {
     /**
      * 修改密码验证码
      */
-    CHANGE_PASSWORD("change:", "修改密码验证码");
+    CHANGE_PASSWORD("change:", "修改密码验证码"),
+    /**
+     * 绑定手机号
+     */
+    BIND_PHONE("bind_phone:", "绑定手机号"),
+    /**
+     * 改绑手机号
+     */
+    CHANGE_PHONE("change_phone:", "改绑手机号"),
+    /**
+     * 改绑手机号验证通过标识
+     */
+    CHANGE_PHONE_FLAG("change_phone_flag:", "改绑手机号验证通过标识"),;
 
     private final String key;
     private final String desc;

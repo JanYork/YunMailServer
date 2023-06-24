@@ -52,7 +52,7 @@ import java.util.List;
  * @version 1.0.0
  * @date 2023/06/23
  * @description 信息相关接口
- * @since 1.0.0 TODO：支付
+ * @since 1.0.0
  */
 @RestController
 @RequestMapping("/user/message")

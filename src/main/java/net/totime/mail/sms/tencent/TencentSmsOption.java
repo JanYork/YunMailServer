@@ -52,6 +52,12 @@ public class TencentSmsOption {
     @Value("#{'${system.operator-phone}'.split(',')}")
     private List<String> operatorPhone;
 
+    /**
+     * 系统开发者手机号
+     */
+    @Value("#{'${system.developer-phone}'.split(',')}")
+    private List<String> developerPhone;
+
 
     /**
      * 信件投递成功通知
@@ -175,6 +181,29 @@ public class TencentSmsOption {
                 .templateId(SmsTemplate.WISH_SUCCESS)
                 .params(new String[]{
                         id
+                })
+                .build();
+        SendSmsResponse response = sut.sendSms(build);
+        return SMS_OK.equals(response.getSendStatusSet()[0].getCode());
+    }
+
+    /**
+     * 系统错误通知
+     *
+     * @param time    时间
+     * @param domain  领域
+     * @param message 消息
+     * @return {@link Boolean}
+     */
+    public Boolean sendSystemError(Date time, String domain, String message) {
+        String[] phone = developerPhone.toArray(new String[0]);
+        SendSmsRequest build = SmsRequestBuild.builder()
+                .phoneNumber(phone)
+                .templateId(SmsTemplate.SYSTEM_ERROR)
+                .params(new String[]{
+                        timeFormat(time, "yyyy-MM-dd HH:mm:ss"),
+                        domain,
+                        message
                 })
                 .build();
         SendSmsResponse response = sut.sendSms(build);

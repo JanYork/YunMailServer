@@ -25,10 +25,20 @@ public class RuntimeExceptionToMsgException extends RuntimeException {
 
     private String msg;
     private final String errorId;
+    private String errorDomain;
+
+    public RuntimeExceptionToMsgException(String msg, String errorDomain) {
+        super(msg);
+        this.msg = msg;
+        this.errorDomain = errorDomain;
+        this.errorId = UUID.randomUUID().toString();
+        log.error("异常ID：{}，异常信息：{}", this.errorId, msg);
+    }
 
     public RuntimeExceptionToMsgException(String msg) {
         super(msg);
         this.msg = msg;
+        this.errorDomain = "未定义";
         this.errorId = UUID.randomUUID().toString();
         log.error("异常ID：{}，异常信息：{}", this.errorId, msg);
     }
@@ -43,5 +53,13 @@ public class RuntimeExceptionToMsgException extends RuntimeException {
 
     public String getErrorId() {
         return errorId;
+    }
+
+    public String getErrorDomain() {
+        return errorDomain;
+    }
+
+    public void setErrorDomain(String errorDomain) {
+        this.errorDomain = errorDomain;
     }
 }

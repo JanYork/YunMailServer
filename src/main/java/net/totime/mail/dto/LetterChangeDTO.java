@@ -58,7 +58,7 @@ public class LetterChangeDTO {
     @NotNull(message = "发信时间不能为空")
     private Date goToTime;
     /**
-     * 信件发往地址 TODO：优化为省市区经纬度
+     * 信件发往地址 TODO：优化为省市区经纬度(P3)
      */
     @ApiModelProperty(value = "信件发往地址", example = "1", required = true)
     @NotNull(message = "地址不能为空")

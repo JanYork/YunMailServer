@@ -20,7 +20,7 @@ import net.totime.mail.entity.User;
 import net.totime.mail.enums.KeyType;
 import net.totime.mail.enums.UserState;
 import net.totime.mail.response.ApiResponse;
-import net.totime.mail.service.impl.UserServiceImpl;
+import net.totime.mail.service.UserService;
 import net.totime.mail.util.BcryptUtil;
 import net.totime.mail.util.RedisUtil;
 import net.totime.mail.util.SnowflakeUtil;
@@ -47,7 +47,7 @@ import java.util.Date;
 @RequestMapping("/api/v1")
 public class LoginApi {
     @Resource
-    private UserServiceImpl userService;
+    private UserService userService;
     @Resource
     private MapperFacade mapperFacade;
     @Resource
@@ -197,135 +197,6 @@ public class LoginApi {
         return ApiResponse.ok(tokenValue).message("注册成功");
     }
 
-    /**
-     * 绑定手机号
-     *
-     * @param phone 手机号
-     * @param code  验证码
-     * @return {@link ApiResponse}<{@link String}> 绑定结果
-     */
-    @PostMapping("/bind/phone")
-    @ApiOperation(value = "绑定手机号")
-    @SaCheckLogin
-    public ApiResponse<Boolean> bindPhone(
-            @RequestParam @Valid @NotNull(message = "手机号为空") String phone,
-            @RequestParam @Valid @NotNull(message = "验证码为空") String code) {
-        if (!isPhone(phone)) {
-            return ApiResponse.fail(false).message("手机号格式错误");
-        }
-        if (existPhone(phone)) {
-            return ApiResponse.fail(false).message("手机号已绑定其他账户");
-        }
-        String key = KeyType.OPEN_PHONE.getKey() + phone;
-        String cacheCode = (String) rut.get(key);
-        if (StringUtils.isEmpty(cacheCode)) {
-            return ApiResponse.fail(false).message("验证码已过期");
-        }
-        if (!code.equals(cacheCode)) {
-            return ApiResponse.fail(false).message("验证码错误");
-        }
-        User user = userService.getById(StpUtil.getLoginIdAsLong());
-        String msg;
-        if (user.getPhone() != null) {
-            msg = "改绑成功";
-        } else {
-            msg = "绑定成功";
-        }
-        user.setPhone(phone);
-        if (!userService.updateById(user)) {
-            return ApiResponse.fail(false).message("系统错误");
-        }
-        rut.delete(key);
-        return ApiResponse.ok(true).message(msg);
-    }
-
-    /**
-     * 绑定邮箱
-     *
-     * @param email 邮箱
-     * @param code  验证码
-     * @return {@link ApiResponse}<{@link String}> 绑定结果
-     */
-    @PostMapping("/bind/email")
-    @ApiOperation(value = "绑定邮箱")
-    @SaCheckLogin
-    public ApiResponse<Boolean> bindEmail(
-            @RequestParam @Valid @NotNull(message = "邮箱为空") String email,
-            @RequestParam @Valid @NotNull(message = "验证码为空") String code) {
-        if (!isEmail(email)) {
-            return ApiResponse.fail(false).message("邮箱格式错误");
-        }
-        if (existEmail(email)) {
-            return ApiResponse.fail(false).message("邮箱已绑定其他账户");
-        }
-        String key = KeyType.OPEN_EMAIL.getKey() + email;
-        String cacheCode = (String) rut.get(key);
-        if (StringUtils.isEmpty(cacheCode)) {
-            return ApiResponse.fail(false).message("验证码已过期");
-        }
-        if (!code.equals(cacheCode)) {
-            return ApiResponse.fail(false).message("验证码错误");
-        }
-        User user = userService.getById(StpUtil.getLoginIdAsLong());
-        String msg;
-        if (user.getEmail() != null) {
-            // TODO：短信
-            msg = "改绑成功";
-        } else {
-            msg = "绑定成功";
-        }
-        user.setEmail(email);
-        if (!userService.updateById(user)) {
-            return ApiResponse.fail(false).message("系统错误");
-        }
-        rut.delete(key);
-        return ApiResponse.ok(true).message(msg);
-    }
-
-
-    /**
-     * 重置密码
-     *
-     * @param phone 电话
-     * @param code  验证码
-     * @return {@link ApiResponse}<{@link String}>
-     */
-    @RequestMapping("/reset")
-    @ApiOperation(value = "重置云寄账户密码", notes = "重置强依赖于手机号")
-    @SaCheckLogin
-    public ApiResponse<String> reset(
-            @RequestParam @Valid @NotNull(message = "手机号为空") String phone,
-            @RequestParam @Valid @NotNull(message = "验证码为空") String code,
-            @RequestParam @Valid @NotNull(message = "密码为空") String pwd
-    ) {
-        if (!isPhone(phone)) {
-            return ApiResponse.fail("手机号格式错误");
-        }
-        if (pwd.length() < 6 || pwd.length() > 16) {
-            return ApiResponse.fail("密码长度为6-16个字符");
-        }
-        User user = userService.getOne(
-                new LambdaQueryWrapper<User>().eq(User::getPhone, phone)
-        );
-        if (ObjectUtils.isEmpty(user)) {
-            return ApiResponse.fail("账户不存在");
-        }
-        // TODO：短信
-        String key = KeyType.CHANGE_PASSWORD.getKey() + phone;
-        String cacheCode = (String) rut.get(key);
-        if (StringUtils.isEmpty(cacheCode)) {
-            return ApiResponse.fail("验证码已过期");
-        }
-        if (!code.equals(cacheCode)) {
-            return ApiResponse.fail("验证码错误");
-        }
-        user.setPwd(BcryptUtil.encrypt(pwd));
-        if (!userService.updateById(user)) {
-            return ApiResponse.fail("重置失败").message("系统错误");
-        }
-        rut.delete(key);
-        return ApiResponse.ok("重置成功");
-    }
 
     /**
      * 退出登录

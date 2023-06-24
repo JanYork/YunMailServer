@@ -47,11 +47,10 @@ import java.util.Map;
  * @since 1.0.0
  */
 @RestController
-@RequestMapping("/common/logistics/old")
+@RequestMapping("/common/logistics")
 @Api(tags = "[公共]物流接口")
 @Slf4j
-@Deprecated
-public class LogisticsKdzsApi {
+public class LogisticsApi {
     @Resource
     private LogisticsService logisticsService;
     @Resource

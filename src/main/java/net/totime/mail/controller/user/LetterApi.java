@@ -176,7 +176,7 @@ public class LetterApi {
                 return ApiResponse.fail(false).message("验证码错误");
             }
         }
-        // 重新走内容校验 TODO：可改为MD5校验
+        // 重新走内容校验 TODO：可改为MD5校验(P2)
         String checkMsg = aiHandler.letterChangeAiCheck(letterChangeDTO);
         if (StringUtils.isNotBlank(checkMsg)) {
             oldLetter.setState(GlobalState.MANUAL_REVIEW_AGAIN.getState());

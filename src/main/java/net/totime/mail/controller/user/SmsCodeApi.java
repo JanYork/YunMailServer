@@ -51,6 +51,48 @@ public class SmsCodeApi {
     }
 
     /**
+     * 获取修改密码验证码
+     *
+     * @param phone 手机号
+     * @return {@link ApiResponse}<{@link Boolean}>
+     */
+    @GetMapping("/getByUpdatePassword")
+    @ApiOperation("获取修改密码验证码")
+    public ApiResponse<Boolean> getSmsCodeByUpdatePassword(String phone) {
+        return smsVerifyUtil.codeByChangePwd(phone, 120L, 2);
+    }
+
+    /**
+     * 获取绑定手机号验证码
+     *
+     * @param phone 手机号
+     * @return {@link ApiResponse}<{@link Boolean}>
+     */
+    @GetMapping("/getByBindPhone")
+    @ApiOperation("获取绑定手机号验证码")
+    public ApiResponse<Boolean> getSmsCodeByBindPhone(String phone) {
+        if (userService.getById(StpUtil.getLoginIdAsLong()).getPhone() != null) {
+            return ApiResponse.fail(false).message("已绑定手机号");
+        }
+        return smsVerifyUtil.codeByBindPhone(phone, 120L, 2);
+    }
+
+    /**
+     * 获取改绑手机号验证码
+     *
+     * @param phone 手机号
+     * @return {@link ApiResponse}<{@link Boolean}>
+     */
+    @GetMapping("/getByChangePhone")
+    @ApiOperation("获取改绑手机号验证码")
+    public ApiResponse<Boolean> getSmsCodeByChangePhone(String phone) {
+        if (userService.getById(StpUtil.getLoginIdAsLong()).getPhone() == null) {
+            return ApiResponse.fail(false).message("未绑定手机号");
+        }
+        return smsVerifyUtil.codeByChangeBindPhone(phone, 120L, 2);
+    }
+
+    /**
      * 获取短信验证码
      *
      * @return {@link ApiResponse}<{@link Boolean}>

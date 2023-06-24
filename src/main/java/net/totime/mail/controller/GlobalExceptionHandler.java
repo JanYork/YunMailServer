@@ -15,10 +15,14 @@ import com.baomidou.kaptcha.exception.KaptchaIncorrectException;
 import com.baomidou.kaptcha.exception.KaptchaNotFoundException;
 import com.baomidou.kaptcha.exception.KaptchaTimeoutException;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
+import io.swagger.annotations.Api;
+import lombok.extern.slf4j.Slf4j;
 import net.totime.mail.exception.GloballyUniversalException;
 import net.totime.mail.exception.PayException;
 import net.totime.mail.exception.RateLimiterException;
+import net.totime.mail.exception.RuntimeExceptionToMsgException;
 import net.totime.mail.response.ApiResponse;
+import net.totime.mail.sms.tencent.TencentSmsOption;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -30,9 +34,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+import javax.annotation.Resource;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 import java.security.GeneralSecurityException;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -43,7 +49,27 @@ import java.util.Objects;
  * @since 1.0.0
  */
 @RestControllerAdvice
+@Api(tags = "全局异常处理程序")
+@Slf4j
 public class GlobalExceptionHandler {
+    @Resource
+    private TencentSmsOption tso;
+
+    /**
+     * 运行时异常短信通知
+     *
+     * @param e 异常
+     * @return {@link ApiResponse}<{@link String}>
+     */
+    @ExceptionHandler(RuntimeExceptionToMsgException.class)
+    public ApiResponse<String> runtimeExceptionToMsgExceptionHandler(RuntimeExceptionToMsgException e) {
+        Boolean r = tso.sendSystemError(new Date(), e.getErrorDomain(), e.getMessage() + "," + e.getErrorId());
+        if (!r) {
+            log.error("系统异常发送短信失败");
+        }
+        return ApiResponse.fail(e.getMessage()).message("系统错误");
+    }
+
     /**
      * 支付异常处理程序
      *
@@ -52,7 +78,10 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(PayException.class)
     public String payExceptionHandler(PayException e) {
-        //TODO: 2021/3/8 支付异常调用短信接口
+        Boolean r = tso.sendSystemError(new Date(), "支付", e.getMessage());
+        if (!r) {
+            log.error("支付异常发送短信失败");
+        }
         return "{\"code\":\"fail\",\"message\":\"失败\"}";
     }
 
@@ -300,7 +329,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ApiResponse<String> handlerException(Exception e) {
         e.printStackTrace();
-        System.out.println("异常：" + e.getMessage());
-        return ApiResponse.fail(e.getMessage());
+        return ApiResponse.fail(e.getMessage()).message("服务器内部错误");
+    }
+
+    /**
+     * 运行时异常处理程序
+     *
+     * @param e e
+     * @return {@link ApiResponse}<{@link String}>
+     */
+    @ExceptionHandler(RuntimeException.class)
+    public ApiResponse<String> handlerException(RuntimeException e) {
+        e.printStackTrace();
+        return ApiResponse.fail(e.getMessage()).message("系统错误");
     }
 }
