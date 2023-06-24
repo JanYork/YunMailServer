@@ -31,4 +31,5 @@ public class AliPayProperties {
     private String returnUrl;
     private String keyPublicPath;
     private String keyPrivatePath;
+    private Boolean enablePoll = false;
 }

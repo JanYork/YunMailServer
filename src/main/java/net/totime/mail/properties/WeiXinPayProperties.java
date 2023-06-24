@@ -30,4 +30,5 @@ public class WeiXinPayProperties {
     private String notifyUrl;
     private String returnUrl;
     private String apiClientKeyP12;
+    private Boolean enablePoll = false;
 }

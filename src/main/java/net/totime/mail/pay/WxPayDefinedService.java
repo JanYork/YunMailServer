@@ -9,11 +9,17 @@
 package net.totime.mail.pay;
 
 import com.egzosn.pay.common.api.PayMessageHandler;
+import com.egzosn.pay.common.bean.PayOrder;
 import com.egzosn.pay.common.http.HttpConfigStorage;
 import com.egzosn.pay.wx.v3.api.WxPayConfigStorage;
 import com.egzosn.pay.wx.v3.api.WxPayService;
 import com.egzosn.pay.wx.v3.bean.response.WxPayMessage;
+import net.totime.mail.context.SpringBeanContext;
 import net.totime.mail.enums.PayCallbackUrlEnum;
+import net.totime.mail.enums.PayPollKey;
+import net.totime.mail.enums.PayState;
+import net.totime.mail.enums.PayType;
+import net.totime.mail.util.RedisUtil;
 
 /**
  * @author JanYork
@@ -24,6 +30,11 @@ import net.totime.mail.enums.PayCallbackUrlEnum;
  * @since 1.0.0
  */
 public class WxPayDefinedService extends WxPayService {
+    /**
+     * 是否开启订单轮询
+     */
+    private boolean enablePolling;
+
     /**
      * 创建支付服务
      *
@@ -41,6 +52,30 @@ public class WxPayDefinedService extends WxPayService {
      */
     public WxPayDefinedService(WxPayConfigStorage payConfigStorage, HttpConfigStorage configStorage) {
         super(payConfigStorage, configStorage);
+    }
+
+    public String toPay(PayOrder order, PayPollKey pollKey) {
+        if (enablePolling) {
+            RedisUtil rut = SpringBeanContext.getBean(RedisUtil.class);
+            rut.set(pollKey.getKey() + order.getOutTradeNo() + PayType.WX_PAY.getId(), PayState.UNPAID.getValue(), pollKey.getExpire());
+        }
+        return super.toPay(order);
+    }
+
+    public String getQrPay(PayOrder order, PayPollKey pollKey) {
+        if (enablePolling) {
+            RedisUtil rut = SpringBeanContext.getBean(RedisUtil.class);
+            rut.set(pollKey.getKey() + order.getOutTradeNo() + PayType.WX_PAY.getId(), PayState.UNPAID.getValue(), pollKey.getExpire());
+        }
+        return super.getQrPay(order);
+    }
+
+    public boolean isEnablePolling() {
+        return enablePolling;
+    }
+
+    public void setEnablePolling(boolean enablePolling) {
+        this.enablePolling = enablePolling;
     }
 
     /**

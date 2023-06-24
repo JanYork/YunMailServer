@@ -64,6 +64,7 @@ public class PayConfigure {
         payConfigStorage.setCertStoreType(CertStoreType.PATH);
         WxPayDefinedService wxPayService = new WxPayDefinedService(payConfigStorage);
         wxPayService.setPayMessageHandler(new WxV3PayMessageHandler());
+        wxPayService.setEnablePolling(wxp.getEnablePoll());
         return wxPayService;
     }
 
@@ -90,6 +91,7 @@ public class PayConfigure {
         AliPayDefinedService aliPayService = new AliPayDefinedService(aliPayConfigStorage, httpConfigStorage);
         aliPayService.addPayMessageInterceptor(new AliPayMessageInterceptor());
         aliPayService.setPayMessageHandler(new AliPayMessageHandler());
+        aliPayService.setEnablePolling(alp.getEnablePoll());
         return aliPayService;
     }
 
