@@ -18,10 +18,14 @@ import lombok.extern.slf4j.Slf4j;
 import net.totime.mail.context.SpringBeanContext;
 import net.totime.mail.entity.*;
 import net.totime.mail.enums.GlobalState;
+import net.totime.mail.enums.PayPollKey;
 import net.totime.mail.enums.PayState;
+import net.totime.mail.enums.PayType;
 import net.totime.mail.exception.PayException;
+import net.totime.mail.properties.WeiXinPayProperties;
 import net.totime.mail.service.*;
 import net.totime.mail.util.PayUtils;
+import net.totime.mail.util.RedisUtil;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.util.Date;
@@ -194,8 +198,14 @@ public class WxV3PayMessageHandler implements PayMessageHandler<WxPayMessage, Wx
                         return payService.getPayOutMessage("fail", "失败");
                     }
                     BaiDuAiHandler aiHandler = SpringBeanContext.getBean(BaiDuAiHandler.class);
+                    WeiXinPayProperties wx = SpringBeanContext.getBean(WeiXinPayProperties.class);
+                    if (wx.getEnablePoll()) {
+                        SpringBeanContext.getBean(RedisUtil.class).set(PayPollKey.DEFAULT.getKey() + outTradeNo + PayType.WX_PAY.getId(), PayState.PAID.getValue(), PayPollKey.DEFAULT.getExpire());
+                    } else {
+                        SimpMessagingTemplate smt = SpringBeanContext.getBean(SimpMessagingTemplate.class);
+                        // TODO：STOMP通知前端(P3)
+                    }
                     aiHandler.wishAiCheck(wish);
-                    SimpMessagingTemplate smt = SpringBeanContext.getBean(SimpMessagingTemplate.class);
                     return payService.getPayOutMessage("success", "成功");
                 }
                 throw new PayException("微信", payMessage.getOutTradeNo());

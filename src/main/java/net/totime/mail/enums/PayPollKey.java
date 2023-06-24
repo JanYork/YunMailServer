@@ -20,7 +20,7 @@ public enum PayPollKey {
     /**
      * 默认
      */
-    DEFAULT("default", 180L);
+    DEFAULT("default_scenario", 180L);
     /**
      * 场景
      */

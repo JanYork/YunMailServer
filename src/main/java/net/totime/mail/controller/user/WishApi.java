@@ -343,15 +343,27 @@ public class WishApi {
             throw new GloballyUniversalException(500, "订单创建失败");
         }
         if (payType.equals(PayType.WX_PAY.getId())) {
-            return wxPayService
+            WxPayDefinedService pay = wxPayService
                     .urlPath(PayCallbackUrlEnum.WX_WISH_CALLBACK_URL)
-                    .backHandler(new WxV3PayMessageHandler.WishHandler())
-                    .getQrPay(new PayOrder("云寄许愿", "云寄许愿与服务", PayAmount.WISH_PRICE.getAmount(), build.getOrdersSerial(), WxTransactionType.NATIVE));
+                    .backHandler(new WxV3PayMessageHandler.WishHandler());
+            String payUrl;
+            if (pay.isEnablePolling()) {
+                payUrl = pay.getQrPay(new PayOrder("云寄许愿", "云寄许愿服务", PayAmount.WISH_PRICE.getAmount(), build.getOrdersSerial(), WxTransactionType.NATIVE), PayPollKey.DEFAULT);
+            } else {
+                payUrl = pay.getQrPay(new PayOrder("云寄许愿", "云寄许愿服务", PayAmount.WISH_PRICE.getAmount(), build.getOrdersSerial(), WxTransactionType.NATIVE));
+            }
+            return payUrl;
         } else if (payType.equals(PayType.ALI_PAY.getId())) {
-            return aliPayService
+            AliPayDefinedService pay = aliPayService
                     .urlPath(PayCallbackUrlEnum.ALI_WISH_CALLBACK_URL)
-                    .backHandler(new AliPayMessageHandler.WishHandler())
-                    .getQrPay(new PayOrder("云寄许愿", "云寄许愿与服务", PayAmount.WISH_PRICE.getAmount(), build.getOrdersSerial(), AliTransactionType.SWEEPPAY));
+                    .backHandler(new AliPayMessageHandler.WishHandler());
+            String payUrl;
+            if (pay.isEnablePolling()) {
+                payUrl = pay.getQrPay(new PayOrder("云寄许愿", "云寄许愿服务", PayAmount.WISH_PRICE.getAmount(), build.getOrdersSerial(), AliTransactionType.SWEEPPAY), PayPollKey.DEFAULT);
+            } else {
+                payUrl = pay.getQrPay(new PayOrder("云寄许愿", "云寄许愿服务", PayAmount.WISH_PRICE.getAmount(), build.getOrdersSerial(), AliTransactionType.SWEEPPAY));
+            }
+            return payUrl;
         } else {
             throw new GloballyUniversalException(500, "支付类型错误");
         }
