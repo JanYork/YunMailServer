@@ -203,7 +203,7 @@ public class LoginApi {
      *
      * @return {@link ApiResponse}<{@link String}> 退出结果
      */
-    @RequestMapping("/logout")
+    @GetMapping("/logout")
     @SaCheckLogin
     @ApiOperation(value = "退出云寄账户", notes = "退出登录,前提是已登录")
     public ApiResponse<Boolean> logout() {

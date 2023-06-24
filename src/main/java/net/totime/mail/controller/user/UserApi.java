@@ -12,7 +12,6 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import ma.glasnost.orika.MapperFacade;
 import net.totime.mail.entity.User;
 import net.totime.mail.enums.KeyType;
 import net.totime.mail.response.ApiResponse;
@@ -41,12 +40,10 @@ import javax.validation.constraints.NotNull;
  */
 @RestController
 @RequestMapping("/user")
-@Api(tags = "云寄用户相关接口")
+@Api(tags = "[用户]云寄用户信息接口")
 public class UserApi {
     @Resource
     private UserService userService;
-    @Resource
-    private MapperFacade mapperFacade;
     @Resource
     private RedisUtil rut;
 

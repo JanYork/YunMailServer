@@ -11,6 +11,7 @@ package net.totime.mail.dto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import net.totime.mail.annotation.RichTextWord;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -39,11 +40,11 @@ public class LetterChangeDTO {
     @Size(min = 1, max = 20, message = "信件标题长度必须在1-20之间")
     private String letterTitle;
     /**
-     * 信件内容 TODO: 优化为富文本
+     * 信件内容
      */
     @ApiModelProperty(value = "信件内容", example = "1", required = true)
     @NotNull(message = "信件内容不能为空")
-    @Size(min = 1, max = 5000, message = "信件内容长度必须在1-5000之间")
+    @RichTextWord(min = 10, max = 10000, message = "内容长度在1-10000之间")
     private String letterContent;
     /**
      * 信件是否公开
