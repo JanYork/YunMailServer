@@ -69,5 +69,5 @@ public class IdCardAuth extends Model<IdCardAuth> {
      */
     @ApiModelProperty(value = "状态", example = "1", required = true)
     @NotNull(message = "状态不能为空")
-    private Integer status;
+    private Boolean status;
 }
