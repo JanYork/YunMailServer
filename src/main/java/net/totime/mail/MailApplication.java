@@ -10,6 +10,8 @@ package net.totime.mail;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.TimeZone;
+
 /**
  * @author JanYork
  * @version 1.0.0
@@ -21,6 +23,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class MailApplication {
     public static void main(String[] args) {
+        System.setProperty("user.timezone", "Asia/Shanghai");
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
         SpringApplication.run(MailApplication.class, args);
     }
 }

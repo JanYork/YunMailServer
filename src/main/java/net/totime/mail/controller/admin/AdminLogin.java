@@ -9,7 +9,7 @@
 package net.totime.mail.controller.admin;
 
 import cn.dev33.satoken.annotation.SaIgnore;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.totime.mail.annotation.SaAdminCheckLogin;
@@ -27,7 +27,6 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.Optional;
 
 /**
  * @author JanYork
@@ -55,9 +54,11 @@ public class AdminLogin {
     @SaIgnore
     public ApiResponse<String> login(@RequestBody @Valid AdminLoginDTO login) {
         Admin admin = adminService.getOne(
-                new QueryWrapper<Admin>().eq("name", login.getUsername())
+                new LambdaQueryWrapper<>(Admin.class).eq(Admin::getName, login.getUsername())
         );
-        Optional.ofNullable(admin).orElseThrow(() -> new RuntimeException("用户不存在"));
+        if (admin == null) {
+            return ApiResponse.fail("账户不存在").message("密码或账户错误");
+        }
         if (!BcryptUtil.verify(login.getPassword(), admin.getPwd())) {
             return ApiResponse.fail("密码错误").message("密码或账户错误");
         }

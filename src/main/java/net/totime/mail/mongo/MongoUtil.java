@@ -12,11 +12,8 @@ import com.mongodb.client.result.UpdateResult;
 import org.apache.commons.lang3.ObjectUtils;
 import org.bson.Document;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.data.mongodb.core.query.UpdateDefinition;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -167,12 +164,36 @@ public class MongoUtil {
     /**
      * 条件删除文档
      *
+     * @param collectionName 集合名称
+     * @param query          查询条件对象
+     * @return boolean 是否存在
+     */
+    public boolean deleteDocument(String collectionName, Query query) {
+        DeleteResult remove = mt.remove(query, collectionName);
+        return remove.getDeletedCount() > 0;
+    }
+
+    /**
+     * 条件删除文档
+     *
      * @param obj   对象
      * @param query 查询条件对象
      * @return boolean 是否存在
      */
     public boolean deleteDocument(Object obj, Query query) {
         DeleteResult remove = mt.remove(query, obj.getClass());
+        return remove.getDeletedCount() > 0;
+    }
+
+    /**
+     * 条件删除文档
+     *
+     * @param clazz 对象
+     * @param query 查询条件对象
+     * @return boolean 是否存在
+     */
+    public boolean deleteDocument(Class clazz, Query query) {
+        DeleteResult remove = mt.remove(query, clazz);
         return remove.getDeletedCount() > 0;
     }
 

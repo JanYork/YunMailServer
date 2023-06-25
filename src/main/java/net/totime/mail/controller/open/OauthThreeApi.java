@@ -288,7 +288,7 @@ public class OauthThreeApi {
             }
             String code = CodeUtil.generateCodeMixHalf(6);
             // 缓存授权码对应的唯一标识
-            rut.set("wx_" + code, message.getUnionId(), 120L);
+            rut.set("wx_" + code, message.getFromUser(), 120L);
             LocalDateTime now = LocalDateTime.now();
             now = now.plusHours(8);
             String time = now.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss SSS"));
@@ -321,7 +321,7 @@ public class OauthThreeApi {
             }
             // 删除场景值缓存
             rut.delete(code);
-            String token = wxUnionIdLogin(message.getUnionId());
+            String token = wxUnionIdLogin(message.getFromUser());
             if (StringUtils.isEmpty(token)) {
                 WxMpXmlOutTextMessage texts = WxMpXmlOutTextMessage
                         .TEXT()
@@ -334,6 +334,9 @@ public class OauthThreeApi {
             }
             // 设置登录信息
             rut.set(authCode, new WxMpLoginInfo(LoginState.LOGGED_IN.getState(), token), 300L);
+            LocalDateTime now = LocalDateTime.now();
+            now = now.plusHours(8);
+            String time = now.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss SSS"));
             WxMpXmlOutTextMessage texts = WxMpXmlOutTextMessage
                     .TEXT()
                     .toUser(message.getFromUser())
@@ -341,7 +344,7 @@ public class OauthThreeApi {
                     .content("登陆成功，欢迎回到云寄星球!" +
                             "\n你不在的日子里，发生了很多很多事情呢，快来看看吧!" +
                             "\n有任何问题，欢迎联系时空管理员哦！\n" +
-                            "节点碎片" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss SSS")))
+                            "节点碎片" + time)
                     .build();
             return texts.toXml();
         }
@@ -377,7 +380,7 @@ public class OauthThreeApi {
     }
 
     /**
-     * 微信unionId登录处理
+     * 微信openId登录处理
      *
      * @param openId 唯一标识
      * @return token {@link String} token

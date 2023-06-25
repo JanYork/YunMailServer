@@ -52,7 +52,7 @@ public class TencentUpload implements UploadInterface {
      * 支持的文件类型
      */
     private static final List<String> FILE_TYPE = Arrays.asList("image/png", "image/jpeg", "image/gif", "image/jpg");
-    private static final Long CACHE_TIME = 3600L;
+    private static final Long CACHE_TIME = 60L;
 
     /**
      * 上传图片
@@ -105,22 +105,22 @@ public class TencentUpload implements UploadInterface {
      *
      * @param img 文件
      * @return {@link String}
-     * @throws IOException ioexception
      */
     @Override
-    public String upload(byte[] img) throws IOException {
+    public String upload(byte[] img) {
         String md5 = Md5Utils.md5Hex(img);
         String url = (String) rut.get(md5);
         if (!StringUtils.isEmpty(url)) {
             return url;
         }
-        String fileName = ImageUtils.getRandomName("jpg");
+        String fileName = ImageUtils.getRandomName();
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(img.length);
         InputStream inputStream = new ByteArrayInputStream(img);
         try {
             cos.putObject(bucketName, fileName, inputStream, objectMetadata);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new GloballyUniversalException(500, "上传失败");
         }
         url = this.url + "/" + fileName;

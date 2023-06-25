@@ -10,7 +10,6 @@ package net.totime.mail.domain;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.SneakyThrows;
 import net.totime.mail.dto.AuthCallBackDTO;
 import net.totime.mail.entity.Oauth;
@@ -62,7 +61,7 @@ public class OauthOperate {
         }
         //未登录->已绑定->走登录
         Oauth oauth = ouathIsBind(auth);
-        if (!ObjectUtils.isEmpty(oauth)) {
+        if (ObjectUtils.isNotEmpty(oauth)) {
             Long userId = oauth.getUserId();
             StpUtil.login(userId);
             return AuthVO.builder().code(200).msg("登录成功").token(StpUtil.getTokenInfo()).build();
@@ -98,7 +97,7 @@ public class OauthOperate {
         }
         //未登录->已绑定->走登录
         Oauth oauth = ouathIsBind(openId, oauthType);
-        if (!ObjectUtils.isEmpty(oauth)) {
+        if (ObjectUtils.isNotEmpty(oauth)) {
             Long userId = oauth.getUserId();
             StpUtil.login(userId);
             return AuthVO.builder().code(200).msg("登录成功").token(StpUtil.getTokenInfo()).build();
@@ -278,12 +277,11 @@ public class OauthOperate {
      * @return Boolean 是否已经绑定
      */
     private Boolean ouathIsBindByUid(Long userId, OauthType provider) {
-        return ObjectUtils.isNotEmpty(
-                oauthService.getOne(
-                        new QueryWrapper<Oauth>()
-                                .eq("user_id", userId)
-                                .eq("provider", provider)
-                )
+        Oauth one = oauthService.getOne(
+                new LambdaQueryWrapper<>(Oauth.class)
+                        .eq(Oauth::getUserId, userId)
+                        .eq(Oauth::getProvider, provider)
         );
+        return one != null;
     }
 }

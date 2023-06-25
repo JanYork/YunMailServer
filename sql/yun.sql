@@ -11,7 +11,7 @@
  Target Server Version : 80012 (8.0.12)
  File Encoding         : 65001
 
- Date: 24/06/2023 19:59:38
+ Date: 25/06/2023 13:34:51
 */
 
 SET NAMES utf8mb4;
@@ -145,7 +145,7 @@ CREATE TABLE `id_card_auth`  (
   `other` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '其他证明身份图片[JSON]',
   `state` tinyint(1) NOT NULL COMMENT '实名认证状态',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '实名认证表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '实名认证表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of id_card_auth
@@ -435,7 +435,7 @@ DROP TABLE IF EXISTS `mail`;
 CREATE TABLE `mail`  (
   `mail_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '邮件唯一ID',
   `user_id` bigint(20) NOT NULL COMMENT '用户ID',
-  `mail_title` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '邮件标题',
+  `mail_title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '邮件标题',
   `mail_content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '邮件内容',
   `mail_create_time` datetime NOT NULL COMMENT '邮件创建时间',
   `go_to` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '发往地址',
@@ -447,7 +447,7 @@ CREATE TABLE `mail`  (
   `ai_check_msg` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT 'AI审核消息',
   PRIMARY KEY (`mail_id`) USING BTREE,
   INDEX `user_for_mail`(`user_id` ASC) USING BTREE COMMENT '邮件表用户索引'
-) ENGINE = InnoDB AUTO_INCREMENT = 10004 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '邮件任务表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 10006 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '邮件任务表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of mail
@@ -455,6 +455,8 @@ CREATE TABLE `mail`  (
 INSERT INTO `mail` VALUES (10001, 1640385966864732160, '来自未来的一封信', '你好，cnmd傻逼', '2023-06-20 09:45:14', '1345561377@qq.com', 0, '2024-07-19 23:30:54', 0, 0, 7, '存在低俗辱骂不合规;');
 INSERT INTO `mail` VALUES (10002, 1640385966864732160, '来自未来的一封信2', 'cnmd，傻逼', '2023-06-20 09:47:58', '1345561377@qq.com', 0, '2024-07-19 23:30:54', 0, 0, 8, '存在低俗辱骂不合规;');
 INSERT INTO `mail` VALUES (10003, 1640385966864732160, '来自未来的一封信2', '你好，未来', '2023-06-20 10:07:29', '1345561377@qq.com', 0, '2024-07-19 23:30:54', 0, 0, 7, NULL);
+INSERT INTO `mail` VALUES (10004, 1640385966864732160, '测试邮件', '<p>测试邮件内容????????<p/>', '2023-06-24 22:55:04', '1607693403@qq.com', 1, '2023-06-24 08:00:00', 1, 0, 3, NULL);
+INSERT INTO `mail` VALUES (10005, 1640385966864732160, '测试邮件', '<p>测试邮件内容,邮件内容<p/>', '2023-06-24 22:55:54', '1607693403@qq.com', 1, '2023-06-24 08:00:00', 1, 0, 3, NULL);
 
 -- ----------------------------
 -- Table structure for message
@@ -678,13 +680,14 @@ CREATE TABLE `wish`  (
   `state` tinyint(1) NOT NULL COMMENT '心愿状态',
   `ai_check_msg` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT 'AI审核消息',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1003 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '许愿表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1004 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '许愿表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of wish
 -- ----------------------------
 INSERT INTO `wish` VALUES (1001, 1640385966864732160, '希望云寄越来越好，越来越优秀', NULL, '2023-06-23 17:49:24', 5, NULL);
 INSERT INTO `wish` VALUES (1002, 1640385966864732160, '希望云寄越来越好，越来越优秀', 'https://a.ideaopen.cn/JanYork/93rwjJbz.png', '2023-06-23 17:52:13', 7, '存在水印不合规;存在二维码不合规;');
+INSERT INTO `wish` VALUES (1003, 1640385966864732160, '祝愿云寄越来越好，越来越优秀', NULL, '2023-06-25 00:18:37', 5, NULL);
 
 -- ----------------------------
 -- Table structure for wish_orders
@@ -702,7 +705,7 @@ CREATE TABLE `wish_orders`  (
   `state` tinyint(1) NOT NULL COMMENT '支付状态',
   `wish_id` bigint(20) NOT NULL COMMENT '心愿ID',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '信件订单表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '信件订单表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of wish_orders
@@ -710,5 +713,7 @@ CREATE TABLE `wish_orders`  (
 INSERT INTO `wish_orders` VALUES (1, '168751357378249203', 1640385966864732160, '2023-06-23 17:46:14', '2023-06-23 17:46:34', 2, 0.01, '4200001818202306234048810891', 1, 1000);
 INSERT INTO `wish_orders` VALUES (2, '168751377040426813', 1640385966864732160, '2023-06-23 17:49:30', '2023-06-23 17:49:44', 2, 0.01, '4200001838202306232029855014', 1, 1001);
 INSERT INTO `wish_orders` VALUES (3, '168751394691701773', 1640385966864732160, '2023-06-23 17:52:27', '2023-06-23 17:52:38', 2, 0.01, '4200001805202306235406328418', 1, 1002);
+INSERT INTO `wish_orders` VALUES (4, '168762356237535273', 1640385966864732160, '2023-06-25 00:19:22', NULL, 1, NULL, NULL, 0, 1003);
+INSERT INTO `wish_orders` VALUES (5, '168762371387444923', 1640385966864732160, '2023-06-25 00:21:54', '2023-06-25 00:23:08', 2, 0.01, '4200001805202306255887200579', 1, 1003);
 
 SET FOREIGN_KEY_CHECKS = 1;

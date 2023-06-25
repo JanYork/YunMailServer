@@ -8,7 +8,9 @@
 
 package net.totime.mail.pojo;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -20,6 +22,8 @@ import java.io.Serializable;
  * @since 1.0.0
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class WxMpLoginInfo implements Serializable {
     private static final long serialVersionUID = 7220418640716217694L;
     /**
@@ -30,9 +34,4 @@ public class WxMpLoginInfo implements Serializable {
      * token
      */
     private String token;
-
-    public WxMpLoginInfo(int state, String token) {
-        this.state = state;
-        this.token = token;
-    }
 }

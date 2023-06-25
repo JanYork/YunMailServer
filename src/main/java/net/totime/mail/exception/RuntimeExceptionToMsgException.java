@@ -43,6 +43,14 @@ public class RuntimeExceptionToMsgException extends RuntimeException {
         log.error("异常ID：{}，异常信息：{}", this.errorId, msg);
     }
 
+    public RuntimeExceptionToMsgException(String msg, String errorDomain, RuntimeException e) {
+        super(msg);
+        this.msg = msg;
+        this.errorDomain = "未定义";
+        this.errorId = UUID.randomUUID().toString();
+        log.error("异常ID：{}，异常信息：{}，错误：{}", this.errorId, msg, e.toString());
+    }
+
     public String getMsg() {
         return msg;
     }
