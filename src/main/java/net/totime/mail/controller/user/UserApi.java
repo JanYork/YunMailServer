@@ -12,18 +12,18 @@ import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import ma.glasnost.orika.MapperFacade;
 import net.totime.mail.entity.User;
 import net.totime.mail.enums.KeyType;
+import net.totime.mail.enums.UserState;
 import net.totime.mail.response.ApiResponse;
 import net.totime.mail.service.UserService;
 import net.totime.mail.util.BcryptUtil;
 import net.totime.mail.util.RedisUtil;
+import net.totime.mail.vo.UserVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -46,6 +46,27 @@ public class UserApi {
     private UserService userService;
     @Resource
     private RedisUtil rut;
+    @Resource
+    private MapperFacade mapperFacade;
+
+    /**
+     * 获取用户信息
+     *
+     * @return {@link ApiResponse}<{@link UserVO}>
+     */
+    @GetMapping("/info")
+    @ApiOperation(value = "获取用户信息")
+    public ApiResponse<UserVO> info() {
+        User user = userService.getById(StpUtil.getLoginIdAsLong());
+        if (user == null) {
+            return ApiResponse.<UserVO>fail(null).message("用户不存在");
+        }
+        if (!user.getState().equals(UserState.NORMAL.getCode())) {
+            return ApiResponse.<UserVO>fail(null).message("用户状态异常");
+        }
+        return ApiResponse.ok(mapperFacade.map(user, UserVO.class));
+    }
+
 
     /**
      * 验证改绑手机号验证码

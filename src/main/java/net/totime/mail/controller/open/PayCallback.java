@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @Slf4j
 @RequestMapping("/api/v2/pay")
-@Api(tags = "[开放]支付回调接口")
+@Api(tags = "[回调]支付回调接口")
 public class PayCallback {
     @Resource
     private WxPayService wxPayservice;

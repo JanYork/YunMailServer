@@ -43,7 +43,7 @@ import java.util.HashMap;
  * @author JanYork
  * @version 1.0.0
  * @date 2023/06/25
- * @description 物流订阅回调接口 TODO：需要重新配置回调地址
+ * @description 物流订阅回调接口
  * @since 1.0.0
  */
 @RestController

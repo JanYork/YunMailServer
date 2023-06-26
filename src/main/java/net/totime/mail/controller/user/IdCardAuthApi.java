@@ -21,7 +21,9 @@ import net.totime.mail.annotation.RateLimiter;
 import net.totime.mail.dto.IdCardAuthDTO;
 import net.totime.mail.entity.IdCardAuth;
 import net.totime.mail.entity.User;
+import net.totime.mail.enums.IdCardAuthStatus;
 import net.totime.mail.enums.UserState;
+import net.totime.mail.exception.GloballyUniversalException;
 import net.totime.mail.exception.RuntimeExceptionToMsgException;
 import net.totime.mail.response.ApiResponse;
 import net.totime.mail.service.IdCardAuthService;
@@ -30,7 +32,10 @@ import net.totime.mail.util.CheckReturn;
 import net.totime.mail.util.OkHttpUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -68,7 +73,7 @@ public class IdCardAuthApi {
      * @return {@link ApiResponse} 实名认证结果
      */
     @PostMapping("/idCard")
-    @RateLimiter(count = 3, time = 60 * 60 * 24 * 7)
+    @RateLimiter(count = 3, time = 3600)
     @ApiOperation(value = "实名认证", notes = "未成年可二要素或填写其他证明身份图片，开启人工审核，成年人必须三要素匹配")
     public ApiResponse<Boolean> idCardAuth(@RequestBody @Valid IdCardAuthDTO authInfo) {
         CheckReturn<Boolean> checkReturn = preCheck(authInfo);
@@ -79,6 +84,11 @@ public class IdCardAuthApi {
         User user = userService.getById(StpUtil.getLoginIdAsLong());
         if (user == null) {
             return ApiResponse.fail(false).message("用户不存在");
+        }
+        if (authInfo.getOther() != null) {
+            // 人工审核模式
+            postOperation(authInfo, user);
+            return ApiResponse.ok(true).message("认证成功，等待人工审核").code(1);
         }
         if (adult) {
             CheckReturn<Boolean> auth = auth(authInfo.getIdCard(), authInfo.getName(), user.getPhone());
@@ -187,7 +197,12 @@ public class IdCardAuthApi {
         int day = Integer.parseInt(birthday.substring(6));
         birthday = year + "-" + (month < 10 ? "0" + month : month) + "-" + (day < 10 ? "0" + day : day);
         // 转换为时间格式
-        Date date = DateUtil.parse(birthday, DatePattern.NORM_DATE_PATTERN);
+        Date date;
+        try{
+            date = DateUtil.parse(birthday, DatePattern.NORM_DATE_PATTERN);
+        }catch (Exception e){
+            throw new GloballyUniversalException(500,"证件号异常");
+        }
         // 获取年龄
         int age = DateUtil.ageOfNow(date);
         return age >= 18;
@@ -220,7 +235,7 @@ public class IdCardAuthApi {
             return CheckReturn.fail("已实名认证");
         }
         // 判断是否已经提交过实名认证
-        if (user.getIdCardAuthId() != null) {
+        if (user.getIdCardAuthId() != 0) {
             return CheckReturn.fail("已提交实名认证");
         }
         return CheckReturn.ok(true);
@@ -237,18 +252,37 @@ public class IdCardAuthApi {
         if (user.getPhone() != null) {
             authInfo.setPhone(user.getPhone());
         }
-        boolean save = authService.save(authInfo);
-        if (!save) {
-            log.error("实名认证失败，身份证：{}，姓名：{}，手机号：{}，认证时间：{}", cardInfo.getIdCard(), cardInfo.getName(), user.getPhone(), DateUtil.format(new Date(), DatePattern.NORM_DATETIME_PATTERN));
-            throw new RuntimeExceptionToMsgException("实名认证写入数据失败", "实名");
+        // 如果存在其他实名资料，转人工
+        if (cardInfo.getOther() != null) {
+            authInfo.setOther(cardInfo.getOther());
+            authInfo.setStatus(IdCardAuthStatus.PENDING.getCode());
+            boolean save = authService.save(authInfo);
+            if (!save) {
+                log.error("存储实名认证失败，身份证：{}，姓名：{}，手机号：{}，认证时间：{}", cardInfo.getIdCard(), cardInfo.getName(), user.getPhone(), DateUtil.format(new Date(), DatePattern.NORM_DATETIME_PATTERN));
+                throw new RuntimeExceptionToMsgException("实名认证写入数据失败", "实名");
+            }
+            user.setIdCardAuthId(authInfo.getId());
+            user.setAuthRealName(false);
+            boolean update = userService.updateById(user);
+            if (!update) {
+                log.error("存储实名认证失败，身份证：{}，姓名：{}，手机号：{}，认证时间：{}", cardInfo.getIdCard(), cardInfo.getName(), user.getPhone(), DateUtil.format(new Date(), DatePattern.NORM_DATETIME_PATTERN));
+                throw new RuntimeExceptionToMsgException("实名认证更新用户数据失败", "实名");
+            }
+            return true;
+        } else {
+            boolean save = authService.save(authInfo);
+            if (!save) {
+                log.error("实名认证失败，身份证：{}，姓名：{}，手机号：{}，认证时间：{}", cardInfo.getIdCard(), cardInfo.getName(), user.getPhone(), DateUtil.format(new Date(), DatePattern.NORM_DATETIME_PATTERN));
+                throw new RuntimeExceptionToMsgException("实名认证写入数据失败", "实名");
+            }
+            user.setIdCardAuthId(authInfo.getId());
+            user.setAuthRealName(true);
+            boolean update = userService.updateById(user);
+            if (!update) {
+                log.error("实名认证失败，身份证：{}，姓名：{}，手机号：{}，认证时间：{}", cardInfo.getIdCard(), cardInfo.getName(), user.getPhone(), DateUtil.format(new Date(), DatePattern.NORM_DATETIME_PATTERN));
+                throw new RuntimeExceptionToMsgException("实名认证更新用户数据失败", "实名");
+            }
+            return true;
         }
-        user.setIdCardAuthId(authInfo.getId());
-        user.setAuthRealName(true);
-        boolean update = userService.updateById(user);
-        if (!update) {
-            log.error("实名认证失败，身份证：{}，姓名：{}，手机号：{}，认证时间：{}", cardInfo.getIdCard(), cardInfo.getName(), user.getPhone(), DateUtil.format(new Date(), DatePattern.NORM_DATETIME_PATTERN));
-            throw new RuntimeExceptionToMsgException("实名认证更新用户数据失败", "实名");
-        }
-        return true;
     }
 }
