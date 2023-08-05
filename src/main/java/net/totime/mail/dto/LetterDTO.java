@@ -39,7 +39,7 @@ public class LetterDTO {
      */
     @ApiModelProperty(value = "信件内容", example = "1", required = true)
     @NotNull(message = "信件内容不能为空")
-    @RichTextWord(min = 10, max = 10000, message = "内容长度在1-10000之间")
+    @RichTextWord(min = 300, max = 10000, message = "内容长度在300-10000之间")
     private String letterContent;
     /**
      * 信件是否公开

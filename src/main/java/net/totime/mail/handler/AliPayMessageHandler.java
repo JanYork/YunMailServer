@@ -94,6 +94,13 @@ public class AliPayMessageHandler implements PayMessageHandler<AliPayMessage, Al
                     return payService.getPayOutMessage("fail", "失败");
                 }
                 BaiDuAiHandler aiHandler = SpringBeanContext.getBean(BaiDuAiHandler.class);
+                AliPayProperties ali = SpringBeanContext.getBean(AliPayProperties.class);
+                if (ali.getEnablePoll()) {
+                    SpringBeanContext.getBean(RedisUtil.class).set(PayPollKey.DEFAULT.getKey() + outTradeNo + PayType.ALI_PAY.getId(), PayState.PAID.getValue(), PayPollKey.DEFAULT.getExpire());
+                } else {
+                    SimpMessagingTemplate smt = SpringBeanContext.getBean(SimpMessagingTemplate.class);
+                    // TODO：STOMP通知前端(P3)
+                }
                 aiHandler.letterAiCheck(letter);
                 return payService.getPayOutMessage("success", "成功");
             }

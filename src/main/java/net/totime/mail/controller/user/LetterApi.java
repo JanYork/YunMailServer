@@ -40,6 +40,8 @@ import net.totime.mail.util.OrderNumberUtil;
 import net.totime.mail.util.QrUtil;
 import net.totime.mail.util.RedisUtil;
 import net.totime.mail.vo.LetterVO;
+import net.totime.mail.vo.PayUrlVO;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -47,6 +49,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -290,14 +293,14 @@ public class LetterApi {
      */
     @GetMapping("/pay")
     @ApiOperation("信件支付")
-    public ApiResponse<String> pay(
+    public ApiResponse<PayUrlVO> pay(
             @Valid @NotNull(message = "信件ID不能为空") String letterId,
             @Valid @NotNull(message = "支付类型不能为空") Integer payType) {
-        String payUrl = toPay(letterId, payType);
-        if (StringUtils.isBlank(payUrl)) {
-            return ApiResponse.fail("支付异常");
+        PayUrlVO payVO = toPayVO(letterId, payType);
+        if (ObjectUtils.isEmpty(payVO)) {
+            return ApiResponse.<PayUrlVO>fail(null).message("支付异常");
         }
-        return ApiResponse.ok(payUrl);
+        return ApiResponse.ok(payVO).message("获取成功");
     }
 
     /**
@@ -406,6 +409,66 @@ public class LetterApi {
     }
 
     /**
+     * 信件支付
+     *
+     * @param letterId 信件ID
+     * @param payType  支付类型
+     * @return {@link PayUrlVO} 支付URL对象且携带Flag
+     */
+    private PayUrlVO toPayVO(String letterId, Integer payType) {
+        if (StringUtils.isBlank(letterId)) {
+            throw new GloballyUniversalException(500, "信件ID不能为空");
+        }
+        PayType payTypeEnum = PayType.getPayTypeEnum(payType);
+        if (payTypeEnum == null) {
+            throw new GloballyUniversalException(500, "支付类型错误");
+        }
+        Long id = Long.valueOf(letterId);
+        Letter letter = letterService.getById(id);
+        if (letter == null) {
+            throw new GloballyUniversalException(500, "信件不存在");
+        }
+        if (!letter.getState().equals(GlobalState.WAITING_FOR_PAYMENT.getState())) {
+            throw new GloballyUniversalException(500, "信件状态异常");
+        }
+        LetterOrdersBuilder build = LetterOrdersBuilder.builder()
+                .letterId(letter.getLetterId())
+                .ordersSerial(OrderNumberUtil.createOrderNumber(ScenarioType.LETTER))
+                .date(new Date())
+                .payType(payTypeEnum.getId())
+                .state(PayState.UNPAID.getValue())
+                .userId(StpUtil.getLoginIdAsLong())
+                .build();
+        boolean save = letterOrdersService.save(mapperFacade.map(build, LetterOrders.class));
+        if (!save) {
+            throw new GloballyUniversalException(500, "订单创建失败");
+        }
+        // 查询用户已支付信件是否>0
+        int count = (int) letterOrdersService.count(
+                new LambdaQueryWrapper<LetterOrders>()
+                        .eq(LetterOrders::getUserId, StpUtil.getLoginIdAsLong())
+                        .eq(LetterOrders::getState, PayState.PAID.getValue())
+        );
+        BigDecimal price = PayAmount.LETTER_PRICE.getAmount();
+        if (count == 0) {
+            price = new BigDecimal("0.1");
+        }
+        if (payType.equals(PayType.WX_PAY.getId())) {
+            String qrUrl = wxPayService
+                    .urlPath(PayCallbackUrlEnum.WX_CALLBACK_URL)
+                    .getQrPay(new PayOrder("云寄信件", "云寄实体信件与服务", price, build.getOrdersSerial(), WxTransactionType.NATIVE));
+            return new PayUrlVO(qrUrl, build.getOrdersSerial());
+        } else if (payType.equals(PayType.ALI_PAY.getId())) {
+            String qrUrl = aliPayService
+                    .urlPath(PayCallbackUrlEnum.ALI_CALLBACK_URL)
+                    .getQrPay(new PayOrder("云寄信件", "云寄实体信件与服务", price, build.getOrdersSerial(), AliTransactionType.SWEEPPAY));
+            return new PayUrlVO(qrUrl, build.getOrdersSerial());
+        } else {
+            throw new GloballyUniversalException(500, "支付类型错误");
+        }
+    }
+
+    /**
      * 信件支付(订单)
      *
      * @param orderNumber 订单号
@@ -446,6 +509,9 @@ public class LetterApi {
      */
     private CheckReturn<Letter> check(LetterDTO letterDTO) {
         User user = userService.getById(StpUtil.getLoginIdAsLong());
+        if (user == null) {
+            return CheckReturn.fail("用户不存在");
+        }
         if (user.getPhone() == null) {
             return CheckReturn.fail("请先绑定手机号");
         }

@@ -70,6 +70,16 @@ public class WxPayDefinedService extends WxPayService {
         return super.getQrPay(order);
     }
 
+    @Override
+    public String getQrPay(PayOrder order) {
+        if (enablePolling) {
+            RedisUtil rut = SpringBeanContext.getBean(RedisUtil.class);
+            PayPollKey pollKey = PayPollKey.DEFAULT;
+            rut.set(pollKey.getKey() + order.getOutTradeNo() + PayType.WX_PAY.getId(), PayState.UNPAID.getValue(), pollKey.getExpire());
+        }
+        return super.getQrPay(order);
+    }
+
     public boolean isEnablePolling() {
         return enablePolling;
     }

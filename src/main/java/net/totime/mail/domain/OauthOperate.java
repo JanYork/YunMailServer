@@ -66,18 +66,10 @@ public class OauthOperate {
             StpUtil.login(userId);
             return AuthVO.builder().code(200).msg("登录成功").token(StpUtil.getTokenInfo()).build();
         }
-        //未登录->未绑定->走注册
-        User user = userBuilder(auth);
         long snowflakeId = SnowflakeUtil.getSnowflakeId();
-        user.setId(snowflakeId);
-        if (!userService.save(user)) {
-            return AuthVO.builder().code(500).msg("登录失败").build();
-        }
-        //构建第三方登录信息实体
-        Oauth o = oauthBuilder(auth);
-        o.setUserId(snowflakeId);
-        if (!oauthService.save(o)) {
-            return AuthVO.builder().code(500).msg("登录失败").build();
+        boolean register = toRegister(snowflakeId, auth);
+        if (!register) {
+            return AuthVO.builder().code(500).msg("注册失败").build();
         }
         StpUtil.login(snowflakeId);
         return AuthVO.builder().code(200).msg("登录成功").token(StpUtil.getTokenInfo()).build();
@@ -103,20 +95,54 @@ public class OauthOperate {
             return AuthVO.builder().code(200).msg("登录成功").token(StpUtil.getTokenInfo()).build();
         }
         //未登录->未绑定->走注册
-        User user = userBuilder(openId);
         long snowflakeId = SnowflakeUtil.getSnowflakeId();
+        boolean register = toRegister(snowflakeId, openId, oauthType);
+        if (!register) {
+            return AuthVO.builder().code(500).msg("登录失败").build();
+        }
+        StpUtil.login(snowflakeId);
+        // 此处事务未提交，所以 StpUtil.getTokenInfo() 无法获取到用户信息
+        return AuthVO.builder().code(200).msg("登录成功").token(StpUtil.getTokenInfo()).build();
+    }
+
+    /**
+     * 注册
+     *
+     * @param snowflakeId 雪花id
+     * @param openId      第三方登录唯一标识
+     * @param oauthType   oauth类型
+     * @return boolean
+     */
+    public boolean toRegister(long snowflakeId, String openId, OauthType oauthType) {
+        User user = userBuilder(openId);
         user.setId(snowflakeId);
         if (!userService.save(user)) {
-            return AuthVO.builder().code(500).msg("登录失败").build();
+            return false;
         }
         //构建第三方登录信息实体
         Oauth o = oauthBuilder(openId, oauthType);
         o.setUserId(snowflakeId);
-        if (!oauthService.save(o)) {
-            return AuthVO.builder().code(500).msg("登录失败").build();
+        return oauthService.save(o);
+    }
+
+    /**
+     * 注册
+     *
+     * @param snowflakeId 雪花id
+     * @param auth        身份验证
+     * @return boolean
+     */
+    public boolean toRegister(long snowflakeId, AuthCallBackDTO auth) {
+        //未登录->未绑定->走注册
+        User user = userBuilder(auth);
+        user.setId(snowflakeId);
+        if (!userService.save(user)) {
+            return false;
         }
-        StpUtil.login(snowflakeId);
-        return AuthVO.builder().code(200).msg("登录成功").token(StpUtil.getTokenInfo()).build();
+        //构建第三方登录信息实体
+        Oauth o = oauthBuilder(auth);
+        o.setUserId(snowflakeId);
+        return oauthService.save(o);
     }
 
     /**

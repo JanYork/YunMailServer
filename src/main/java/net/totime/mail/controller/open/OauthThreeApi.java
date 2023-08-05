@@ -41,6 +41,7 @@ import net.totime.mail.response.ApiResponse;
 import net.totime.mail.util.CodeUtil;
 import net.totime.mail.util.RedisUtil;
 import net.totime.mail.vo.AuthVO;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -224,15 +225,16 @@ public class OauthThreeApi {
     public ApiResponse<String> wxMpLoginState(String code) {
         WxMpLoginInfo info = (WxMpLoginInfo) rut.get(code);
         if (info == null) {
-            throw new GloballyUniversalException(500, "登录状态已过期");
+            return ApiResponse.ok("登录异常").code(-2).message("系统错误");
         }
         if (info.getState() == LoginState.LOGGED_IN.getState()) {
             rut.delete(code);
-            return ApiResponse.ok(info.getToken()).message("登录成功");
+            String token = wxUnionIdLogin(info.getToken());
+            return ApiResponse.ok(token).message("登录成功");
         } else if (info.getState() == LoginState.NOT_LOGIN.getState()) {
-            return ApiResponse.fail("未登录").message("Go On").code(-1);
+            return ApiResponse.ok("未登录").message("Go On").code(-1);
         }
-        return ApiResponse.fail("登录异常").code(-2).message("未知错误");
+        return ApiResponse.ok("登录异常").code(-2).message("未知错误");
     }
 
     /**
@@ -290,7 +292,6 @@ public class OauthThreeApi {
             // 缓存授权码对应的唯一标识
             rut.set("wx_" + code, message.getFromUser(), 120L);
             LocalDateTime now = LocalDateTime.now();
-            now = now.plusHours(8);
             String time = now.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss SSS"));
             WxMpXmlOutTextMessage texts = WxMpXmlOutTextMessage
                     .TEXT()
@@ -321,7 +322,7 @@ public class OauthThreeApi {
             }
             // 删除场景值缓存
             rut.delete(code);
-            String token = wxUnionIdLogin(message.getFromUser());
+            String token = message.getFromUser();
             if (StringUtils.isEmpty(token)) {
                 WxMpXmlOutTextMessage texts = WxMpXmlOutTextMessage
                         .TEXT()
@@ -335,7 +336,6 @@ public class OauthThreeApi {
             // 设置登录信息
             rut.set(authCode, new WxMpLoginInfo(LoginState.LOGGED_IN.getState(), token), 300L);
             LocalDateTime now = LocalDateTime.now();
-            now = now.plusHours(8);
             String time = now.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss SSS"));
             WxMpXmlOutTextMessage texts = WxMpXmlOutTextMessage
                     .TEXT()
@@ -387,12 +387,17 @@ public class OauthThreeApi {
      */
     private String wxUnionIdLogin(String openId) {
         AuthVO login = oos.login(openId, OauthType.WECHAT_MP);
-        if (login == null) {
-            return null;
+        if (ObjectUtils.isEmpty(login)) {
+            log.error("微信登录失败，失败原因：{}", "微信登录接口返回空");
+            throw new GloballyUniversalException(500, "未知异常");
         }
         if (login.getCode() != 200) {
             log.error("微信登录失败，失败原因：{}", login.getMsg());
-            return null;
+            throw new GloballyUniversalException(500, login.getMsg());
+        }
+        if (login.getToken() == null) {
+            log.error("微信登录失败，失败原因：{}", login.getMsg());
+            throw new GloballyUniversalException(500, login.getMsg());
         }
         return login.getToken().getTokenValue();
     }

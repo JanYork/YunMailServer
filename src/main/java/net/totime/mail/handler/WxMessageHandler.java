@@ -3,9 +3,17 @@ package net.totime.mail.handler;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlOutTextMessage;
+import net.totime.mail.enums.LoginState;
 import net.totime.mail.enums.WxMessageEvent;
 import net.totime.mail.enums.WxMpSceneEnum;
+import net.totime.mail.pojo.WxMpLoginInfo;
+import net.totime.mail.util.RedisUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * @author JanYork
@@ -43,6 +51,8 @@ public class WxMessageHandler {
      */
     @SuppressWarnings("FieldCanBeLocal")
     private final String WX_LOGIN_PREFIX = "qrscene_";
+    @Resource
+    private RedisUtil rut;
 
     /**
      * 微信消息处理器
@@ -84,17 +94,59 @@ public class WxMessageHandler {
      * @return {@link String}
      */
     private String eventHandler() {
-        System.out.println("event：" + message.getEvent());
         // 关注事件
         if (message.getEvent().equals(WxMessageEvent.SUBSCRIBE.getEvent())) {
             String content = "Hi！让小云看看，是哪一个小可爱通过时光机来到了云寄星球？嘿嘿嘿！不要走！快给未来留下点什么吧！我就知道你有很多小秘密，放心写下吧！\n" +
                     "哎呀呀，小云是不会偷听的啦！";
             // 获取场景值
             if (message.getEventKey().equals(WX_LOGIN_PREFIX + WxMpSceneEnum.LOGIN.getScene())) {
-                content = content + "\n\n" +
-                        "嗯！对啦！你已经成功登录云寄星球，有什么事情可以和小云说哦！";
-                String unionId = message.getUnionId();
-                // TODO: 2023/06/12 登录
+                // 获取场景值
+                String code = message.getEventKey();
+                code = code.substring(WX_LOGIN_PREFIX.length());
+                // 获取授权码
+                String authCode = (String) rut.get(code);
+                if (StringUtils.isEmpty(authCode)) {
+                    content = content + "\n\n" +
+                            "哎呀呀，就在刚刚这个时空裂缝貌似已经被修复了呢，本次登录已经失效了哦！\n" +
+                            "尝试重新获取登录二维码或者寻找其他可用的时空裂缝吧！";
+                    WxMpXmlOutTextMessage texts = WxMpXmlOutTextMessage
+                            .TEXT()
+                            .toUser(message.getFromUser())
+                            .fromUser(message.getToUser())
+                            .content(content)
+                            .build();
+                    return texts.toXml();
+                }
+                // 删除场景值缓存
+                rut.delete(code);
+                String token = message.getFromUser();
+                if (StringUtils.isEmpty(token)) {
+                    content = content + "\n\n" +
+                            "哎呀呀，云寄时光机出现了故障呢，本次登录失败了！\n" +
+                            "尝试重新获取登录二维码或者向云寄官方反馈吧！";
+                    WxMpXmlOutTextMessage texts = WxMpXmlOutTextMessage
+                            .TEXT()
+                            .toUser(message.getFromUser())
+                            .fromUser(message.getToUser())
+                            .content(content)
+                            .build();
+                    return texts.toXml();
+                }
+                // 设置登录信息
+                rut.set(authCode, new WxMpLoginInfo(LoginState.LOGGED_IN.getState(), token), 300L);
+                LocalDateTime now = LocalDateTime.now();
+                String time = now.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss SSS"));
+                content = "登陆成功，欢迎来到云寄星球!" +
+                        "\n你不在的日子里，发生了很多很多事情呢，快来看看吧!" +
+                        "\n有任何问题，欢迎联系时空管理员哦！\n" +
+                        "节点碎片" + time;
+                WxMpXmlOutTextMessage texts = WxMpXmlOutTextMessage
+                        .TEXT()
+                        .toUser(message.getFromUser())
+                        .fromUser(message.getToUser())
+                        .content(content)
+                        .build();
+                return texts.toXml();
             }
             WxMpXmlOutTextMessage texts = WxMpXmlOutTextMessage
                     .TEXT()

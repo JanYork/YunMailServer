@@ -56,7 +56,7 @@ public enum PayCallbackUrlEnum {
     }
 
     public String getValue() {
-        String baseUrl = "http://uj7pjg.natappfree.cc/api/v2/pay";
+        String baseUrl = "https://api.totime.cn/api/v2/pay";
         return baseUrl + value;
     }
 

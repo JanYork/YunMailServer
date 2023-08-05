@@ -22,7 +22,7 @@ public enum PayAmount {
     /**
      * 信件价格
      */
-    LETTER_PRICE(new BigDecimal("0.01")),
+    LETTER_PRICE(new BigDecimal("10.88")),
     /**
      * 短信价格
      */

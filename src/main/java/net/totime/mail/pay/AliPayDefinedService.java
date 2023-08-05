@@ -71,6 +71,16 @@ public class AliPayDefinedService extends AliPayService {
         return super.getQrPay(order);
     }
 
+    @Override
+    public String getQrPay(PayOrder order) {
+        if (enablePolling) {
+            PayPollKey pollKey = PayPollKey.DEFAULT;
+            RedisUtil rut = SpringBeanContext.getBean(RedisUtil.class);
+            rut.set(pollKey.getKey() + order.getOutTradeNo() + PayType.ALI_PAY.getId(), PayState.UNPAID.getValue(), pollKey.getExpire());
+        }
+        return super.getQrPay(order);
+    }
+
     public boolean isEnablePolling() {
         return enablePolling;
     }

@@ -89,6 +89,13 @@ public class WxV3PayMessageHandler implements PayMessageHandler<WxPayMessage, Wx
                     return payService.getPayOutMessage("fail", "失败");
                 }
                 BaiDuAiHandler aiHandler = SpringBeanContext.getBean(BaiDuAiHandler.class);
+                WeiXinPayProperties wx = SpringBeanContext.getBean(WeiXinPayProperties.class);
+                if (wx.getEnablePoll()) {
+                    SpringBeanContext.getBean(RedisUtil.class).set(PayPollKey.DEFAULT.getKey() + outTradeNo + PayType.WX_PAY.getId(), PayState.PAID.getValue(), PayPollKey.DEFAULT.getExpire());
+                } else {
+                    SimpMessagingTemplate smt = SpringBeanContext.getBean(SimpMessagingTemplate.class);
+                    // TODO：STOMP通知前端(P3)
+                }
                 aiHandler.letterAiCheck(letter);
                 return payService.getPayOutMessage("success", "成功");
             }
