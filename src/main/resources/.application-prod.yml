@@ -1,0 +1,211 @@
+server:
+  port: 8088
+spring:
+  datasource:
+    username: root
+    password: 1111111111
+    url: jdbc:mysql://121.62.00.000:3306/yun?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    timeout: 5000
+    lettuce:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
+  freemarker:
+    allow-request-override: false
+    allow-session-override: false
+    cache: false
+    charset: UTF-8
+    check-template-location: true
+    content-type: text/html
+    enabled: true
+    expose-request-attributes: false
+    expose-session-attributes: false
+    expose-spring-macro-helpers: true
+    prefer-file-system-access: true
+    suffix: .ftl
+    template-loader-path: classpath:/templates/
+    request-context-attribute: request
+    settings:
+      template_update_delay: 0
+      default_encoding: UTF-8
+      classic_compatible: true
+  data:
+    mongodb:
+      uri: mongodb://JanYork:[密码]@121.62.00.000:00000/yun?authSource=admin
+sa-token:
+  timeout: 2592000
+  activity-timeout: -1
+  is-concurrent: true
+  is-share: true
+  token-style: random-64
+  is-log: false
+  is-print: off
+  isReadCookie: false
+  token-name: token
+  token-session-check-login: false
+mybatis-plus:
+  global-config.banner: false
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+logging:
+  level:
+#    org.springframework: error
+#    net.totime.mail: info
+#    com.xxl.job: error
+alibaba:
+  cloud:
+    access-key: 11111111111
+    secret-key: 1111111111111
+xxl:
+  job:
+    admin:
+      addresses: https://job.1111.cn/xxl-job-admin
+    accessToken: default_token
+    executor:
+      appname: yun-job
+      ip: 111.11.11.11
+      port: 8086
+      logpath: /data/applogs/xxl-job/jobhandler
+      logretentiondays: -1
+      # noinspection SpringBootApplicationYaml
+      address:
+knife4j:
+  enable: true
+swagger:
+  # 是否开启swagger
+  enable: true
+  title: "云寄2.0版本服务端"
+  description: "一站式时光信件服务平台"
+  version: "2.0.0"
+  contact:
+    name: "JanYork"
+    url: "https://totime.net"
+    email: "747945307@qq.com"
+# noinspection SpringBootApplicationYaml
+jetcache:
+  statIntervalMinutes: 15
+  areaInCacheName: false
+  local:
+    default:
+      type: caffeine
+      keyConvertor: fastjson2 #other choose：fastjson/jackson
+      limit: 100
+  remote:
+    default:
+      type: redis
+      keyConvertor: fastjson2
+      broadcastChannel: projectA
+      valueEncoder: java
+      valueDecoder: java
+      poolConfig:
+        minIdle: 5
+        maxIdle: 20
+        maxTotal: 50
+      host: 127.0.0.1
+      port: 6379
+pay:
+  wx:
+    appId: 1111
+    mchId: 111
+    apiKey: 11111
+    inputCharset: utf-8
+    notifyUrl: https://api.totime.cn/api/v2/pay/wx/callback
+    returnUrl: https://api.totime.cn/api/v2/pay/wx/callback
+    apiClientKeyP12: /www/wwwroot/111/wxCert.p12
+    # 开启轮询
+    enablePoll: true
+  ali:
+    app-id: 1111
+    pid: 11
+    seller: 11111
+    inputCharset: utf-8
+    notifyUrl: https://api.totime.cn/api/v2/pay/ali/callback
+    returnUrl: https://api.totime.cn/api/v2/pay/ali/callback
+    keyPublicPath: /www/wwwroot/1111/keyPublic.txt
+    keyPrivatePath: /www/wwwroot/1111/keyPrivate.txt
+    # 开启轮询
+    enablePoll: true
+justauth:
+  enabled: true
+  type:
+    ALIPAY:
+      client-id: 2021003174661831
+      client-secret: 111
+      redirect-uri: https://api.totime.net/oauth/alipay/callback
+      alipay-public-key: 111
+    GITEE:
+      client-id: 111
+      client-secret: 111
+      redirect-uri: https://api.totime.cn/oauth/gitee/callback
+    GITHUB:
+      client-id: 11
+      client-secret: 11
+      redirect-uri: https://api.totime.cn/oauth/github/callback
+    DOUYIN:
+      client-id: 11
+      client-secret: 111
+      redirect-uri: https://api.totime.cn/oauth/douyin/callback
+  cache:
+    prefix: auth_
+    type: redis
+wx:
+  miniapp:
+    appid: 111
+    secret: 111
+    msg-data-format: JSON
+    config-storage:
+      type: RedisTemplate
+      keyPrefix: wx-mini
+      redis:
+        host: 127.0.0.1
+        port: 6379
+        database: 1
+  mp:
+    appid: 111
+    secret: 111
+    token: 111
+    aesKey: 111
+    config-storage:
+      type: RedisTemplate
+      keyPrefix: wx-mp
+      redis:
+        host: 127.0.0.1
+        port: 6379
+        database: 1
+tencent:
+  cos:
+    secret-id: 111
+    secret-key: 111
+    region: ap-guangzhou
+    bucket: yun-111
+    url: https://image.111.net
+  sms:
+    secret-id: 111
+    secret-key: 111
+    region: ap-beijing
+third:
+  app-code: 1111
+  three-element:
+    url: https://mobile3elements.shumaidata.com/mobile/verify_real_name
+  two-element:
+    url: https://zid.market.alicloudapi.com/idcheck/Post
+  logistics:
+    url: https://wuliu.market.alicloudapi.com/kdi
+ws:
+  allowed-origins: http://localhost:3000
+  endpoint: /ws
+  pay: /third/pay
+kdzs:
+  key: 111
+  secret: 111
+baidu:
+  ai:
+    app-id: 111
+    api-key: 111
+    secret-key: 111
